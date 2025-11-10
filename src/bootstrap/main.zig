@@ -1,92 +1,114 @@
 const std = @import("std");
-const ast = @import("../common/ast.zig");
-const codegen = @import("../common/codegen.zig");
-const ebnf_parser = @import("ebnf_parser.zig");
+const bootstrap = @import("parser.zig");
+const builder_mod = @import("pegz_common").builder;
 
-// Bootstrap main entry point
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer _ = gpa.deinit();
-    const allocator = gpa.allocator();
-
-    const args = try std.process.argsAlloc(allocator);
-    defer std.process.argsFree(allocator, args);
-
-    if (args.len < 2) {
-        std.debug.print("Usage: {s} <ebnf_file> [output_file]\n", .{args[0]});
-        std.debug.print("  ebnf_file: Path to EBNF grammar file\n");
-        std.debug.print("  output_file: Optional output file for generated parser (default: parser.zig)\n");
-        return;
+    var gpa = std.heap.GeneralPurposeAllocator(.{
+        .thread_safe = false,
+    }).init;
+    defer {
+        _ = gpa.deinit();
     }
 
-    const input_file = args[1];
-    const output_file = if (args.len > 2) args[2] else "parser.zig";
+    var arena = std.heap.ArenaAllocator.init(gpa.allocator());
+    defer arena.deinit();
+    const allocator = arena.allocator();
 
-    // Read input file
-    const input = try std.fs.cwd().readFileAlloc(allocator, input_file, 1024 * 1024 * 10); // 10MB limit
-    defer allocator.free(input);
+    const args = try std.process.argsAlloc(allocator);
+    defer allocator.free(args);
 
-    // Parse EBNF grammar
-    std.debug.print("Parsing EBNF grammar from {s}...\n", .{input_file});
-    var grammar = try ebnf_parser.parseEbnfGrammar(allocator, input);
-    defer grammar.deinit();
+    if (args.len < 2) {
+        std.log.err("USAGE: bootstrap-build [-o OUTPUT] FILE\n", .{});
+        std.process.exit(1);
+    }
 
-    std.debug.print("Successfully parsed {d} rules:\n", .{grammar.rules.items.len});
-    for (grammar.rules.items) |rule| {
-        std.debug.print("  - {s}\n", .{rule.name});
-        if (rule.display_name) |display| {
-            std.debug.print("    Display name: {s}\n", .{display});
+    var output_file: ?[]const u8 = null;
+    var input_file: []const u8 = "";
+
+    // Parse command line arguments
+    var i: usize = 1;
+    while (i < args.len) {
+        if (std.mem.eql(u8, args[i], "-o")) {
+            if (i + 1 >= args.len) {
+                std.log.err("Error: -o flag requires an output filename\n", .{});
+                std.process.exit(2);
+            }
+            output_file = args[i + 1];
+            i += 2;
+        } else if (input_file.len == 0) {
+            input_file = args[i];
+            i += 1;
+        } else {
+            std.log.err("Error: Unexpected argument: {s}", .{args[i]});
+            std.process.exit(2);
         }
     }
 
+    if (input_file.len == 0) {
+        std.log.err("Error: Input file required\n", .{});
+        std.process.exit(1);
+    }
+
+    var out_file = if (output_file) |outfile_path|
+        std.fs.createFileAbsolute(outfile_path, .{}) catch |err| {
+            std.log.err("Error creating output file: {}", .{err});
+            std.process.exit(2);
+        }
+    else
+        null;
+
+    var out_writer: std.fs.File.Writer = undefined;
+    var should_close_out = false;
+    var buffer: [4096]u8 = undefined;
+
+    if (out_file) |*file| {
+        out_writer = file.writer(&buffer);
+        should_close_out = true;
+    } else {
+        out_writer = std.fs.File.stdout().writer(&buffer);
+    }
+
+    defer {
+        if (should_close_out) {
+            if (out_file) |*file| {
+                file.close();
+            }
+        }
+    }
+
+    // Parse input file
+    const input_file_abs = try std.fs.cwd().realpathAlloc(allocator, input_file);
+    const in_file = std.fs.openFileAbsolute(input_file_abs, .{}) catch |err| {
+        std.log.err("Error opening input file: {}", .{err});
+        std.process.exit(2);
+    };
+    defer in_file.close();
+
+    var parser = bootstrap.Parser.init(allocator);
+    defer parser.deinit();
+
+    const grammar = parser.parse(input_file, in_file.reader(&buffer).interface) catch |err| {
+        std.log.err("Parse error: {}", .{err});
+        std.process.exit(5);
+    };
+
     // Generate parser code
-    std.debug.print("\nGenerating parser code...\n");
-    var generator = codegen.CodeGenerator.init(allocator, &grammar);
-    defer generator.deinit();
+    var output_buffer: std.ArrayList(u8) = .empty;
+    defer output_buffer.deinit(allocator);
 
-    const parser_code = try generator.generateParser();
-    defer allocator.free(parser_code);
+    const writer = std.io.Writer.Allocating.fromArrayList(allocator, &output_buffer);
+    var builder = try builder_mod.Builder.init(allocator, writer.writer, .{});
+    defer builder.deinit();
 
-    // Write output file
-    std.debug.print("Writing generated parser to {s}...\n", .{output_file});
-    try std.fs.cwd().writeFile(.{ .sub_path = output_file, .data = parser_code });
+    builder.buildParser(grammar) catch |err| {
+        std.log.err("Build error: {}", .{err});
+        std.process.exit(6);
+    };
 
-    std.debug.print("Bootstrap completed successfully!\n");
-    std.debug.print("Generated parser: {s} ({d} bytes)\n", .{ output_file, parser_code.len });
-}
-
-// Test function to validate bootstrap process
-test "bootstrap test" {
-    const allocator = std.testing.allocator;
-
-    const test_grammar =
-        \\Grammar = RuleList .
-        \\RuleList = Rule { Rule } .
-        \\Rule = ident ruledef Expression semicolon .
-        \\Expression = ChoiceExpr .
-        \\ChoiceExpr = ActionExpr { "/" ActionExpr } .
-        \\ActionExpr = SeqExpr .
-        \\SeqExpr = LabeledExpr { LabeledExpr } .
-        \\LabeledExpr = PrefixedExpr .
-        \\PrefixedExpr = [ ampersand ] SuffixedExpr .
-        \\SuffixedExpr = PrimaryExpr [ star ] .
-        \\PrimaryExpr = LiteralMatcher | RuleRefExpr .
-        \\LiteralMatcher = str .
-        \\RuleRefExpr = ident .
-    ;
-
-    var grammar = try ebnf_parser.parseEbnfGrammar(allocator, test_grammar);
-    defer grammar.deinit();
-
-    try std.testing.expect(grammar.rules.items.len > 0);
-    try std.testing.expectEqualStrings("Grammar", grammar.rules.items[0].name);
-
-    var generator = codegen.CodeGenerator.init(allocator, &grammar);
-    defer generator.deinit();
-
-    const parser_code = try generator.generateParser();
-    defer allocator.free(parser_code);
-
-    try std.testing.expect(parser_code.len > 0);
-    try std.testing.expect(std.mem.indexOf(u8, parser_code, "pub const Parser") != null);
+    // Write output
+    const generated_code = output_buffer.items;
+    out_writer.interface.writeAll(generated_code) catch |err| {
+        std.log.err("Error writing output: {}", .{err});
+        std.process.exit(7);
+    };
 }

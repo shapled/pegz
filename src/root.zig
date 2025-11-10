@@ -1,19 +1,6 @@
 //! By convention, root.zig is the root source file when making a library.
 const std = @import("std");
 
-// Common modules (shared between bootstrap and self-hosting phases)
-pub const ast = @import("common/ast.zig");
-pub const lexer = @import("common/lexer.zig");
-pub const parser = @import("common/parser.zig");
-pub const codegen = @import("common/codegen_simple.zig");
-
-// Bootstrap phase modules
-pub const bootstrap = struct {
-    pub const ebnf_lexer = @import("bootstrap/ebnf_lexer.zig");
-    pub const ebnf_parser = @import("bootstrap/ebnf_parser.zig");
-    pub const main = @import("bootstrap/main.zig");
-};
-
 pub fn bufferedPrint() !void {
     // Stdout is for the actual output of your application, for example if you
     // are implementing gzip, then only the compressed bytes should be sent to
