@@ -6,13 +6,20 @@ const blacklisted_idents = @import("token.zig").BlacklistedIdents;
 const Tid = token.Tid;
 const Token = token.Token;
 
+const ScannerError = error{
+    ScannerError,
+    EndOfStream,
+    UnexpectedEOF,
+    InvalidCharacter,
+};
+
 /// Error handler function type
-pub const ErrorFn = *const fn (pos: ast.Pos, err: anyerror) void;
+pub const ErrorFn = *const fn (pos: ast.Pos, err_msg: []const u8) void;
 
 /// Scanner tokenizes an input source for PEG grammar.
 pub const Scanner = struct {
     allocator: std.mem.Allocator,
-    reader: std.io.Reader,
+    reader: *std.io.Reader,
     errh: ?ErrorFn,
 
     eof: bool,
@@ -23,7 +30,7 @@ pub const Scanner = struct {
     tok_buffer: std.ArrayList(u8),
     blacklisted: blacklisted_idents.HashMap,
 
-    pub fn init(allocator: std.mem.Allocator, filename: []const u8, reader: std.io.Reader, errh: ?ErrorFn) !Scanner {
+    pub fn init(allocator: std.mem.Allocator, filename: []const u8, reader: *std.io.Reader, errh: ?ErrorFn) !Scanner {
         const tok_buffer: std.ArrayList(u8) = .empty;
         var scanner = Scanner{
             .allocator = allocator,
@@ -598,29 +605,16 @@ pub const Scanner = struct {
             return;
         }
 
-        const buf = self.reader.take(4) catch |err| {
-            // const result = self.reader.readSliceAll(&buf) catch |err| {
+        // Read one byte at a time for simplicity
+        const byte = self.reader.takeByte() catch |err| {
             self.fatalError(err);
             return;
         };
 
-        if (buf.len == 0) {
-            self.fatalError(error.EndOfStream);
-            return;
-        }
-
-        // Decode the UTF-8 bytes
-        const decoded_len = std.unicode.utf8ByteSequenceLength(buf[0]) catch 1;
-        if (decoded_len > buf.len) {
-            self.fatalError(error.EndOfStream);
-            return;
-        }
-
-        // For simplicity, assume single-byte encoding for now
-        // In a full implementation, you'd handle multi-byte UTF-8 sequences
-        self.cur = buf[0];
+        // Store the byte as a Unicode code point
+        self.cur = byte;
         self.cpos.offset += @intCast(self.cw);
-        self.cw = buf.len;
+        self.cw = 1;
 
         // newline is '\n' as in Go
         if (self.cur == '\n') {
@@ -641,11 +635,23 @@ pub const Scanner = struct {
 
     /// notify the handler of an error.
     fn errorp(self: *Scanner, pos: ast.Pos, err: anyerror) void {
-        if (self.errh) |errh| {
-            errh(pos, err);
-        } else {
-            std.log.err("{f}: {any}", .{ pos, err });
-        }
+        var need_free = false;
+        const err_msg = blk: {
+            const msg = std.fmt.allocPrint(self.allocator, "{any}", .{err}) catch {
+                // 提供一个后备值给 err_msg
+                break :blk "Unknown error";
+            };
+            need_free = true;
+            break :blk msg;
+        };
+
+        defer if (need_free) self.allocator.free(err_msg);
+
+        // if (self.errh) |errh| {
+        //     errh(pos, err_msg);
+        // } else {
+            std.log.err("{f}: {s}", .{ pos, err_msg });
+        // }
     }
 
     /// helper to generate and notify of an error.
@@ -655,16 +661,21 @@ pub const Scanner = struct {
 
     /// helper to generate and notify of an error at a specific position.
     fn errorpf(self: *Scanner, pos: ast.Pos, comptime fmt: []const u8, args: anytype) void {
-        self.errorp(pos, error.ScannerError);
-        _ = fmt;
-        _ = args;
+        const err_msg = std.fmt.allocPrint(self.allocator, fmt, args) catch "Scanner error";
+        defer self.allocator.free(err_msg);
+
+        if (self.errh) |errh| {
+            errh(pos, err_msg);
+        } else {
+            std.log.err("{f}: {s}", .{ pos, err_msg });
+        }
     }
 
     /// notify a non-recoverable error that terminates scanning.
     fn fatalError(self: *Scanner, err: anyerror) void {
         self.cur = std.math.maxInt(u21);
         self.eof = true;
-        if (err != error.EndOfStream) {
+        if (err != ScannerError.EndOfStream) {
             self.errorp(self.cpos, err);
         }
     }

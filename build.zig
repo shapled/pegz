@@ -20,4 +20,18 @@ pub fn build(b: *std.Build) void {
 
     bootstrap_exe.root_module.addImport("pegz_common", common_module);
     b.installArtifact(bootstrap_exe);
+    
+    const lldb = b.addSystemCommand(&.{
+        "lldb",
+    });
+    // appends the bootstrap executable path to the lldb command line
+    lldb.addArtifactArg(bootstrap_exe);
+    // add test.pegz as argument to bootstrap executable
+    lldb.addArgs(&.{
+        "--",
+        "test.pegz",
+    });
+
+    const lldb_step = b.step("debug-bootstrap", "run the bootstrap under lldb with test.pegz");
+    lldb_step.dependOn(&lldb.step);
 }

@@ -77,8 +77,7 @@ pub fn main() !void {
     }
 
     // Parse input file
-    const input_file_abs = try std.fs.cwd().realpathAlloc(allocator, input_file);
-    const in_file = std.fs.openFileAbsolute(input_file_abs, .{}) catch |err| {
+    const in_file = std.fs.cwd().openFile(input_file, .{.mode = .read_only}) catch |err| {
         std.log.err("Error opening input file: {}", .{err});
         std.process.exit(2);
     };
@@ -87,8 +86,9 @@ pub fn main() !void {
     var parser = bootstrap.Parser.init(allocator);
     defer parser.deinit();
 
-    const grammar = parser.parse(input_file, in_file.reader(&buffer).interface) catch |err| {
-        std.log.err("Parse error: {}", .{err});
+    var file_reader = in_file.reader(&buffer);
+    const grammar = parser.parse(input_file, &file_reader.interface) catch |err| {
+        std.log.err("Error parsing input file: {}", .{err});
         std.process.exit(5);
     };
 

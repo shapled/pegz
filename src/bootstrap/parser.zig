@@ -104,7 +104,7 @@ pub const Parser = struct {
     /// Parse parses the data from the reader r and generates the AST
     /// or returns an error if it fails. The filename is used as information
     /// in the error messages.
-    pub fn parse(self: *Parser, filename: []const u8, reader: std.io.Reader) !*ast.Grammar {
+    pub fn parse(self: *Parser, filename: []const u8, reader: *std.io.Reader) !*ast.Grammar {
         self.errs.reset();
 
         self.scanner = try Scanner.init(self.allocator, filename, reader, null);
@@ -121,6 +121,7 @@ pub const Parser = struct {
 
         if (self.errs.hasErrors()) {
             if (self.errs.getError()) |err_msg| {
+                std.log.err("parser error: {s}", .{err_msg});
                 self.allocator.free(err_msg);
             }
             return ParserError.ParseError;
