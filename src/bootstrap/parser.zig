@@ -428,41 +428,43 @@ pub const Parser = struct {
         defer self.out("labeledExpr");
         self.in("labeledExpr");
 
-        if (self.tok.id != .ident) {
-            return null;
+        // Check if this is a labeled expression (identifier followed by colon)
+        if (self.tok.id == .ident) {
+            const peek_token = self.peek();
+            if (peek_token.id == .colon) {
+                // Handle labeled expression case: identifier ':' expression
+
+                const identifier: *ast.Identifier = try self.allocator.create(ast.Identifier);
+                identifier.* = ast.Identifier{
+                    .pos = self.tok.pos,
+                    .value = try self.allocator.dupe(u8, self.tok.lit),
+                };
+                self.read();
+                if (!self.expect(&[_]Tid{.colon})) {
+                    return null;
+                }
+                self.read();
+
+                const expr = try self.prefixedExpr();
+                if (expr == null) {
+                    self.errs.add(self.tok.pos, "label without expression", .{});
+                    return null;
+                }
+
+                const labeled = try self.allocator.create(ast.LabeledExpr);
+                const expr_ptr = try self.allocator.create(ast.Expression);
+                expr_ptr.* = expr.?;
+                labeled.* = ast.LabeledExpr{
+                    .pos = identifier.pos,
+                    .label = identifier,
+                    .expr = expr_ptr,
+                };
+                return ast.Expression{ .labeled = labeled };
+            }
         }
 
-        const peek_token = self.peek();
-        if (peek_token.id == .colon) {
-            return null;
-        }
-
-        const identifier: *ast.Identifier = try self.allocator.create(ast.Identifier);
-        identifier.* = ast.Identifier{
-            .pos = self.tok.pos,
-            .value = try self.allocator.dupe(u8, self.tok.lit),
-        };
-        self.read();
-        if (!self.expect(&[_]Tid{.colon})) {
-            return null;
-        }
-        self.read();
-
-        const expr = try self.prefixedExpr();
-        if (expr == null) {
-            self.errs.add(self.tok.pos, "label without expression", .{});
-            return null;
-        }
-
-        const labeled = try self.allocator.create(ast.LabeledExpr);
-        const expr_ptr = try self.allocator.create(ast.Expression);
-        expr_ptr.* = expr.?;
-        labeled.* = ast.LabeledExpr{
-            .pos = identifier.pos,
-            .label = identifier,
-            .expr = expr_ptr,
-        };
-        return ast.Expression{ .labeled = labeled };
+        // Handle non-labeled expression case: directly parse prefixedExpr
+        return self.prefixedExpr();
     }
 
     fn prefixedExpr(self: *Parser) !?ast.Expression {

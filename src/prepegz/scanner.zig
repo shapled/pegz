@@ -201,14 +201,14 @@ pub const Scanner = struct {
     fn scanCode(self: *Scanner) ![]const u8 {
         self.tok_buffer.clearAndFree(self.allocator);
         var buf: [4]u8 = undefined;
-        const len1 = try std.unicode.utf8Encode(self.cur, &buf);
-        try self.tok_buffer.appendSlice(self.allocator, buf[0..len1]);
+        _ = try std.unicode.utf8Encode(self.cur, &buf);
+        try self.tok_buffer.appendSlice(self.allocator, &buf);
 
         var depth: usize = 1;
         while (true) {
             self.read();
-            const len = try std.unicode.utf8Encode(self.cur, &buf);
-            try self.tok_buffer.appendSlice(self.allocator, buf[0..len]);
+            _ = try std.unicode.utf8Encode(self.cur, &buf);
+            try self.tok_buffer.appendSlice(self.allocator, &buf);
 
             switch (self.cur) {
                 std.math.maxInt(u21) => {

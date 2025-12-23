@@ -49,37 +49,11 @@ pub fn main() !void {
         std.process.exit(1);
     }
 
-    var out_file = if (output_file) |outfile_path|
-        std.fs.createFileAbsolute(outfile_path, .{}) catch |err| {
-            std.log.err("Error creating output file: {}", .{err});
-            std.process.exit(2);
-        }
-    else
-        null;
-
-    var out_writer: std.fs.File.Writer = undefined;
-    var should_close_out = false;
-    var buffer: [4096]u8 = undefined;
-
-    if (out_file) |*file| {
-        out_writer = file.writer(&buffer);
-        should_close_out = true;
-    } else {
-        out_writer = std.fs.File.stdout().writer(&buffer);
-    }
-
-    defer {
-        if (should_close_out) {
-            if (out_file) |*file| {
-                file.close();
-            }
-        }
-    }
-
     // Parse input file
+    var buffer: [4096]u8 = undefined;
     const in_file = std.fs.cwd().openFile(input_file, .{.mode = .read_only}) catch |err| {
         std.log.err("Error opening input file: {}", .{err});
-        std.process.exit(2);
+        std.process.exit(5);
     };
     defer in_file.close();
 
@@ -92,23 +66,43 @@ pub fn main() !void {
         std.process.exit(5);
     };
 
-    // Generate parser code
-    var output_buffer: std.ArrayList(u8) = .empty;
-    defer output_buffer.deinit(allocator);
+    // Create writer based on output
+    if (output_file) |outfile_path| {
+        // Check if path is absolute or relative
+        const file = if (std.fs.path.isAbsolute(outfile_path))
+            try std.fs.createFileAbsolute(outfile_path, .{})
+        else
+            try std.fs.cwd().createFile(outfile_path, .{});
+        defer file.close();
 
-    const writer = std.io.Writer.Allocating.fromArrayList(allocator, &output_buffer);
-    var builder = try builder_mod.Builder.init(allocator, writer.writer, .{});
-    defer builder.deinit();
+        // Create writer
+        var file_writer = file.writer(&buffer);
+        const file_writer_interface = &file_writer.interface;
 
-    builder.buildParser(grammar) catch |err| {
-        std.log.err("Build error: {}", .{err});
-        std.process.exit(6);
-    };
+        // Create builder
+        var builder = try builder_mod.Builder.init(allocator, file_writer_interface, .{});
+        defer builder.deinit();
 
-    // Write output
-    const generated_code = output_buffer.items;
-    out_writer.interface.writeAll(generated_code) catch |err| {
-        std.log.err("Error writing output: {}", .{err});
-        std.process.exit(7);
-    };
+        builder.buildParser(grammar) catch |err| {
+            std.log.err("Build error: {}", .{err});
+            std.process.exit(6);
+        };
+
+        try file_writer_interface.flush();
+    } else {
+        // Use stdout
+        var stdout_buffer: [4096]u8 = undefined;
+        var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+        const stdout = &stdout_writer.interface;
+
+        var builder = try builder_mod.Builder.init(allocator, stdout, .{});
+        defer builder.deinit();
+
+        builder.buildParser(grammar) catch |err| {
+            std.log.err("Build error: {}", .{err});
+            std.process.exit(6);
+        };
+
+        try stdout.flush();
+    }
 }
