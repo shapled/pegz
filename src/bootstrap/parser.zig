@@ -246,7 +246,6 @@ pub const Parser = struct {
             .pos = self.tok.pos,
             .name = undefined,
             .display_name = undefined,
-            .expression = undefined,
             .expr = undefined,
             .visited = false,
             .nullable = false,
@@ -290,10 +289,7 @@ pub const Parser = struct {
             self.errs.add(self.tok.pos, "missing expression", .{});
             return null;
         }
-        const expr_ptr = try self.allocator.create(ast.Expression);
-        expr_ptr.* = expr.?;
-        rle.expr = expr_ptr;
-        rle.expression = expr.?;
+        rle.expr = expr.?;
 
         if (!self.expect(&[_]Tid{ .eol, .eof, .semicolon })) {
             self.errs.add(self.tok.pos, "rule not terminated", .{});
@@ -306,15 +302,13 @@ pub const Parser = struct {
         defer self.out("expression");
         self.in("expression");
 
-        var alternatives = try std.ArrayList(*ast.Expression).initCapacity(self.allocator, 0);
+        var alternatives = try std.ArrayList(ast.Expression).initCapacity(self.allocator, 0);
         defer alternatives.deinit(self.allocator);
 
         while (true) {
             const expr = try self.actionExpr();
             if (expr) |e| {
-                const e_ptr = try self.allocator.create(ast.Expression);
-                e_ptr.* = e;
-                try alternatives.append(self.allocator, e_ptr);
+                try alternatives.append(self.allocator, e);
             }
 
             if (self.tok.id != .slash) {
@@ -324,14 +318,15 @@ pub const Parser = struct {
                         return null;
                     },
                     1 => {
-                        return alternatives.items[0].*;
+                        return alternatives.items[0];
                     },
                     else => {
                         const choice = try self.allocator.create(ast.ChoiceExpr);
                         choice.* = ast.ChoiceExpr{
                             .pos = alternatives.items[0].pos(),
-                            .alternatives = try std.ArrayList(*ast.Expression).initCapacity(self.allocator, 0),
+                            .alternatives = try std.ArrayList(ast.Expression).initCapacity(self.allocator, 0),
                             .nullable = false,
+                            .allocator = self.allocator,
                         };
 
                         for (alternatives.items) |alt| {
@@ -356,10 +351,9 @@ pub const Parser = struct {
             return null;
         }
 
-        var code_block: ?*ast.CodeBlock = null;
+        var code_block: ?ast.CodeBlock = null;
         if (self.tok.id == .code) {
-            code_block = try self.allocator.create(ast.CodeBlock);
-            code_block.?.* = ast.CodeBlock{
+            code_block = ast.CodeBlock{
                 .pos = self.tok.pos,
                 .value = try self.allocator.dupe(u8, self.tok.lit),
             };
@@ -368,14 +362,13 @@ pub const Parser = struct {
 
         if (code_block) |code| {
             const action = try self.allocator.create(ast.ActionExpr);
-            const expr_ptr = try self.allocator.create(ast.Expression);
-            expr_ptr.* = expr.?;
             action.* = ast.ActionExpr{
                 .pos = expr.?.pos(),
-                .expr = expr_ptr,
+                .expr = expr.?,
                 .code = code,
                 .func_ix = 0,
                 .nullable = false,
+                .allocator = self.allocator,
             };
             return ast.Expression{ .action = action };
         }
@@ -387,15 +380,13 @@ pub const Parser = struct {
         defer self.out("seqExpr");
         self.in("seqExpr");
 
-        var exprs = try std.ArrayList(*ast.Expression).initCapacity(self.allocator, 0);
+        var exprs = try std.ArrayList(ast.Expression).initCapacity(self.allocator, 0);
         defer exprs.deinit(self.allocator);
 
         while (true) {
             const expr = try self.labeledExpr();
             if (expr) |e| {
-                const e_ptr = try self.allocator.create(ast.Expression);
-                e_ptr.* = e;
-                try exprs.append(self.allocator, e_ptr);
+                try exprs.append(self.allocator, e);
             } else {
                 switch (exprs.items.len) {
                     0 => {
@@ -403,14 +394,15 @@ pub const Parser = struct {
                         return null;
                     },
                     1 => {
-                        return exprs.items[0].*;
+                        return exprs.items[0];
                     },
                     else => {
                         const seq = try self.allocator.create(ast.SeqExpr);
                         seq.* = ast.SeqExpr{
                             .pos = exprs.items[0].pos(),
-                            .exprs = try std.ArrayList(*ast.Expression).initCapacity(self.allocator, 0),
+                            .exprs = try std.ArrayList(ast.Expression).initCapacity(self.allocator, 0),
                             .nullable = false,
+                            .allocator = self.allocator,
                         };
 
                         for (exprs.items) |e| {
@@ -452,12 +444,10 @@ pub const Parser = struct {
                 }
 
                 const labeled = try self.allocator.create(ast.LabeledExpr);
-                const expr_ptr = try self.allocator.create(ast.Expression);
-                expr_ptr.* = expr.?;
                 labeled.* = ast.LabeledExpr{
                     .pos = identifier.pos,
-                    .label = identifier,
-                    .expr = expr_ptr,
+                    .label = identifier.*,
+                    .expr = expr.?,
                 };
                 return ast.Expression{ .labeled = labeled };
             }
@@ -489,21 +479,19 @@ pub const Parser = struct {
             switch (pt) {
                 .ampersand => {
                     const and_expr = try self.allocator.create(ast.AndExpr);
-                    const expr_ptr = try self.allocator.create(ast.Expression);
-                    expr_ptr.* = expr.?;
                     and_expr.* = ast.AndExpr{
                         .pos = expr.?.pos(),
-                        .expr = expr_ptr,
+                        .expr = expr.?,
+                        .allocator = self.allocator,
                     };
                     return ast.Expression{ .and_expr = and_expr };
                 },
                 .exclamation => {
                     const not_expr = try self.allocator.create(ast.NotExpr);
-                    const expr_ptr = try self.allocator.create(ast.Expression);
-                    expr_ptr.* = expr.?;
                     not_expr.* = ast.NotExpr{
                         .pos = expr.?.pos(),
-                        .expr = expr_ptr,
+                        .expr = expr.?,
+                        .allocator = self.allocator,
                     };
                     return ast.Expression{ .not = not_expr };
                 },
@@ -529,33 +517,30 @@ pub const Parser = struct {
         switch (self.tok.id) {
             .question => {
                 const zero_or_one = try self.allocator.create(ast.ZeroOrOneExpr);
-                const expr_ptr = try self.allocator.create(ast.Expression);
-                expr_ptr.* = expr.?;
                 zero_or_one.* = ast.ZeroOrOneExpr{
                     .pos = expr.?.pos(),
-                    .expr = expr_ptr,
+                    .expr = expr.?,
+                    .allocator = self.allocator,
                 };
                 self.read();
                 return ast.Expression{ .zero_or_one = zero_or_one };
             },
             .star => {
                 const zero_or_more = try self.allocator.create(ast.ZeroOrMoreExpr);
-                const expr_ptr = try self.allocator.create(ast.Expression);
-                expr_ptr.* = expr.?;
                 zero_or_more.* = ast.ZeroOrMoreExpr{
                     .pos = expr.?.pos(),
-                    .expr = expr_ptr,
+                    .expr = expr.?,
+                    .allocator = self.allocator,
                 };
                 self.read();
                 return ast.Expression{ .zero_or_more = zero_or_more };
             },
             .plus => {
                 const one_or_more = try self.allocator.create(ast.OneOrMoreExpr);
-                const expr_ptr = try self.allocator.create(ast.Expression);
-                expr_ptr.* = expr.?;
                 one_or_more.* = ast.OneOrMoreExpr{
                     .pos = expr.?.pos(),
-                    .expr = expr_ptr,
+                    .expr = expr.?,
+                    .allocator = self.allocator,
                 };
                 self.read();
                 return ast.Expression{ .one_or_more = one_or_more };
@@ -663,6 +648,7 @@ pub const Parser = struct {
             .pos = self.tok.pos,
             .name = identifier.*,
             .nullable = false,
+            .allocator = self.allocator,
         };
 
         self.read();

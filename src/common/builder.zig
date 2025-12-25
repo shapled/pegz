@@ -77,9 +77,9 @@ pub const Builder = struct {
 
     // State
     rule_name: []const u8 = "",
-    rule_index: usize = 0,       // Current rule index
-    expr_index: usize = 0,       // Index for RuleRefExpr variables within current rule
-    block_index: usize = 0,      // Index for block labels (Seq/Choice)
+    rule_index: usize = 0, // Current rule index
+    expr_index: usize = 0, // Index for RuleRefExpr variables within current rule
+    block_index: usize = 0, // Index for block labels (Seq/Choice)
     args_stack: std.ArrayList(std.ArrayList([]const u8)),
     range_table: bool = false,
 
@@ -155,91 +155,68 @@ pub const Builder = struct {
         try self.writer.writeAll("// Grammar data structure\n");
         try self.writer.writeAll("pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {\n");
 
-        try self.writer.writeAll("    const grammar = try allocator.create(ast.Grammar);\n");
-        try self.writer.writeAll("    grammar.* = ast.Grammar{\n");
-        try self.writer.print("        .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n", .{g.pos.line, g.pos.column, g.pos.offset});
-        try self.writer.writeAll("        .init = null,\n");
-        try self.writer.print("        .rules = std.ArrayList(*ast.Rule).initCapacity(allocator, {}) catch unreachable,\n", .{g.rules.items.len});
-        try self.writer.writeAll("    };\n\n");
+        // Generate all rule creation code inline, then pass to Grammar.create
+        try writeWithIndent(self.writer, 1, "return try ast.Grammar.create(\n");
+        try writeWithIndent(self.writer, 2, "allocator,\n");
+        try printWithIndent(self.writer, 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ g.pos.line, g.pos.column, g.pos.offset });
+        try writeWithIndent(self.writer, 2, "&.{\n");
 
-        // Phase 1: Generate rule structures and expressions
-        // rule_ref variables will be declared inline in writeExprForAST
         for (g.rules.items, 0..) |rule, i| {
             self.rule_index = i;
-
-            // Reset expr_index for generating expressions
             self.expr_index = 0;
 
-            // Generate the expression AST first with error handling
-            const expr_result = self.writeExprForAST(rule.expr) catch |err| {
-                std.debug.print("ERROR generating expr for rule '{s}': {}\n", .{rule.name.value, err});
+            // Generate the expression AST code
+            const expr_code = self.writeInlineExprWithIndent(rule.expr, 4) catch |err| {
+                std.debug.print("ERROR generating expr for rule '{s}': {}\n", .{ rule.name.value, err });
                 continue;
             };
+            defer self.allocator.free(expr_code);
 
-            // Now generate the rule
-            try self.writer.writeAll("    {\n");
-            try self.writer.writeAll("        const r = try allocator.create(ast.Rule);\n");
-            try self.writer.writeAll("        r.* = ast.Rule{\n");
-
-            // Position
-            const pos = rule.pos;
-            try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n", .{pos.line, pos.column, pos.offset});
-
-            // Name
+            // Generate name identifier inline
             const escaped_name = try escapeZigString(rule.name.value, self.allocator);
             defer self.allocator.free(escaped_name);
-            try self.writer.print("            .name = ast.Identifier{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n",
-                .{rule.name.pos.line, rule.name.pos.column, rule.name.pos.offset, escaped_name});
 
-            // Display name
+            // Generate display name inline
+            const escaped_display = try escapeZigString(rule.display_name.value, self.allocator);
+            defer self.allocator.free(escaped_display);
+
+            // Generate inline Rule.create call
+            try writeWithIndent(self.writer, 3, "try ast.Rule.create(\n");
+            try writeWithIndent(self.writer, 4, "allocator,\n");
+            try printWithIndent(self.writer, 4, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ rule.pos.line, rule.pos.column, rule.pos.offset });
+            try writeWithIndent(self.writer, 4, "ast.Identifier.init(\n");
+            try printWithIndent(self.writer, 5, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ rule.name.pos.line, rule.name.pos.column, rule.name.pos.offset });
+            try printWithIndent(self.writer, 5, "\"{s}\",\n", .{escaped_name});
+            try writeWithIndent(self.writer, 4, "),\n");
+            try writeWithIndent(self.writer, 4, "ast.StringLit.init(\n");
             if (rule.display_name.value.len > 0) {
-                const escaped_display = try escapeZigString(rule.display_name.value, self.allocator);
-                defer self.allocator.free(escaped_display);
-                try self.writer.print("            .display_name = ast.StringLit{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n",
-                    .{rule.display_name.pos.line, rule.display_name.pos.column, rule.display_name.pos.offset, escaped_display});
+                try printWithIndent(self.writer, 5, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ rule.display_name.pos.line, rule.display_name.pos.column, rule.display_name.pos.offset });
             } else {
-                try self.writer.writeAll("            .display_name = ast.StringLit{\n");
-                try self.writer.writeAll("                .pos = ast.Pos{ .line = 0, .column = 0, .offset = 0 },\n");
-                try self.writer.writeAll("                .value = \"\",\n");
-                try self.writer.writeAll("            },\n");
+                try writeWithIndent(self.writer, 5, ".{ .line = 0, .column = 0, .offset = 0 },\n");
             }
-
-            // Expression value and pointer
-            // For now, set .expression to undefined and use .expr pointer
-            try self.writer.writeAll("            .expression = undefined,\n");
-            try self.writer.print("            .expr = {s},\n", .{expr_result.name});
-            // TODO: manage memory properly
-            _ = expr_result.is_rule_ref;
-
-            // Other fields
-            try self.writer.writeAll("            .visited = false,\n");
-            try self.writer.writeAll("            .nullable = false,\n");
-            try self.writer.writeAll("            .left_recursive = false,\n");
-            try self.writer.writeAll("            .leader = false,\n");
-
-            try self.writer.writeAll("        };\n");
-            try self.writer.writeAll("        try grammar.rules.append(allocator, r);\n");
-            try self.writer.writeAll("    }\n");
+            try printWithIndent(self.writer, 5, "\"{s}\",\n", .{escaped_display});
+            try writeWithIndent(self.writer, 4, "),\n");
+            try printWithIndent(self.writer, 0, "{s},\n", .{expr_code});
+            try writeWithIndent(self.writer, 3, "),\n");
         }
 
-        try self.writer.writeAll("    return grammar;\n");
+        try writeWithIndent(self.writer, 1, "},\n");
+        try self.writer.writeAll(");\n");
         try self.writer.writeAll("}\n\n");
     }
 
     /// Write expression value (inline, not pointer)
-    fn writeExprValue(self: *Builder, expr: *ast.Expression) !void {
+    fn writeExprValue(self: *Builder, expr: ast.Expression) !void {
         try self.writer.writeAll("ast.Expression{");
-        switch (expr.*) {
+        switch (expr) {
             .seq => |seq| {
                 try self.writer.writeAll(".seq = ast.SeqExpr{");
-                try self.writer.print(" .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, ",
-                    .{seq.pos.line, seq.pos.column, seq.pos.offset});
+                try self.writer.print(" .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, ", .{ seq.pos.line, seq.pos.column, seq.pos.offset });
                 try self.writer.writeAll(".exprs = undefined, .nullable = false }");
             },
             .choice => |choice| {
                 try self.writer.writeAll(".choice = ast.ChoiceExpr{");
-                try self.writer.print(" .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, ",
-                    .{choice.pos.line, choice.pos.column, choice.pos.offset});
+                try self.writer.print(" .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, ", .{ choice.pos.line, choice.pos.column, choice.pos.offset });
                 try self.writer.writeAll(".alternatives = undefined, .nullable = false }");
             },
             else => {
@@ -249,291 +226,286 @@ pub const Builder = struct {
         try self.writer.writeAll("}");
     }
 
-    /// Generate expression AST data structure (for interpreter mode)
-    fn writeExprForAST(self: *Builder, expr: *ast.Expression) !struct { name: []const u8, is_rule_ref: bool } {
-        // Handle rule_ref - generate declaration and return wrapper name
-        if (expr.* == .rule_ref) {
-            self.expr_index += 1;
-            const rule_ref = expr.rule_ref;
-
-            // Generate rule_ref declaration
-            const escaped_name = try escapeZigString(rule_ref.name.value, self.allocator);
-            defer self.allocator.free(escaped_name);
-
-            try self.writer.print("    const rule_ref_{}_{} = try allocator.create(ast.RuleRefExpr);\n", .{self.rule_index, self.expr_index});
-            try self.writer.print("    rule_ref_{}_{}.* = .{{\n", .{self.rule_index, self.expr_index});
-            try self.writer.print("        .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                .{ rule_ref.pos.line, rule_ref.pos.column, rule_ref.pos.offset });
-            try self.writer.print("        .name = .{{\n            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n            .value = \"{s}\",\n        }},\n",
-                .{rule_ref.name.pos.line, rule_ref.name.pos.column, rule_ref.name.pos.offset, escaped_name});
-            try self.writer.writeAll("        .nullable = false,\n");
-            try self.writer.print("    }};\n", .{});
-
-            // Generate Expression wrapper
-            const wrapper_name = try std.fmt.allocPrint(self.allocator, "rule_ref_expr_{d}_{d}",
-                .{self.rule_index, self.expr_index});
-            try self.writer.print("    const {s} = try allocator.create(ast.Expression);\n", .{wrapper_name});
-            try self.writer.print("    {s}.* = .{{ .rule_ref = rule_ref_{}_{} }};\n\n", .{wrapper_name, self.rule_index, self.expr_index});
-
-            return .{ .name = wrapper_name, .is_rule_ref = true };
+    /// Helper to write indentation spaces
+    fn writeIndent(writer: anytype, n: usize) !void {
+        for (0..n) |_| {
+            try writer.writeAll("    ");
         }
+    }
 
-        // For other expression types, generate the structure
-        // Increment expr_index for this expression
-        self.expr_index += 1;
-        const current_expr_index = self.expr_index;
+    /// Helper to write content with indentation
+    fn writeWithIndent(writer: anytype, indent: usize, comptime content: []const u8) !void {
+        try writeIndent(writer, indent);
+        try writer.writeAll(content);
+    }
 
-        // Generate unique variable name for this expression
-        const var_name = try std.fmt.allocPrint(self.allocator, "expr_{d}_{d}", .{self.rule_index, current_expr_index});
-        errdefer self.allocator.free(var_name);
+    /// Helper to print with indentation
+    fn printWithIndent(writer: anytype, indent: usize, comptime fmt: []const u8, args: anytype) !void {
+        try writeIndent(writer, indent);
+        try writer.print(fmt, args);
+    }
 
-        try self.writer.print("    const {s} = try allocator.create(ast.Expression);\n", .{var_name});
-        try self.writer.writeAll("    {\n");
+    /// Write inline expression code with indent level (number of 4-space indents)
+    fn writeInlineExprWithIndent(self: *Builder, expr: ast.Expression, indent_level: usize) BuilderError![]const u8 {
+        var buffer = std.ArrayList(u8).initCapacity(self.allocator, 1024) catch unreachable;
+        errdefer buffer.deinit(self.allocator);
 
-        switch (expr.*) {
+        const writer = buffer.writer(self.allocator);
+
+        switch (expr) {
             .seq => |seq| {
-                try self.writer.print("        const seq_{} = try allocator.create(ast.SeqExpr);\n", .{current_expr_index});
-                try self.writer.print("        seq_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{seq.pos.line, seq.pos.column, seq.pos.offset});
-                try self.writer.writeAll("            .exprs = std.ArrayList(*ast.Expression).initCapacity(allocator, ");
-                try self.writer.print("{}) catch unreachable,\n", .{seq.exprs.items.len});
-                try self.writer.writeAll("            .nullable = false,\n");
-                try self.writer.writeAll("        };\n");
-
-                // Now generate sub-expressions and add them
-                for (seq.exprs.items) |sub_expr| {
-                    const sub_var = try self.writeExprForAST(sub_expr);
-                    try self.writer.print("        try seq_{}.exprs.append(allocator, {s});\n", .{current_expr_index, sub_var.name});
-                    _ = sub_var.is_rule_ref;
+                // First, generate all sub-expressions with increased indent
+                var sub_expr_codes = std.ArrayList([]const u8).initCapacity(self.allocator, seq.exprs.items.len) catch unreachable;
+                defer {
+                    for (sub_expr_codes.items) |code| {
+                        self.allocator.free(code);
+                    }
+                    sub_expr_codes.deinit(self.allocator);
                 }
 
-                try self.writer.print("        {s}.* = .{{ .seq = seq_{} }};\n", .{var_name, current_expr_index});
+                for (seq.exprs.items) |sub_expr| {
+                    const sub_code = try self.writeInlineExprWithIndent(sub_expr, indent_level + 3);
+                    try sub_expr_codes.append(self.allocator, sub_code);
+                }
+                
+                // Generate inline SeqExpr code with proper indentation
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.SeqExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ seq.pos.line, seq.pos.column, seq.pos.offset });
+
+                if (sub_expr_codes.items.len == 0) {
+                    try writeWithIndent(writer, indent_level + 2, "&.{},\n");
+                    try writeWithIndent(writer, indent_level, "),\n)");
+                } else {
+                    try writeWithIndent(writer, indent_level + 2, "&.{\n");
+                    for (sub_expr_codes.items) |code| {
+                        try writer.print("{s},\n", .{code});
+                    }
+                    try writeWithIndent(writer, indent_level + 2, "},\n");
+                    try writeWithIndent(writer, indent_level, "),\n)");
+                }
             },
             .choice => |choice| {
-                try self.writer.print("        const choice_{} = try allocator.create(ast.ChoiceExpr);\n", .{current_expr_index});
-                try self.writer.print("        choice_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{choice.pos.line, choice.pos.column, choice.pos.offset});
-                try self.writer.writeAll("            .alternatives = std.ArrayList(*ast.Expression).initCapacity(allocator, ");
-                try self.writer.print("{}) catch unreachable,\n", .{choice.alternatives.items.len});
-                try self.writer.writeAll("            .nullable = false,\n");
-                try self.writer.writeAll("        };\n");
-
-                // Generate sub-expressions
-                for (choice.alternatives.items) |alt| {
-                    const alt_var = try self.writeExprForAST(alt);
-                    try self.writer.print("        try choice_{}.alternatives.append(allocator, {s});\n", .{current_expr_index, alt_var.name});
-                    _ = alt_var.is_rule_ref;
+                // First, generate all sub-expressions with increased indent
+                var sub_expr_codes = std.ArrayList([]const u8).initCapacity(self.allocator, choice.alternatives.items.len) catch unreachable;
+                defer {
+                    for (sub_expr_codes.items) |code| {
+                        self.allocator.free(code);
+                    }
+                    sub_expr_codes.deinit(self.allocator);
                 }
 
-                try self.writer.print("        {s}.* = .{{ .choice = choice_{} }};\n", .{var_name, current_expr_index});
+                for (choice.alternatives.items) |alt| {
+                    const alt_code = try self.writeInlineExprWithIndent(alt, indent_level + 2);
+                    try sub_expr_codes.append(self.allocator, alt_code);
+                }
+
+                // Generate inline ChoiceExpr code with proper indentation
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.ChoiceExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ choice.pos.line, choice.pos.column, choice.pos.offset });
+
+                if (sub_expr_codes.items.len == 0) {
+                    try writeWithIndent(writer, indent_level + 1, "&.{},\n");
+                    try writeWithIndent(writer, indent_level, "),\n)");
+                } else {
+                    try writeWithIndent(writer, indent_level + 1, "&.{\n");
+                    for (sub_expr_codes.items) |code| {
+                        try writer.print("{s},\n", .{code});
+                    }
+                    try writeWithIndent(writer, indent_level + 1, "},\n");
+                    try writeWithIndent(writer, indent_level, "),\n)");
+                }
             },
             .action => |act| {
-                // Create and initialize code block first
+                // Generate sub-expression for action with increased indent
+                const sub_code = try self.writeInlineExprWithIndent(act.expr, indent_level + 2);
+
+                // Create and inline code block
                 const escaped_code = try escapeZigString(act.code.value, self.allocator);
                 defer self.allocator.free(escaped_code);
-                try self.writer.print("        const code_{} = try allocator.create(ast.CodeBlock);\n", .{current_expr_index});
-                try self.writer.print("        code_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{act.code.pos.line, act.code.pos.column, act.code.pos.offset});
-                try self.writer.print("            .value = \"{s}\",\n", .{escaped_code});
-                try self.writer.writeAll("        };\n");
 
-                // Now create action expression
-                try self.writer.print("        const action_{} = try allocator.create(ast.ActionExpr);\n", .{current_expr_index});
-                try self.writer.print("        action_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{act.pos.line, act.pos.column, act.pos.offset});
-                try self.writer.writeAll("            .expr = undefined,\n");
-                try self.writer.print("            .code = code_{},\n", .{current_expr_index});
-                try self.writer.writeAll("            .func_ix = 0,\n");
-                try self.writer.writeAll("            .nullable = false,\n");
-                try self.writer.writeAll("        };\n");
-
-                // Generate sub-expression for action
-                const sub_var = try self.writeExprForAST(act.expr);
-                try self.writer.print("        action_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
-                _ = sub_var.is_rule_ref;
-
-                try self.writer.print("        {s}.* = .{{ .action = action_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.ActionExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ act.pos.line, act.pos.column, act.pos.offset });
+                try writer.print("{s},\n", .{sub_code});
+                try writeWithIndent(writer, indent_level + 1, "ast.CodeBlock.init(\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ act.code.pos.line, act.code.pos.column, act.code.pos.offset });
+                try writeWithIndent(writer, indent_level + 2, "\"");
+                try writer.writeAll(escaped_code);
+                try writer.writeAll("\",\n");
+                try writeWithIndent(writer, indent_level + 1, "),\n");
+                try writeWithIndent(writer, indent_level + 1, "0,\n");
+                try writeWithIndent(writer, indent_level + 1, "),\n)");
             },
             .labeled => |labeled| {
-                // Create and initialize label identifier first
+                // Generate sub-expression with indent_level + 2 (labeled body is nested deeper)
+                const sub_code = try self.writeInlineExprWithIndent(labeled.expr, indent_level + 2);
+
+                // Create and inline label identifier
                 const escaped_label = try escapeZigString(labeled.label.value, self.allocator);
                 defer self.allocator.free(escaped_label);
-                try self.writer.print("        const label_{} = try allocator.create(ast.Identifier);\n", .{current_expr_index});
-                try self.writer.print("        label_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{labeled.label.pos.line, labeled.label.pos.column, labeled.label.pos.offset});
-                try self.writer.print("            .value = \"{s}\",\n", .{escaped_label});
-                try self.writer.writeAll("        };\n");
 
-                // Now create labeled expression
-                try self.writer.print("        const labeled_{} = try allocator.create(ast.LabeledExpr);\n", .{current_expr_index});
-                try self.writer.print("        labeled_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{labeled.pos.line, labeled.pos.column, labeled.pos.offset});
-                try self.writer.print("            .label = label_{},\n", .{current_expr_index});
-                try self.writer.writeAll("            .expr = undefined,\n");
-                try self.writer.writeAll("        };\n");
-
-                // Generate sub-expression
-                const sub_var = try self.writeExprForAST(labeled.expr);
-                try self.writer.print("        labeled_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
-                _ = sub_var.is_rule_ref;
-
-                try self.writer.print("        {s}.* = .{{ .labeled = labeled_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.LabeledExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ labeled.pos.line, labeled.pos.column, labeled.pos.offset });
+                try writeWithIndent(writer, indent_level + 1, "ast.Identifier.init(\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ labeled.label.pos.line, labeled.label.pos.column, labeled.label.pos.offset });
+                try writeWithIndent(writer, indent_level + 2, "\"");
+                try writer.writeAll(escaped_label);
+                try writer.writeAll("\",\n");
+                try writeWithIndent(writer, indent_level + 1, "),\n");
+                try writer.print("{s},\n", .{sub_code});
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .and_expr => |and_expr| {
-                try self.writer.print("        const and_expr_{} = try allocator.create(ast.AndExpr);\n", .{current_expr_index});
-                try self.writer.print("        and_expr_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{and_expr.pos.line, and_expr.pos.column, and_expr.pos.offset});
-                try self.writer.writeAll("            .expr = undefined,\n");
-                try self.writer.writeAll("        };\n");
+                const sub_code = try self.writeInlineExprWithIndent(and_expr.expr, indent_level + 1);
 
-                const sub_var = try self.writeExprForAST(and_expr.expr);
-                try self.writer.print("        and_expr_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
-                _ = sub_var.is_rule_ref;
-
-                try self.writer.print("        {s}.* = .{{ .and_expr = and_expr_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.AndExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ and_expr.pos.line, and_expr.pos.column, and_expr.pos.offset });
+                try writer.print("{s},\n", .{sub_code});
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .not => |not_expr| {
-                try self.writer.print("        const not_expr_{} = try allocator.create(ast.NotExpr);\n", .{current_expr_index});
-                try self.writer.print("        not_expr_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{not_expr.pos.line, not_expr.pos.column, not_expr.pos.offset});
-                try self.writer.writeAll("            .expr = undefined,\n");
-                try self.writer.writeAll("        };\n");
+                const sub_code = try self.writeInlineExprWithIndent(not_expr.expr, indent_level + 1);
 
-                const sub_var = try self.writeExprForAST(not_expr.expr);
-                try self.writer.print("        not_expr_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
-                _ = sub_var.is_rule_ref;
-
-                try self.writer.print("        {s}.* = .{{ .not = not_expr_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.NotExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ not_expr.pos.line, not_expr.pos.column, not_expr.pos.offset });
+                try writer.print("{s},\n", .{sub_code});
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .zero_or_one => |z| {
-                try self.writer.print("        const zero_or_one_{} = try allocator.create(ast.ZeroOrOneExpr);\n", .{current_expr_index});
-                try self.writer.print("        zero_or_one_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{z.pos.line, z.pos.column, z.pos.offset});
-                try self.writer.writeAll("            .expr = undefined,\n");
-                try self.writer.writeAll("        };\n");
+                const sub_code = try self.writeInlineExprWithIndent(z.expr, indent_level + 1);
 
-                const sub_var = try self.writeExprForAST(z.expr);
-                try self.writer.print("        zero_or_one_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
-                _ = sub_var.is_rule_ref;
-
-                try self.writer.print("        {s}.* = .{{ .zero_or_one = zero_or_one_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.ZeroOrOneExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ z.pos.line, z.pos.column, z.pos.offset });
+                try writer.print("{s},\n", .{sub_code});
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .zero_or_more => |z| {
-                try self.writer.print("        const zero_or_more_{} = try allocator.create(ast.ZeroOrMoreExpr);\n", .{current_expr_index});
-                try self.writer.print("        zero_or_more_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{z.pos.line, z.pos.column, z.pos.offset});
-                try self.writer.writeAll("            .expr = undefined,\n");
-                try self.writer.writeAll("        };\n");
+                const sub_code = try self.writeInlineExprWithIndent(z.expr, indent_level + 1);
 
-                const sub_var = try self.writeExprForAST(z.expr);
-                try self.writer.print("        zero_or_more_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
-                _ = sub_var.is_rule_ref;
-
-                try self.writer.print("        {s}.* = .{{ .zero_or_more = zero_or_more_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.ZeroOrMoreExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ z.pos.line, z.pos.column, z.pos.offset });
+                try writer.print("{s},\n", .{sub_code});
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .one_or_more => |o| {
-                try self.writer.print("        const one_or_more_{} = try allocator.create(ast.OneOrMoreExpr);\n", .{current_expr_index});
-                try self.writer.print("        one_or_more_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{o.pos.line, o.pos.column, o.pos.offset});
-                try self.writer.writeAll("            .expr = undefined,\n");
-                try self.writer.writeAll("        };\n");
+                const sub_code = try self.writeInlineExprWithIndent(o.expr, indent_level + 1);
 
-                const sub_var = try self.writeExprForAST(o.expr);
-                try self.writer.print("        one_or_more_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
-                _ = sub_var.is_rule_ref;
-
-                try self.writer.print("        {s}.* = .{{ .one_or_more = one_or_more_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.OneOrMoreExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ o.pos.line, o.pos.column, o.pos.offset });
+                try writer.print("{s},\n", .{sub_code});
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .lit_matcher => |lit| {
                 const escaped_val = try escapeZigString(lit.value, self.allocator);
                 defer self.allocator.free(escaped_val);
 
-                try self.writer.print("        const lit_{} = try allocator.create(ast.LitMatcher);\n", .{current_expr_index});
-                try self.writer.print("        lit_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{lit.pos.line, lit.pos.column, lit.pos.offset});
-                try self.writer.print("            .value = \"{s}\",\n", .{escaped_val});
-                try self.writer.print("            .ignore_case = {},\n", .{lit.ignore_case});
-                try self.writer.writeAll("        };\n");
-
-                try self.writer.print("        {s}.* = .{{ .lit_matcher = lit_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.LitMatcher.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ lit.pos.line, lit.pos.column, lit.pos.offset });
+                try writeWithIndent(writer, indent_level + 1, "\"");
+                try writer.writeAll(escaped_val);
+                try writer.writeAll("\",\n");
+                try printWithIndent(writer, indent_level + 1, "{},\n", .{lit.ignore_case});
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .any_matcher => |any| {
-                try self.writer.print("        const any_{} = try allocator.create(ast.AnyMatcher);\n", .{current_expr_index});
-                try self.writer.print("        any_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{any.pos.line, any.pos.column, any.pos.offset});
-                try self.writer.print("            .value = \"{s}\",\n", .{any.value});
-                try self.writer.writeAll("        };\n");
-
-                try self.writer.print("        {s}.* = .{{ .any_matcher = any_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.AnyMatcher.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ any.pos.line, any.pos.column, any.pos.offset });
+                try writeWithIndent(writer, indent_level + 1, "\"");
+                try writer.writeAll(any.value);
+                try writer.writeAll("\",\n");
+                try writeWithIndent(writer, indent_level, "),\n)");
             },
             .char_class_matcher => |class| {
-                try self.writer.print("        const char_class_{} = try allocator.create(ast.CharClassMatcher);\n", .{current_expr_index});
-                try self.writer.print("        char_class_{}.* = .{{\n", .{current_expr_index});
-                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{class.pos.line, class.pos.column, class.pos.offset});
-
-                // value and ignore_case fields
                 const escaped_value = try escapeZigString(class.value, self.allocator);
                 defer self.allocator.free(escaped_value);
-                try self.writer.print("            .value = \"{s}\",\n", .{escaped_value});
-                try self.writer.print("            .ignore_case = {},\n", .{class.ignore_case});
-                try self.writer.print("            .inverted = {},\n", .{class.inverted});
 
-                try self.writer.writeAll("            .ranges = std.ArrayList(struct { u8, u8 }).initCapacity(allocator, ");
-                try self.writer.print("{}) catch unreachable,\n", .{class.ranges.items.len});
-                try self.writer.writeAll("            .chars = std.ArrayList(u8).initCapacity(allocator, ");
-                try self.writer.print("{}) catch unreachable,\n", .{class.chars.items.len});
-                try self.writer.writeAll("            .unicode_classes = std.ArrayList([]const u8).initCapacity(allocator, ");
-                try self.writer.print("{}) catch unreachable,\n", .{class.unicode_classes.items.len});
-                try self.writer.writeAll("        };\n");
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.CharClassMatcher.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ class.pos.line, class.pos.column, class.pos.offset });
+                try writeWithIndent(writer, indent_level + 1, "\"");
+                try writer.writeAll(escaped_value);
+                try writer.writeAll("\",\n");
+                try printWithIndent(writer, indent_level + 1, "{},\n", .{class.ignore_case});
+                try printWithIndent(writer, indent_level + 1, "{},\n", .{class.inverted});
 
-                // Add ranges
-                for (class.ranges.items) |r| {
-                    // Output: try char_class_N.ranges.append(allocator, .{ a, b });
-                    try self.writer.print("        try char_class_{}.ranges.append(allocator, .{{ {}, {} }});\n",
-                        .{current_expr_index, r[0], r[1]});
+                // chars array
+                try writeWithIndent(writer, indent_level + 1, "&.{");
+                for (class.chars.items, 0..) |c, i| {
+                    try writer.print(" {}", .{c});
+                    if (i < class.chars.items.len - 1) {
+                        try writer.writeAll(",");
+                    }
                 }
+                try writer.writeAll("},\n");
 
-                // Add chars
-                for (class.chars.items) |c| {
-                    try self.writer.print("        try char_class_{}.chars.append(allocator, {});\n",
-                        .{current_expr_index, c});
+                // ranges array
+                try writeWithIndent(writer, indent_level + 1, "&.{");
+                for (class.ranges.items, 0..) |r, i| {
+                    try writer.print(" .{{ {}, {} }}", .{ r[0], r[1] });
+                    if (i < class.ranges.items.len - 1) {
+                        try writer.writeAll(",");
+                    }
                 }
+                try writer.writeAll("},\n");
 
-                // Add unicode_classes
-                for (class.unicode_classes.items) |uc| {
+                // unicode_classes array
+                try writeWithIndent(writer, indent_level + 1, "&.{");
+                for (class.unicode_classes.items, 0..) |uc, i| {
                     const escaped = try escapeZigString(uc, self.allocator);
                     defer self.allocator.free(escaped);
-                    try self.writer.print("        try char_class_{}.unicode_classes.append(allocator, \"{s}\");\n",
-                        .{current_expr_index, escaped});
+                    try writer.writeAll(" \"");
+                    try writer.writeAll(escaped);
+                    try writer.writeAll("\"");
+                    if (i < class.unicode_classes.items.len - 1) {
+                        try writer.writeAll(",");
+                    }
                 }
+                try writer.writeAll("},\n");
+                try writeWithIndent(writer, indent_level + 1, "),\n)");
+            },
+            .rule_ref => |rule_ref| {
+                const escaped_name = try escapeZigString(rule_ref.name.value, self.allocator);
+                defer self.allocator.free(escaped_name);
 
-                try self.writer.print("        {s}.* = .{{ .char_class_matcher = char_class_{} }};\n", .{var_name, current_expr_index});
+                try writeWithIndent(writer, indent_level, "ast.Expression.init(\n");
+                try writeWithIndent(writer, indent_level + 1, "try ast.RuleRefExpr.create(\n");
+                try writeWithIndent(writer, indent_level + 2, "allocator,\n");
+                try printWithIndent(writer, indent_level + 2, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ rule_ref.pos.line, rule_ref.pos.column, rule_ref.pos.offset });
+                try writeWithIndent(writer, indent_level + 2, "ast.Identifier.init(\n");
+                try printWithIndent(writer, indent_level + 3, ".{{ .line = {}, .column = {}, .offset = {} }},\n", .{ rule_ref.name.pos.line, rule_ref.name.pos.column, rule_ref.name.pos.offset });
+                try printWithIndent(writer, indent_level + 3, "\"{s}\",\n", .{escaped_name});
+                try writeWithIndent(writer, indent_level + 2, "),\n");
+                try writeWithIndent(writer, indent_level + 1, "),\n)");
             },
             else => {
                 // For other expression types, return undefined
-                try self.writer.print("        {s}.* = undefined;\n", .{var_name});
-                try self.writer.writeAll("    }\n");
-                return .{ .name = var_name, .is_rule_ref = false };
+                try writer.writeAll("undefined");
             },
         }
 
-        try self.writer.writeAll("    }\n");
-
-        return .{ .name = var_name, .is_rule_ref = false };
+        return buffer.toOwnedSlice(self.allocator);
     }
 
     fn writeParseFunction(self: *Builder, grammar: *ast.Grammar) !void {
@@ -550,25 +522,27 @@ pub const Builder = struct {
     }
 
     // Declare all RuleRefExpr variables in an expression tree
-    fn declareRuleRefExprs(self: *Builder, expr: *ast.Expression) BuilderError!void {
-        switch (expr.*) {
+    fn declareRuleRefExprs(self: *Builder, expr: ast.Expression) BuilderError!void {
+        switch (expr) {
             .rule_ref => |rule_ref| {
-                // Don't increment expr_index here - it will be incremented in writeExprForAST
+                // Don't increment expr_index here - it will be incremented in writeExpr
                 const escaped_name = try escapeZigString(rule_ref.name.value, self.allocator);
                 defer self.allocator.free(escaped_name);
 
-                try self.writer.print("    const rule_ref_{}_{} = try allocator.create(ast.RuleRefExpr);\n", .{self.rule_index, self.expr_index + 1});
-                try self.writer.print("    rule_ref_{}_{}.* = .{{\n", .{self.rule_index, self.expr_index + 1});
-                try self.writer.print("        .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
-                    .{ rule_ref.pos.line, rule_ref.pos.column, rule_ref.pos.offset });
-                try self.writer.print("        .name = .{{\n            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n            .value = \"{s}\",\n        }},\n",
-                    .{rule_ref.name.pos.line, rule_ref.name.pos.column, rule_ref.name.pos.offset, escaped_name});
-                try self.writer.writeAll("        .nullable = false,\n");
-                try self.writer.print("    }};\n", .{});
+                // Create name identifier first
+                try self.writer.print("    const name_{}_{} = ast.Identifier.init(\n", .{ self.rule_index, self.expr_index + 1 });
+                try self.writer.print("        .{{ .line = {}, .column = {}, .offset = {} }},\n", .{ rule_ref.name.pos.line, rule_ref.name.pos.column, rule_ref.name.pos.offset });
+                try self.writer.writeAll("        \"");
+                try self.writer.writeAll(escaped_name);
+                try self.writer.writeAll("\");\n");
+
+                // Create RuleRefExpr using create method
+                try self.writer.print("    const rule_ref_{}_{} = try ast.RuleRefExpr.create(allocator,\n", .{ self.rule_index, self.expr_index + 1 });
+                try self.writer.print("        .{{ .line = {}, .column = {}, .offset = {} }},\n", .{ rule_ref.pos.line, rule_ref.pos.column, rule_ref.pos.offset });
+                try self.writer.print("        name_{}_{});\n\n", .{ self.rule_index, self.expr_index + 1 });
 
                 // Also create Expression wrapper for this rule_ref
-                try self.writer.print("    const rule_ref_expr_{}_{} = try allocator.create(ast.Expression);\n", .{self.rule_index, self.expr_index + 1});
-                try self.writer.print("    rule_ref_expr_{}_{}.* = .{{ .rule_ref = rule_ref_{}_{} }};\n\n", .{self.rule_index, self.expr_index + 1, self.rule_index, self.expr_index + 1});
+                try self.writer.print("    const rule_ref_expr_{}_{} = ast.Expression.init(rule_ref_{}_{});\n\n", .{ self.rule_index, self.expr_index + 1, self.rule_index, self.expr_index + 1 });
             },
             .action => |act| try self.declareRuleRefExprs(act.expr),
             .and_expr => |and_expr| try self.declareRuleRefExprs(and_expr.expr),
@@ -594,11 +568,9 @@ pub const Builder = struct {
 
     fn writeRuleDefinition(self: *Builder, r: *ast.Rule) !void {
         try self.writer.writeAll("        .{\n");
-        try self.writer.print("            .name = ast.Identifier{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n",
-            .{ r.pos.line, r.pos.column, r.pos.offset, r.name.value });
+        try self.writer.print("            .name = ast.Identifier{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n", .{ r.pos.line, r.pos.column, r.pos.offset, r.name.value });
 
-        try self.writer.print("            .display_name = ast.StringLit{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n",
-            .{ r.display_name.pos.line, r.display_name.pos.column, r.display_name.pos.offset, r.display_name.value });
+        try self.writer.print("            .display_name = ast.StringLit{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n", .{ r.display_name.pos.line, r.display_name.pos.column, r.display_name.pos.offset, r.display_name.value });
 
         try self.writer.writeAll("            .expr = null,\n"); // Need proper expression serialization
         try self.writer.writeAll("        },\n");
@@ -618,11 +590,10 @@ pub const Builder = struct {
         }
 
         const pos = r.pos;
-        try self.writer.print("        .pos = Position{{ .line = {d}, .column = {d}, .offset = {d} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("        .pos = Position{{ .line = {d}, .column = {d}, .offset = {d} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.writeAll("        .expr = ");
-        try self.writeExpr(r.expr);
+        try self.writeExpr(r.expr, 0);
 
         if (r.leader) {
             try self.writer.writeAll("        .leader = true,\n");
@@ -634,10 +605,11 @@ pub const Builder = struct {
         try self.writer.writeAll("    },\n");
     }
 
-    fn writeExpr(self: *Builder, expr: *ast.Expression) BuilderError!void {
+    fn writeExpr(self: *Builder, expr: ast.Expression, indent: usize) BuilderError!void {
+        _ = indent;
         self.expr_index += 1;
 
-        switch (expr.*) {
+        switch (expr) {
             .action => |act| try self.writeActionExpr(act),
             .and_code => |and_code| try self.writeAndCodeExpr(and_code),
             .and_expr => |and_expr| try self.writeAndExpr(and_expr),
@@ -659,11 +631,11 @@ pub const Builder = struct {
         }
     }
 
-    fn writeActionExpr(self: *Builder, act: *ast.ActionExpr) BuilderError!void {
+    fn writeActionExpr(self: *Builder, act: *ast.ActionExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&ActionExpr{\n");
         const pos = act.pos;
-        try self.writer.print("    .pos = Position{{ .line = {d}, .column = {d}, .offset = {d} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {d}, .column = {d}, .offset = {d} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (act.func_ix == 0) {
             act.func_ix = self.expr_index;
@@ -671,15 +643,15 @@ pub const Builder = struct {
 
         try self.writer.print("    .run = parser.call{s},\n", .{self.rule_name});
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(act.expr);
+        try self.writeExpr(act.expr, 0);
         try self.writer.writeAll(",\n},\n");
     }
 
-    fn writeAndCodeExpr(self: *Builder, and_code: *ast.AndCodeExpr) BuilderError!void {
+    fn writeAndCodeExpr(self: *Builder, and_code: *ast.AndCodeExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&AndCodeExpr{\n");
         const pos = and_code.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (and_code.func_ix == 0) {
             and_code.func_ix = self.expr_index;
@@ -689,30 +661,28 @@ pub const Builder = struct {
         try self.writer.writeAll("},\n");
     }
 
-    fn writeAndExpr(self: *Builder, and_expr: *ast.AndExpr) BuilderError!void {
+    fn writeAndExpr(self: *Builder, and_expr: *ast.AndExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&AndExpr{\n");
         const pos = and_expr.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(and_expr.expr);
+        try self.writeExpr(and_expr.expr, 0);
         try self.writer.writeAll(",\n},\n");
     }
 
     fn writeAnyMatcher(self: *Builder, any: *ast.AnyMatcher) BuilderError!void {
         try self.writer.writeAll("&AnyMatcher{\n");
         const pos = any.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
         try self.writer.writeAll("},\n");
     }
 
     fn writeCharClassMatcher(self: *Builder, char_class: *ast.CharClassMatcher) BuilderError!void {
         try self.writer.writeAll("&CharClassMatcher{\n");
         const pos = char_class.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.print("    .value = \"{s}\",\n", .{char_class.value});
 
@@ -732,8 +702,7 @@ pub const Builder = struct {
             try self.writer.writeAll("    .ranges = &[_]struct { u21, u21 }{\n");
             for (char_class.ranges.items) |range| {
                 if (char_class.ignore_case) {
-                    try self.writer.print("        .{{ {}, {} }},\n",
-                        .{ std.ascii.toLower(range[0]), std.ascii.toLower(range[1]) });
+                    try self.writer.print("        .{{ {}, {} }},\n", .{ std.ascii.toLower(range[0]), std.ascii.toLower(range[1]) });
                 } else {
                     try self.writer.print("        .{{ {}, {} }},\n", .{ range[0], range[1] });
                 }
@@ -752,42 +721,41 @@ pub const Builder = struct {
         try self.writer.writeAll("},\n");
     }
 
-    fn writeChoiceExpr(self: *Builder, choice: *ast.ChoiceExpr) BuilderError!void {
+    fn writeChoiceExpr(self: *Builder, choice: *ast.ChoiceExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&ChoiceExpr{\n");
         const pos = choice.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (choice.alternatives.items.len > 0) {
             try self.writer.writeAll("    .alternatives = &[_]Expression{\n");
             for (choice.alternatives.items) |alt| {
-                try self.writeExpr(alt);
+                try self.writeExpr(alt, 1);
             }
             try self.writer.writeAll("    },\n");
         }
         try self.writer.writeAll("},\n");
     }
 
-    fn writeLabeledExpr(self: *Builder, labeled: *ast.LabeledExpr) BuilderError!void {
+    fn writeLabeledExpr(self: *Builder, labeled: *ast.LabeledExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&LabeledExpr{\n");
         const pos = labeled.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (labeled.label.value.len > 0) {
             try self.writer.print("    .label = \"{s}\",\n", .{labeled.label.value});
         }
 
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(labeled.expr);
+        try self.writeExpr(labeled.expr, 0);
         try self.writer.writeAll(",\n},\n");
     }
 
     fn writeLitMatcher(self: *Builder, lit: *ast.LitMatcher) BuilderError!void {
         try self.writer.writeAll("&LitMatcher{\n");
         const pos = lit.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (lit.ignore_case) {
             const output = try self.allocator.dupe(u8, lit.value);
@@ -803,11 +771,11 @@ pub const Builder = struct {
         try self.writer.writeAll("},\n");
     }
 
-    fn writeNotCodeExpr(self: *Builder, not_code: *ast.NotCodeExpr) BuilderError!void {
+    fn writeNotCodeExpr(self: *Builder, not_code: *ast.NotCodeExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&NotCodeExpr{\n");
         const pos = not_code.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (not_code.func_ix == 0) {
             not_code.func_ix = self.expr_index;
@@ -817,38 +785,38 @@ pub const Builder = struct {
         try self.writer.writeAll("},\n");
     }
 
-    fn writeNotExpr(self: *Builder, not_expr: *ast.NotExpr) BuilderError!void {
+    fn writeNotExpr(self: *Builder, not_expr: *ast.NotExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&NotExpr{\n");
         const pos = not_expr.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(not_expr.expr);
+        try self.writeExpr(not_expr.expr, 0);
         try self.writer.writeAll(",\n},\n");
     }
 
-    fn writeOneOrMoreExpr(self: *Builder, one_or_more: *ast.OneOrMoreExpr) BuilderError!void {
+    fn writeOneOrMoreExpr(self: *Builder, one_or_more: *ast.OneOrMoreExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&OneOrMoreExpr{\n");
         const pos = one_or_more.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(one_or_more.expr);
+        try self.writeExpr(one_or_more.expr, 0);
         try self.writer.writeAll(",\n},\n");
     }
 
-    fn writeRecoveryExpr(self: *Builder, recovery: *ast.RecoveryExpr) BuilderError!void {
+    fn writeRecoveryExpr(self: *Builder, recovery: *ast.RecoveryExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&RecoveryExpr{\n");
         const pos = recovery.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(recovery.expr);
+        try self.writeExpr(recovery.expr, 0);
         try self.writer.writeAll("    .recover_expr = ");
-        try self.writeExpr(recovery.recover_expr);
+        try self.writeExpr(recovery.recover_expr, 0);
 
         try self.writer.writeAll("    .labels = &[_][]const u8{\n");
         for (recovery.labels.items) |label| {
@@ -857,38 +825,38 @@ pub const Builder = struct {
         try self.writer.writeAll("    },\n},\n");
     }
 
-    fn writeRuleRefExpr(self: *Builder, rule_ref: *ast.RuleRefExpr) BuilderError!void {
+    fn writeRuleRefExpr(self: *Builder, rule_ref: *ast.RuleRefExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&RuleRefExpr{\n");
         const pos = rule_ref.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.print("    .name = \"{s}\",\n", .{rule_ref.name.value});
         try self.writer.writeAll("},\n");
     }
 
-    fn writeSeqExpr(self: *Builder, seq: *ast.SeqExpr) BuilderError!void {
+    fn writeSeqExpr(self: *Builder, seq: *ast.SeqExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&SeqExpr{\n");
         const pos = seq.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (seq.exprs.items.len > 0) {
             try self.writer.writeAll("    .exprs = &[_]Expression{\n");
             for (seq.exprs.items) |expr| {
-                try self.writeExpr(expr);
+                try self.writeExpr(expr, 1);
             }
             try self.writer.writeAll("    },\n");
         }
         try self.writer.writeAll("},\n");
     }
 
-    fn writeStateCodeExpr(self: *Builder, state_code: *ast.StateCodeExpr) BuilderError!void {
+    fn writeStateCodeExpr(self: *Builder, state_code: *ast.StateCodeExpr, indent: usize) BuilderError!void {
+        _ = indent;
         self.options.global_state = true;
         try self.writer.writeAll("&StateCodeExpr{\n");
         const pos = state_code.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         if (state_code.func_ix == 0) {
             state_code.func_ix = self.expr_index;
@@ -898,35 +866,35 @@ pub const Builder = struct {
         try self.writer.writeAll("},\n");
     }
 
-    fn writeThrowExpr(self: *Builder, throw: *ast.ThrowExpr) BuilderError!void {
+    fn writeThrowExpr(self: *Builder, throw: *ast.ThrowExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&ThrowExpr{\n");
         const pos = throw.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.print("    .label = \"{s}\",\n", .{throw.label});
         try self.writer.writeAll("},\n");
     }
 
-    fn writeZeroOrMoreExpr(self: *Builder, zero_or_more: *ast.ZeroOrMoreExpr) BuilderError!void {
+    fn writeZeroOrMoreExpr(self: *Builder, zero_or_more: *ast.ZeroOrMoreExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&ZeroOrMoreExpr{\n");
         const pos = zero_or_more.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(zero_or_more.expr);
+        try self.writeExpr(zero_or_more.expr, 0);
         try self.writer.writeAll(",\n},\n");
     }
 
-    fn writeZeroOrOneExpr(self: *Builder, zero_or_one: *ast.ZeroOrOneExpr) BuilderError!void {
+    fn writeZeroOrOneExpr(self: *Builder, zero_or_one: *ast.ZeroOrOneExpr, indent: usize) BuilderError!void {
+        _ = indent;
         try self.writer.writeAll("&ZeroOrOneExpr{\n");
         const pos = zero_or_one.pos;
-        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n",
-            .{ pos.line, pos.column, pos.offset });
+        try self.writer.print("    .pos = Position{{ .line = {}, .column = {}, .offset = {} }},\n", .{ pos.line, pos.column, pos.offset });
 
         try self.writer.writeAll("    .expr = ");
-        try self.writeExpr(zero_or_one.expr);
+        try self.writeExpr(zero_or_one.expr, 0);
         try self.writer.writeAll(",\n},\n");
     }
 
@@ -981,14 +949,14 @@ pub const Builder = struct {
         }
 
         // Generate action code
-        try self.writeExprCode(rule.expr);
+        try self.writeExprCode(rule.expr, 1);
 
         try self.writer.writeAll("}\n\n");
         self.popArgsSet();
     }
 
     /// Analyze which parameters are referenced in the action code
-    fn analyzeUsedParams(self: *Builder, expr: *const ast.Expression) !std.ArrayList([]const u8) {
+    fn analyzeUsedParams(self: *Builder, expr: ast.Expression) !std.ArrayList([]const u8) {
         var used = try std.ArrayList([]const u8).initCapacity(self.allocator, 0);
         errdefer used.deinit(self.allocator);
 
@@ -1022,8 +990,8 @@ pub const Builder = struct {
     }
 
     /// Collect all action code strings from an expression
-    fn collectActionCode(self: *Builder, expr: *const ast.Expression, codes: *std.ArrayList([]const u8)) !void {
-        switch (expr.*) {
+    fn collectActionCode(self: *Builder, expr: ast.Expression, codes: *std.ArrayList([]const u8)) !void {
+        switch (expr) {
             .action => |act| {
                 try codes.append(self.allocator, try self.allocator.dupe(u8, act.code.value));
                 try self.collectActionCode(act.expr, codes);
@@ -1076,7 +1044,8 @@ pub const Builder = struct {
                 const next_char = code[i];
                 if (next_char == '.' or next_char == '(' or next_char == ' ' or
                     next_char == '\n' or next_char == ',' or next_char == ';' or
-                    next_char == ')' or next_char == '}' or next_char == '=') {
+                    next_char == ')' or next_char == '}' or next_char == '=')
+                {
                     // Check if this identifier is a known parameter
                     // For now, assume any identifier could be a parameter
                     // In a more complete implementation, we'd check against self.params
@@ -1105,17 +1074,17 @@ pub const Builder = struct {
         }
     }
 
-    fn addArg(self: *Builder, arg: *ast.Identifier) !void {
+    fn addArg(self: *Builder, arg: *const ast.Identifier) !void {
         if (self.args_stack.items.len == 0) return;
 
         const current_set = &self.args_stack.items[self.args_stack.items.len - 1];
         try current_set.append(self.allocator, arg.value);
     }
 
-    fn collectParams(self: *Builder, expr: *ast.Expression) !void {
-        switch (expr.*) {
+    fn collectParams(self: *Builder, expr: ast.Expression) !void {
+        switch (expr) {
             .labeled => |labeled| {
-                try self.addArg(labeled.label);
+                try self.addArg(&labeled.label);
                 try self.collectParams(labeled.expr);
             },
             .seq => |seq| {
@@ -1143,69 +1112,69 @@ pub const Builder = struct {
         return self.args_stack.items[self.args_stack.items.len - 1];
     }
 
-    fn writeExprCode(self: *Builder, expr: *ast.Expression) !void {
-        switch (expr.*) {
+    fn writeExprCode(self: *Builder, expr: ast.Expression, indent: usize) !void {
+        switch (expr) {
             .action => |act| {
-                try self.writeExprCode(act.expr);
-                try self.writeActionExprCode(act);
+                try self.writeExprCode(act.expr, indent);
+                try self.writeActionExprCode(act, indent);
             },
-            .and_code => |and_code| try self.writeAndCodeExprCode(and_code),
+            .and_code => |and_code| try self.writeAndCodeExprCode(and_code, indent),
             .labeled => |labeled| {
-                try self.addArg(labeled.label);
+                try self.addArg(&labeled.label);
                 try self.pushArgsSet();
-                try self.writeExprCode(labeled.expr);
+                try self.writeExprCode(labeled.expr, indent);
                 self.popArgsSet();
             },
-            .not_code => |not_code| try self.writeNotCodeExprCode(not_code),
+            .not_code => |not_code| try self.writeNotCodeExprCode(not_code, indent),
             .and_expr => |and_expr| {
                 try self.pushArgsSet();
-                try self.writeExprCode(and_expr.expr);
+                try self.writeExprCode(and_expr.expr, indent);
                 self.popArgsSet();
             },
             .choice => |choice| {
                 for (choice.alternatives.items) |alt| {
                     try self.pushArgsSet();
-                    try self.writeExprCode(alt);
+                    try self.writeExprCode(alt, indent);
                     self.popArgsSet();
                 }
             },
             .not => |not_expr| {
                 try self.pushArgsSet();
-                try self.writeExprCode(not_expr.expr);
+                try self.writeExprCode(not_expr.expr, indent);
                 self.popArgsSet();
             },
             .one_or_more => |one_or_more| {
                 try self.pushArgsSet();
-                try self.writeExprCode(one_or_more.expr);
+                try self.writeExprCode(one_or_more.expr, indent);
                 self.popArgsSet();
             },
             .recovery => |recovery| {
                 try self.pushArgsSet();
-                try self.writeExprCode(recovery.expr);
-                try self.writeExprCode(recovery.recover_expr);
+                try self.writeExprCode(recovery.expr, indent);
+                try self.writeExprCode(recovery.recover_expr, indent);
                 self.popArgsSet();
             },
             .seq => |seq| {
                 for (seq.exprs.items) |sub| {
-                    try self.writeExprCode(sub);
+                    try self.writeExprCode(sub, indent);
                 }
             },
-            .state_code => |state_code| try self.writeStateCodeExprCode(state_code),
+            .state_code => |state_code| try self.writeStateCodeExprCode(state_code, indent),
             .zero_or_more => |zero_or_more| {
                 try self.pushArgsSet();
-                try self.writeExprCode(zero_or_more.expr);
+                try self.writeExprCode(zero_or_more.expr, indent);
                 self.popArgsSet();
             },
             .zero_or_one => |zero_or_one| {
                 try self.pushArgsSet();
-                try self.writeExprCode(zero_or_one.expr);
+                try self.writeExprCode(zero_or_one.expr, indent);
                 self.popArgsSet();
             },
             else => {}, // Other types don't generate code
         }
     }
 
-    fn writeActionExprCode(self: *Builder, act: *ast.ActionExpr) !void {
+    fn writeActionExprCode(self: *Builder, act: *ast.ActionExpr, indent: usize) !void {
         // Write the user's action code
         // For now, we just extract the code and write it
         // TODO: Process the code to handle variable references
@@ -1214,32 +1183,33 @@ pub const Builder = struct {
         if (code.len > 2) { // Not just {}
             // Extract code between braces
             const inner_code = if (code.len > 2 and code[0] == '{')
-                code[1 .. code.len-1]
+                code[1 .. code.len - 1]
             else
                 code;
 
             // Write the code with proper indentation
-            try self.writer.writeAll("    ");
-            try self.writer.writeAll(inner_code);
-            try self.writer.writeAll("\n");
+            try printWithIndent(self.writer, indent, "{s}\n", .{inner_code});
         }
     }
 
-    fn writeAndCodeExprCode(self: *Builder, and_code: *ast.AndCodeExpr) !void {
+    fn writeAndCodeExprCode(self: *Builder, and_code: *ast.AndCodeExpr, indent: usize) !void {
+        _ = indent;
         if (and_code.func_ix > 0) {
             try self.writeFunc(CALL_PRED_FUNC_TEMPLATE, ON_PRED_FUNC_TEMPLATE, and_code.func_ix, and_code.code.value);
             and_code.func_ix = 0; // prevent duplicates
         }
     }
 
-    fn writeNotCodeExprCode(self: *Builder, not_code: *ast.NotCodeExpr) !void {
+    fn writeNotCodeExprCode(self: *Builder, not_code: *ast.NotCodeExpr, indent: usize) !void {
+        _ = indent;
         if (not_code.func_ix > 0) {
             try self.writeFunc(CALL_PRED_FUNC_TEMPLATE, ON_PRED_FUNC_TEMPLATE, not_code.func_ix, not_code.code.value);
             not_code.func_ix = 0; // prevent duplicates
         }
     }
 
-    fn writeStateCodeExprCode(self: *Builder, state_code: *ast.StateCodeExpr) !void {
+    fn writeStateCodeExprCode(self: *Builder, state_code: *ast.StateCodeExpr, indent: usize) !void {
+        _ = indent;
         if (state_code.func_ix > 0) {
             try self.writeFunc(CALL_STATE_FUNC_TEMPLATE, ON_STATE_FUNC_TEMPLATE, state_code.func_ix, state_code.code.value);
             state_code.func_ix = 0; // prevent duplicates
@@ -1248,7 +1218,7 @@ pub const Builder = struct {
 
     fn writeFunc(self: *Builder, comptime call_template: []const u8, comptime func_template: []const u8, func_ix: usize, code: []const u8) !void {
         _ = func_ix;
-        
+
         if (code.len <= 2) return; // empty code block {}
 
         // Remove braces and trim whitespace
@@ -1274,8 +1244,7 @@ pub const Builder = struct {
         const fn_name = self.rule_name;
 
         // Write function definition
-        try self.writer.print(func_template,
-            .{ self.options.receiver_name, fn_name, args_buffer.items });
+        try self.writer.print(func_template, .{ self.options.receiver_name, fn_name, args_buffer.items });
 
         // Generate stack access arguments
         args_buffer.clearRetainingCapacity();
@@ -1314,9 +1283,9 @@ pub const Builder = struct {
         try self.writer.writeAll("    reader: *std.io.Reader,\n");
 
         // Scanner-related fields
-        try self.writer.writeAll("    scanner: ?*Scanner,\n");  // Scanner will be defined in scanner.zig - optional pointer
-        try self.writer.writeAll("    tok: Token,\n");        // Current token
-        try self.writer.writeAll("    peek_tok: Token,\n");    // Peek token (next one in stream)
+        try self.writer.writeAll("    scanner: ?*Scanner,\n"); // Scanner will be defined in scanner.zig - optional pointer
+        try self.writer.writeAll("    tok: Token,\n"); // Current token
+        try self.writer.writeAll("    peek_tok: Token,\n"); // Peek token (next one in stream)
 
         // Debug and error handling fields
         try self.writer.writeAll("    debug: bool = false,\n");
@@ -1332,8 +1301,8 @@ pub const Builder = struct {
         try self.writer.writeAll("    pub fn init(allocator: std.mem.Allocator, filename: []const u8, reader: *std.io.Reader) Parser {\n");
         try self.writer.writeAll("        // Initialize with scanner = null and empty tokens\n");
         try self.writer.writeAll("        var init_tok = Token{\n");
-        try self.writer.writeAll("            .id = .invalid,\n");  // Assume Token has an id field with enum type
-        try self.writer.writeAll("            .lit = \"\",\n");     // Assume Token has a lit field
+        try self.writer.writeAll("            .id = .invalid,\n"); // Assume Token has an id field with enum type
+        try self.writer.writeAll("            .lit = \"\",\n"); // Assume Token has a lit field
         try self.writer.writeAll("        };\n");
         try self.writer.writeAll("\n");
         try self.writer.writeAll("        return Parser{\n");
