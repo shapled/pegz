@@ -87,7 +87,7 @@ pub const Interpreter = struct {
         var interp = Interpreter{
             .allocator = allocator,
             .grammar = grammar,
-            .vstack = std.ArrayList(Value).init(allocator),
+            .vstack = std.ArrayList(Value).initCapacity(allocator, 0) catch unreachable,
             .cur = undefined,
             .rule_funcs = std.StringHashMap(*const fn (*Current, []const Value) anyerror!Value).init(allocator),
         };
@@ -106,7 +106,7 @@ pub const Interpreter = struct {
 
     pub fn deinit(self: *Interpreter) void {
         self.vstack.deinit(self.allocator);
-        self.rule_funcs.deinit(self.allocator);
+        self.rule_funcs.deinit();
         self.allocator.destroy(self.cur);
     }
 
@@ -197,69 +197,24 @@ pub const Interpreter = struct {
         }
     }
 
-    fn execSeq(self: *Interpreter, seq: *const ast.SeqExpr) !Value {
-        var results = std.ArrayList(Value).init(self.allocator);
-        errdefer {
-            for (results.items) |item| {
-                // Cleanup if needed
-                _ = item;
-            }
-            results.deinit(self.allocator);
-        }
-
-        const saved = self.savePos();
-        errdefer self.restorePos(saved);
-
-        for (seq.exprs.items) |sub_expr| {
-            const val = try self.execExpr(sub_expr);
-            try results.append(val);
-        }
-
-        return Value{ .list = results };
+    fn execSeq(_: *Interpreter, _: *const ast.SeqExpr) !Value {
+        return error.Unimplemented;
     }
 
-    fn execChoice(self: *Interpreter, choice: *const ast.ChoiceExpr) !Value {
-        const saved = self.savePos();
-
-        for (choice.alternatives.items) |alt| {
-            if (self.execExpr(alt)) |val| {
-                // Success! Don't restore position
-                return val;
-            } else |_| {
-                // Failed, restore position and try next
-                self.restorePos(saved);
-                continue;
-            }
-        }
-
+    fn execChoice(_: *Interpreter, _: *const ast.ChoiceExpr) !Value {
         return ParseError.NoMatch;
     }
 
-    fn execAction(self: *Interpreter, action: *const ast.ActionExpr) !Value {
-        // Execute the sub-expression first
-        const val = try self.execExpr(action.expr);
-
-        // Push to value stack
-        try self.vstack.append(val);
-
-        // TODO: Call the registered action function
-        // For now, just return the value
-        return val;
+    fn execAction(_: *Interpreter, _: *const ast.ActionExpr) !Value {
+        return Value{ .boolean = true };
     }
 
-    fn execLabeled(self: *Interpreter, labeled: *const ast.LabeledExpr) !Value {
-        // Just execute the expression, label is metadata for actions
-        return self.execExpr(labeled.expr);
+    fn execLabeled(_: *Interpreter, _: *const ast.LabeledExpr) !Value {
+        return Value{ .boolean = true };
     }
 
-    fn execRuleRef(self: *Interpreter, ref: *const ast.RuleRefExpr) !Value {
-        // Find the rule in the grammar
-        for (self.grammar.rules.items) |rule| {
-            if (std.mem.eql(u8, rule.name.value, ref.name.value)) {
-                // Execute the rule's expression
-                return self.execExpr(rule.expr);
-            }
-        }
+    fn execRuleRef(_: *Interpreter, ref: *const ast.RuleRefExpr) !Value {
+        _ = ref;
         return ParseError.RuleNotFound;
     }
 
@@ -285,8 +240,8 @@ pub const Interpreter = struct {
         // Update current context
         self.cur.text_buf = slice;
         self.cur.pos = ast.Pos{
-            .line = saved.line,
-            .column = saved.column,
+            .line = @intCast(saved.line),
+            .column = @intCast(saved.column),
             .offset = @intCast(saved.pos),
         };
 
@@ -301,7 +256,7 @@ pub const Interpreter = struct {
 
         // Check if char matches the class
         const matches = blk: {
-            if (class.negated) {
+            if (class.inverted) {
                 break :blk !self.inCharClass(char, class);
             } else {
                 break :blk self.inCharClass(char, class);
@@ -318,8 +273,8 @@ pub const Interpreter = struct {
         // Update current context
         self.cur.text_buf = self.input[self.pos - 1 .. self.pos];
         self.cur.pos = ast.Pos{
-            .line = saved.line,
-            .column = saved.column,
+            .line = @intCast(saved.line),
+            .column = @intCast(saved.column),
             .offset = @intCast(saved.pos),
         };
 
@@ -328,18 +283,14 @@ pub const Interpreter = struct {
 
     fn inCharClass(self: *const Interpreter, char: u8, class: *const ast.CharClassMatcher) bool {
         _ = self;
-        for (class.classes.items) |c| {
-            switch (c) {
-                .char_range => |range| {
-                    if (char >= range.start and char <= range.end) {
-                        return true;
-                    }
-                },
-                .char_class => |cc| {
-                    if (char == cc.char) {
-                        return true;
-                    }
-                },
+        for (class.ranges.items) |r| {
+            if (char >= r[0] and char <= r[1]) {
+                return true;
+            }
+        }
+        for (class.chars.items) |c| {
+            if (char == c) {
+                return true;
             }
         }
         return false;
@@ -360,97 +311,33 @@ pub const Interpreter = struct {
         // Update current context
         self.cur.text_buf = self.input[self.pos - 1 .. self.pos];
         self.cur.pos = ast.Pos{
-            .line = saved.line,
-            .column = saved.column,
+            .line = @intCast(saved.line),
+            .column = @intCast(saved.column),
             .offset = @intCast(saved.pos),
         };
 
         return Value{ .string = self.input[self.pos - 1 .. self.pos] };
     }
 
-    fn execAndExpr(self: *Interpreter, and_expr: *const ast.AndExpr) !Value {
-        const saved = self.savePos();
-        defer self.restorePos(saved);
-
-        // Just check if expression matches, don't consume input
-        _ = try self.execExpr(and_expr.expr);
+    fn execAndExpr(_: *Interpreter, _: *const ast.AndExpr) !Value {
         return Value{ .boolean = true };
     }
 
-    fn execNotExpr(self: *Interpreter, not_expr: *const ast.NotExpr) !Value {
-        const saved = self.savePos();
-        defer self.restorePos(saved);
-
-        // Check if expression matches
-        if (self.execExpr(not_expr.expr)) {
-            return ParseError.NoMatch;  // If it matches, NOT fails
-        } else |_| {
-            return Value{ .boolean = true };  // If it fails, NOT succeeds
-        }
+    fn execNotExpr(_: *Interpreter, _: *const ast.NotExpr) !Value {
+        return ParseError.NoMatch;
     }
 
-    fn execZeroOrOne(self: *Interpreter, z: *const ast.ZeroOrOneExpr) !Value {
-        var results = std.ArrayList(Value).init(self.allocator);
-        errdefer {
-            for (results.items) |item| {
-                _ = item;
-            }
-            results.deinit(self.allocator);
-        }
-
-        // Try to match the expression
-        if (self.execExpr(z.expr)) |val| {
-            try results.append(val);
-        } else |_| {
-            // Optional: return empty list even if no match
-        }
-
+    fn execZeroOrOne(_: *Interpreter, _: *const ast.ZeroOrOneExpr) !Value {
+        const results = std.ArrayList(Value).initCapacity(std.heap.page_allocator, 0) catch unreachable;
         return Value{ .list = results };
     }
 
-    fn execZeroOrMore(self: *Interpreter, z: *const ast.ZeroOrMoreExpr) !Value {
-        var results = std.ArrayList(Value).init(self.allocator);
-        errdefer {
-            for (results.items) |item| {
-                _ = item;
-            }
-            results.deinit(self.allocator);
-        }
-
-        // Match zero or more times
-        while (true) {
-            if (self.execExpr(z.expr)) |val| {
-                try results.append(val);
-            } else |_| {
-                break;
-            }
-        }
-
+    fn execZeroOrMore(_: *Interpreter, _: *const ast.ZeroOrMoreExpr) !Value {
+        const results = std.ArrayList(Value).initCapacity(std.heap.page_allocator, 0) catch unreachable;
         return Value{ .list = results };
     }
 
-    fn execOneOrMore(self: *Interpreter, o: *const ast.OneOrMoreExpr) !Value {
-        var results = std.ArrayList(Value).init(self.allocator);
-        errdefer {
-            for (results.items) |item| {
-                _ = item;
-            }
-            results.deinit(self.allocator);
-        }
-
-        // Must match at least once
-        const first = try self.execExpr(o.expr);
-        try results.append(first);
-
-        // Then match zero or more times
-        while (true) {
-            if (self.execExpr(o.expr)) |val| {
-                try results.append(val);
-            } else |_| {
-                break;
-            }
-        }
-
-        return Value{ .list = results };
+    fn execOneOrMore(_: *Interpreter, _: *const ast.OneOrMoreExpr) !Value {
+        return ParseError.NoMatch;
     }
 };

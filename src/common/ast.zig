@@ -674,7 +674,7 @@ pub const OneOrMoreExpr = struct {
 
 pub const RuleRefExpr = struct {
     pos: Pos,
-    name: *Identifier,
+    name: Identifier,
     nullable: bool,
 
     const Self = @This();

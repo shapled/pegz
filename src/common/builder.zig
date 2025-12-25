@@ -2,6 +2,27 @@ const std = @import("std");
 const ast = @import("ast.zig");
 const interpreter_mod = @import("interpreter.zig");
 
+// Helper function to escape strings for Zig code generation
+fn escapeZigString(s: []const u8, allocator: std.mem.Allocator) ![]const u8 {
+    var result = try std.ArrayList(u8).initCapacity(allocator, s.len * 2);
+    errdefer {
+        result.deinit(allocator);
+    }
+
+    for (s) |c| {
+        switch (c) {
+            '\\' => try result.appendSlice(allocator, "\\\\"),
+            '"' => try result.appendSlice(allocator, "\\\""),
+            '\n' => try result.appendSlice(allocator, "\\n"),
+            '\r' => try result.appendSlice(allocator, "\\r"),
+            '\t' => try result.appendSlice(allocator, "\\t"),
+            else => try result.append(allocator, c),
+        }
+    }
+
+    return result.toOwnedSlice(allocator);
+}
+
 /// Options configuration for the builder
 pub const Options = struct {
     receiver_name: []const u8 = "c",
@@ -56,7 +77,9 @@ pub const Builder = struct {
 
     // State
     rule_name: []const u8 = "",
-    expr_index: usize = 0,
+    rule_index: usize = 0,       // Current rule index
+    expr_index: usize = 0,       // Index for RuleRefExpr variables within current rule
+    block_index: usize = 0,      // Index for block labels (Seq/Choice)
     args_stack: std.ArrayList(std.ArrayList([]const u8)),
     range_table: bool = false,
 
@@ -100,9 +123,8 @@ pub const Builder = struct {
             try self.writeRuleCode(rule);
         }
 
-        // Skip static code/parser generation as requested
-        // try self.writeStaticCode();
-        std.debug.print("[Builder] buildParser: Skipped static code/Parser generation\n", .{});
+        // Write parse() entry function
+        try self.writeParseFunction(grammar);
 
         std.debug.print("[Builder] buildParser: end\n", .{});
     }
@@ -130,23 +152,444 @@ pub const Builder = struct {
 
     fn writeGrammar(self: *Builder, g: *ast.Grammar) !void {
         // Generate grammar structure for interpreter
-        try self.writer.writeAll("// Grammar data structure for interpreter\n");
+        try self.writer.writeAll("// Grammar data structure\n");
         try self.writer.writeAll("pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {\n");
 
         try self.writer.writeAll("    const grammar = try allocator.create(ast.Grammar);\n");
         try self.writer.writeAll("    grammar.* = ast.Grammar{\n");
         try self.writer.print("        .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n", .{g.pos.line, g.pos.column, g.pos.offset});
         try self.writer.writeAll("        .init = null,\n");
-        try self.writer.writeAll("        .rules = std.ArrayList(*ast.Rule).init(allocator),\n");
+        try self.writer.print("        .rules = std.ArrayList(*ast.Rule).initCapacity(allocator, {}) catch unreachable,\n", .{g.rules.items.len});
         try self.writer.writeAll("    };\n\n");
 
-        // Add rules
-        for (g.rules.items) |rule| {
-            try self.writer.print("    // Rule: {s}\n", .{rule.name.value});
+        // Phase 1: Generate rule structures and expressions
+        // rule_ref variables will be declared inline in writeExprForAST
+        for (g.rules.items, 0..) |rule, i| {
+            self.rule_index = i;
+
+            // Reset expr_index for generating expressions
+            self.expr_index = 0;
+
+            // Generate the expression AST first with error handling
+            const expr_result = self.writeExprForAST(rule.expr) catch |err| {
+                std.debug.print("ERROR generating expr for rule '{s}': {}\n", .{rule.name.value, err});
+                continue;
+            };
+
+            // Now generate the rule
+            try self.writer.writeAll("    {\n");
+            try self.writer.writeAll("        const r = try allocator.create(ast.Rule);\n");
+            try self.writer.writeAll("        r.* = ast.Rule{\n");
+
+            // Position
+            const pos = rule.pos;
+            try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n", .{pos.line, pos.column, pos.offset});
+
+            // Name
+            const escaped_name = try escapeZigString(rule.name.value, self.allocator);
+            defer self.allocator.free(escaped_name);
+            try self.writer.print("            .name = ast.Identifier{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n",
+                .{rule.name.pos.line, rule.name.pos.column, rule.name.pos.offset, escaped_name});
+
+            // Display name
+            if (rule.display_name.value.len > 0) {
+                const escaped_display = try escapeZigString(rule.display_name.value, self.allocator);
+                defer self.allocator.free(escaped_display);
+                try self.writer.print("            .display_name = ast.StringLit{{ .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, .value = \"{s}\" }},\n",
+                    .{rule.display_name.pos.line, rule.display_name.pos.column, rule.display_name.pos.offset, escaped_display});
+            } else {
+                try self.writer.writeAll("            .display_name = ast.StringLit{\n");
+                try self.writer.writeAll("                .pos = ast.Pos{ .line = 0, .column = 0, .offset = 0 },\n");
+                try self.writer.writeAll("                .value = \"\",\n");
+                try self.writer.writeAll("            },\n");
+            }
+
+            // Expression value and pointer
+            // For now, set .expression to undefined and use .expr pointer
+            try self.writer.writeAll("            .expression = undefined,\n");
+            try self.writer.print("            .expr = {s},\n", .{expr_result.name});
+            // TODO: manage memory properly
+            _ = expr_result.is_rule_ref;
+
+            // Other fields
+            try self.writer.writeAll("            .visited = false,\n");
+            try self.writer.writeAll("            .nullable = false,\n");
+            try self.writer.writeAll("            .left_recursive = false,\n");
+            try self.writer.writeAll("            .leader = false,\n");
+
+            try self.writer.writeAll("        };\n");
+            try self.writer.writeAll("        try grammar.rules.append(allocator, r);\n");
+            try self.writer.writeAll("    }\n");
         }
 
         try self.writer.writeAll("    return grammar;\n");
         try self.writer.writeAll("}\n\n");
+    }
+
+    /// Write expression value (inline, not pointer)
+    fn writeExprValue(self: *Builder, expr: *ast.Expression) !void {
+        try self.writer.writeAll("ast.Expression{");
+        switch (expr.*) {
+            .seq => |seq| {
+                try self.writer.writeAll(".seq = ast.SeqExpr{");
+                try self.writer.print(" .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, ",
+                    .{seq.pos.line, seq.pos.column, seq.pos.offset});
+                try self.writer.writeAll(".exprs = undefined, .nullable = false }");
+            },
+            .choice => |choice| {
+                try self.writer.writeAll(".choice = ast.ChoiceExpr{");
+                try self.writer.print(" .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }}, ",
+                    .{choice.pos.line, choice.pos.column, choice.pos.offset});
+                try self.writer.writeAll(".alternatives = undefined, .nullable = false }");
+            },
+            else => {
+                try self.writer.writeAll(".seq = undefined");
+            },
+        }
+        try self.writer.writeAll("}");
+    }
+
+    /// Generate expression AST data structure (for interpreter mode)
+    fn writeExprForAST(self: *Builder, expr: *ast.Expression) !struct { name: []const u8, is_rule_ref: bool } {
+        // Handle rule_ref - generate declaration and return wrapper name
+        if (expr.* == .rule_ref) {
+            self.expr_index += 1;
+            const rule_ref = expr.rule_ref;
+
+            // Generate rule_ref declaration
+            const escaped_name = try escapeZigString(rule_ref.name.value, self.allocator);
+            defer self.allocator.free(escaped_name);
+
+            try self.writer.print("    const rule_ref_{}_{} = try allocator.create(ast.RuleRefExpr);\n", .{self.rule_index, self.expr_index});
+            try self.writer.print("    rule_ref_{}_{}.* = .{{\n", .{self.rule_index, self.expr_index});
+            try self.writer.print("        .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                .{ rule_ref.pos.line, rule_ref.pos.column, rule_ref.pos.offset });
+            try self.writer.print("        .name = .{{\n            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n            .value = \"{s}\",\n        }},\n",
+                .{rule_ref.name.pos.line, rule_ref.name.pos.column, rule_ref.name.pos.offset, escaped_name});
+            try self.writer.writeAll("        .nullable = false,\n");
+            try self.writer.print("    }};\n", .{});
+
+            // Generate Expression wrapper
+            const wrapper_name = try std.fmt.allocPrint(self.allocator, "rule_ref_expr_{d}_{d}",
+                .{self.rule_index, self.expr_index});
+            try self.writer.print("    const {s} = try allocator.create(ast.Expression);\n", .{wrapper_name});
+            try self.writer.print("    {s}.* = .{{ .rule_ref = rule_ref_{}_{} }};\n\n", .{wrapper_name, self.rule_index, self.expr_index});
+
+            return .{ .name = wrapper_name, .is_rule_ref = true };
+        }
+
+        // For other expression types, generate the structure
+        // Increment expr_index for this expression
+        self.expr_index += 1;
+        const current_expr_index = self.expr_index;
+
+        // Generate unique variable name for this expression
+        const var_name = try std.fmt.allocPrint(self.allocator, "expr_{d}_{d}", .{self.rule_index, current_expr_index});
+        errdefer self.allocator.free(var_name);
+
+        try self.writer.print("    const {s} = try allocator.create(ast.Expression);\n", .{var_name});
+        try self.writer.writeAll("    {\n");
+
+        switch (expr.*) {
+            .seq => |seq| {
+                try self.writer.print("        const seq_{} = try allocator.create(ast.SeqExpr);\n", .{current_expr_index});
+                try self.writer.print("        seq_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{seq.pos.line, seq.pos.column, seq.pos.offset});
+                try self.writer.writeAll("            .exprs = std.ArrayList(*ast.Expression).initCapacity(allocator, ");
+                try self.writer.print("{}) catch unreachable,\n", .{seq.exprs.items.len});
+                try self.writer.writeAll("            .nullable = false,\n");
+                try self.writer.writeAll("        };\n");
+
+                // Now generate sub-expressions and add them
+                for (seq.exprs.items) |sub_expr| {
+                    const sub_var = try self.writeExprForAST(sub_expr);
+                    try self.writer.print("        try seq_{}.exprs.append(allocator, {s});\n", .{current_expr_index, sub_var.name});
+                    _ = sub_var.is_rule_ref;
+                }
+
+                try self.writer.print("        {s}.* = .{{ .seq = seq_{} }};\n", .{var_name, current_expr_index});
+            },
+            .choice => |choice| {
+                try self.writer.print("        const choice_{} = try allocator.create(ast.ChoiceExpr);\n", .{current_expr_index});
+                try self.writer.print("        choice_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{choice.pos.line, choice.pos.column, choice.pos.offset});
+                try self.writer.writeAll("            .alternatives = std.ArrayList(*ast.Expression).initCapacity(allocator, ");
+                try self.writer.print("{}) catch unreachable,\n", .{choice.alternatives.items.len});
+                try self.writer.writeAll("            .nullable = false,\n");
+                try self.writer.writeAll("        };\n");
+
+                // Generate sub-expressions
+                for (choice.alternatives.items) |alt| {
+                    const alt_var = try self.writeExprForAST(alt);
+                    try self.writer.print("        try choice_{}.alternatives.append(allocator, {s});\n", .{current_expr_index, alt_var.name});
+                    _ = alt_var.is_rule_ref;
+                }
+
+                try self.writer.print("        {s}.* = .{{ .choice = choice_{} }};\n", .{var_name, current_expr_index});
+            },
+            .action => |act| {
+                // Create and initialize code block first
+                const escaped_code = try escapeZigString(act.code.value, self.allocator);
+                defer self.allocator.free(escaped_code);
+                try self.writer.print("        const code_{} = try allocator.create(ast.CodeBlock);\n", .{current_expr_index});
+                try self.writer.print("        code_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{act.code.pos.line, act.code.pos.column, act.code.pos.offset});
+                try self.writer.print("            .value = \"{s}\",\n", .{escaped_code});
+                try self.writer.writeAll("        };\n");
+
+                // Now create action expression
+                try self.writer.print("        const action_{} = try allocator.create(ast.ActionExpr);\n", .{current_expr_index});
+                try self.writer.print("        action_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{act.pos.line, act.pos.column, act.pos.offset});
+                try self.writer.writeAll("            .expr = undefined,\n");
+                try self.writer.print("            .code = code_{},\n", .{current_expr_index});
+                try self.writer.writeAll("            .func_ix = 0,\n");
+                try self.writer.writeAll("            .nullable = false,\n");
+                try self.writer.writeAll("        };\n");
+
+                // Generate sub-expression for action
+                const sub_var = try self.writeExprForAST(act.expr);
+                try self.writer.print("        action_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
+                _ = sub_var.is_rule_ref;
+
+                try self.writer.print("        {s}.* = .{{ .action = action_{} }};\n", .{var_name, current_expr_index});
+            },
+            .labeled => |labeled| {
+                // Create and initialize label identifier first
+                const escaped_label = try escapeZigString(labeled.label.value, self.allocator);
+                defer self.allocator.free(escaped_label);
+                try self.writer.print("        const label_{} = try allocator.create(ast.Identifier);\n", .{current_expr_index});
+                try self.writer.print("        label_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{labeled.label.pos.line, labeled.label.pos.column, labeled.label.pos.offset});
+                try self.writer.print("            .value = \"{s}\",\n", .{escaped_label});
+                try self.writer.writeAll("        };\n");
+
+                // Now create labeled expression
+                try self.writer.print("        const labeled_{} = try allocator.create(ast.LabeledExpr);\n", .{current_expr_index});
+                try self.writer.print("        labeled_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{labeled.pos.line, labeled.pos.column, labeled.pos.offset});
+                try self.writer.print("            .label = label_{},\n", .{current_expr_index});
+                try self.writer.writeAll("            .expr = undefined,\n");
+                try self.writer.writeAll("        };\n");
+
+                // Generate sub-expression
+                const sub_var = try self.writeExprForAST(labeled.expr);
+                try self.writer.print("        labeled_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
+                _ = sub_var.is_rule_ref;
+
+                try self.writer.print("        {s}.* = .{{ .labeled = labeled_{} }};\n", .{var_name, current_expr_index});
+            },
+            .and_expr => |and_expr| {
+                try self.writer.print("        const and_expr_{} = try allocator.create(ast.AndExpr);\n", .{current_expr_index});
+                try self.writer.print("        and_expr_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{and_expr.pos.line, and_expr.pos.column, and_expr.pos.offset});
+                try self.writer.writeAll("            .expr = undefined,\n");
+                try self.writer.writeAll("        };\n");
+
+                const sub_var = try self.writeExprForAST(and_expr.expr);
+                try self.writer.print("        and_expr_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
+                _ = sub_var.is_rule_ref;
+
+                try self.writer.print("        {s}.* = .{{ .and_expr = and_expr_{} }};\n", .{var_name, current_expr_index});
+            },
+            .not => |not_expr| {
+                try self.writer.print("        const not_expr_{} = try allocator.create(ast.NotExpr);\n", .{current_expr_index});
+                try self.writer.print("        not_expr_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{not_expr.pos.line, not_expr.pos.column, not_expr.pos.offset});
+                try self.writer.writeAll("            .expr = undefined,\n");
+                try self.writer.writeAll("        };\n");
+
+                const sub_var = try self.writeExprForAST(not_expr.expr);
+                try self.writer.print("        not_expr_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
+                _ = sub_var.is_rule_ref;
+
+                try self.writer.print("        {s}.* = .{{ .not = not_expr_{} }};\n", .{var_name, current_expr_index});
+            },
+            .zero_or_one => |z| {
+                try self.writer.print("        const zero_or_one_{} = try allocator.create(ast.ZeroOrOneExpr);\n", .{current_expr_index});
+                try self.writer.print("        zero_or_one_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{z.pos.line, z.pos.column, z.pos.offset});
+                try self.writer.writeAll("            .expr = undefined,\n");
+                try self.writer.writeAll("        };\n");
+
+                const sub_var = try self.writeExprForAST(z.expr);
+                try self.writer.print("        zero_or_one_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
+                _ = sub_var.is_rule_ref;
+
+                try self.writer.print("        {s}.* = .{{ .zero_or_one = zero_or_one_{} }};\n", .{var_name, current_expr_index});
+            },
+            .zero_or_more => |z| {
+                try self.writer.print("        const zero_or_more_{} = try allocator.create(ast.ZeroOrMoreExpr);\n", .{current_expr_index});
+                try self.writer.print("        zero_or_more_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{z.pos.line, z.pos.column, z.pos.offset});
+                try self.writer.writeAll("            .expr = undefined,\n");
+                try self.writer.writeAll("        };\n");
+
+                const sub_var = try self.writeExprForAST(z.expr);
+                try self.writer.print("        zero_or_more_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
+                _ = sub_var.is_rule_ref;
+
+                try self.writer.print("        {s}.* = .{{ .zero_or_more = zero_or_more_{} }};\n", .{var_name, current_expr_index});
+            },
+            .one_or_more => |o| {
+                try self.writer.print("        const one_or_more_{} = try allocator.create(ast.OneOrMoreExpr);\n", .{current_expr_index});
+                try self.writer.print("        one_or_more_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{o.pos.line, o.pos.column, o.pos.offset});
+                try self.writer.writeAll("            .expr = undefined,\n");
+                try self.writer.writeAll("        };\n");
+
+                const sub_var = try self.writeExprForAST(o.expr);
+                try self.writer.print("        one_or_more_{}.expr = {s};\n", .{current_expr_index, sub_var.name});
+                _ = sub_var.is_rule_ref;
+
+                try self.writer.print("        {s}.* = .{{ .one_or_more = one_or_more_{} }};\n", .{var_name, current_expr_index});
+            },
+            .lit_matcher => |lit| {
+                const escaped_val = try escapeZigString(lit.value, self.allocator);
+                defer self.allocator.free(escaped_val);
+
+                try self.writer.print("        const lit_{} = try allocator.create(ast.LitMatcher);\n", .{current_expr_index});
+                try self.writer.print("        lit_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{lit.pos.line, lit.pos.column, lit.pos.offset});
+                try self.writer.print("            .value = \"{s}\",\n", .{escaped_val});
+                try self.writer.print("            .ignore_case = {},\n", .{lit.ignore_case});
+                try self.writer.writeAll("        };\n");
+
+                try self.writer.print("        {s}.* = .{{ .lit_matcher = lit_{} }};\n", .{var_name, current_expr_index});
+            },
+            .any_matcher => |any| {
+                try self.writer.print("        const any_{} = try allocator.create(ast.AnyMatcher);\n", .{current_expr_index});
+                try self.writer.print("        any_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{any.pos.line, any.pos.column, any.pos.offset});
+                try self.writer.print("            .value = \"{s}\",\n", .{any.value});
+                try self.writer.writeAll("        };\n");
+
+                try self.writer.print("        {s}.* = .{{ .any_matcher = any_{} }};\n", .{var_name, current_expr_index});
+            },
+            .char_class_matcher => |class| {
+                try self.writer.print("        const char_class_{} = try allocator.create(ast.CharClassMatcher);\n", .{current_expr_index});
+                try self.writer.print("        char_class_{}.* = .{{\n", .{current_expr_index});
+                try self.writer.print("            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{class.pos.line, class.pos.column, class.pos.offset});
+
+                // value and ignore_case fields
+                const escaped_value = try escapeZigString(class.value, self.allocator);
+                defer self.allocator.free(escaped_value);
+                try self.writer.print("            .value = \"{s}\",\n", .{escaped_value});
+                try self.writer.print("            .ignore_case = {},\n", .{class.ignore_case});
+                try self.writer.print("            .inverted = {},\n", .{class.inverted});
+
+                try self.writer.writeAll("            .ranges = std.ArrayList(struct { u8, u8 }).initCapacity(allocator, ");
+                try self.writer.print("{}) catch unreachable,\n", .{class.ranges.items.len});
+                try self.writer.writeAll("            .chars = std.ArrayList(u8).initCapacity(allocator, ");
+                try self.writer.print("{}) catch unreachable,\n", .{class.chars.items.len});
+                try self.writer.writeAll("            .unicode_classes = std.ArrayList([]const u8).initCapacity(allocator, ");
+                try self.writer.print("{}) catch unreachable,\n", .{class.unicode_classes.items.len});
+                try self.writer.writeAll("        };\n");
+
+                // Add ranges
+                for (class.ranges.items) |r| {
+                    // Output: try char_class_N.ranges.append(allocator, .{ a, b });
+                    try self.writer.print("        try char_class_{}.ranges.append(allocator, .{{ {}, {} }});\n",
+                        .{current_expr_index, r[0], r[1]});
+                }
+
+                // Add chars
+                for (class.chars.items) |c| {
+                    try self.writer.print("        try char_class_{}.chars.append(allocator, {});\n",
+                        .{current_expr_index, c});
+                }
+
+                // Add unicode_classes
+                for (class.unicode_classes.items) |uc| {
+                    const escaped = try escapeZigString(uc, self.allocator);
+                    defer self.allocator.free(escaped);
+                    try self.writer.print("        try char_class_{}.unicode_classes.append(allocator, \"{s}\");\n",
+                        .{current_expr_index, escaped});
+                }
+
+                try self.writer.print("        {s}.* = .{{ .char_class_matcher = char_class_{} }};\n", .{var_name, current_expr_index});
+            },
+            else => {
+                // For other expression types, return undefined
+                try self.writer.print("        {s}.* = undefined;\n", .{var_name});
+                try self.writer.writeAll("    }\n");
+                return .{ .name = var_name, .is_rule_ref = false };
+            },
+        }
+
+        try self.writer.writeAll("    }\n");
+
+        return .{ .name = var_name, .is_rule_ref = false };
+    }
+
+    fn writeParseFunction(self: *Builder, grammar: *ast.Grammar) !void {
+        _ = grammar;
+
+        try self.writer.writeAll("\n// Parse entry function\n");
+        try self.writer.writeAll("// Note: This returns a static grammar template, not a dynamically parsed one\n");
+        try self.writer.writeAll("pub fn parse(allocator: std.mem.Allocator, filename: []const u8, source: []const u8) !*ast.Grammar {\n");
+        try self.writer.writeAll("    _ = filename;\n");
+        try self.writer.writeAll("    _ = source;\n");
+        try self.writer.writeAll("    // Get the static grammar structure\n");
+        try self.writer.writeAll("    return getGrammar(allocator);\n");
+        try self.writer.writeAll("}\n");
+    }
+
+    // Declare all RuleRefExpr variables in an expression tree
+    fn declareRuleRefExprs(self: *Builder, expr: *ast.Expression) BuilderError!void {
+        switch (expr.*) {
+            .rule_ref => |rule_ref| {
+                // Don't increment expr_index here - it will be incremented in writeExprForAST
+                const escaped_name = try escapeZigString(rule_ref.name.value, self.allocator);
+                defer self.allocator.free(escaped_name);
+
+                try self.writer.print("    const rule_ref_{}_{} = try allocator.create(ast.RuleRefExpr);\n", .{self.rule_index, self.expr_index + 1});
+                try self.writer.print("    rule_ref_{}_{}.* = .{{\n", .{self.rule_index, self.expr_index + 1});
+                try self.writer.print("        .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n",
+                    .{ rule_ref.pos.line, rule_ref.pos.column, rule_ref.pos.offset });
+                try self.writer.print("        .name = .{{\n            .pos = ast.Pos{{ .line = {}, .column = {}, .offset = {} }},\n            .value = \"{s}\",\n        }},\n",
+                    .{rule_ref.name.pos.line, rule_ref.name.pos.column, rule_ref.name.pos.offset, escaped_name});
+                try self.writer.writeAll("        .nullable = false,\n");
+                try self.writer.print("    }};\n", .{});
+
+                // Also create Expression wrapper for this rule_ref
+                try self.writer.print("    const rule_ref_expr_{}_{} = try allocator.create(ast.Expression);\n", .{self.rule_index, self.expr_index + 1});
+                try self.writer.print("    rule_ref_expr_{}_{}.* = .{{ .rule_ref = rule_ref_{}_{} }};\n\n", .{self.rule_index, self.expr_index + 1, self.rule_index, self.expr_index + 1});
+            },
+            .action => |act| try self.declareRuleRefExprs(act.expr),
+            .and_expr => |and_expr| try self.declareRuleRefExprs(and_expr.expr),
+            .choice => |choice| {
+                for (choice.alternatives.items) |e| try self.declareRuleRefExprs(e);
+            },
+            .labeled => |labeled| try self.declareRuleRefExprs(labeled.expr),
+            .not => |not_expr| try self.declareRuleRefExprs(not_expr.expr),
+            .one_or_more => |one_or_more| try self.declareRuleRefExprs(one_or_more.expr),
+            .seq => |seq| {
+                for (seq.exprs.items) |e| try self.declareRuleRefExprs(e);
+            },
+            .zero_or_more => |zero_or_more| try self.declareRuleRefExprs(zero_or_more.expr),
+            .zero_or_one => |zero_or_one| try self.declareRuleRefExprs(zero_or_one.expr),
+            .recovery => |recovery| {
+                try self.declareRuleRefExprs(recovery.expr);
+                try self.declareRuleRefExprs(recovery.recover_expr);
+            },
+            // These types don't contain nested expressions that need RuleRefExpr
+            .and_code, .not_code, .state_code, .any_matcher, .char_class_matcher, .lit_matcher, .throw => {},
+        }
     }
 
     fn writeRuleDefinition(self: *Builder, r: *ast.Rule) !void {

@@ -1,5 +1,5 @@
 const std = @import("std");
-const prepegz = @import("parser.zig");
+const parser_mod = @import("parser.zig");
 const builder_mod = @import("pegz_common").builder;
 
 pub fn main() !void {
@@ -18,8 +18,8 @@ pub fn main() !void {
     defer allocator.free(args);
 
     if (args.len < 2) {
-        std.log.err("USAGE: prepegz [-o OUTPUT] GRAMMAR_FILE\n", .{});
-        std.log.err("Example: prepegz grammars/pegz.pegz -o pegz/parser.zig\n", .{});
+        std.log.err("USAGE: pegz [-o OUTPUT] GRAMMAR_FILE\n", .{});
+        std.log.err("Example: pegz calc.pegz -o calc/parser.zig\n", .{});
         std.process.exit(1);
     }
 
@@ -90,7 +90,7 @@ pub fn main() !void {
     _ = try in_file.readAll(source);
 
     // Use generated parser to parse grammar
-    const grammar = prepegz.parse(allocator, grammar_file, source) catch |err| {
+    const grammar = parser_mod.parse(allocator, grammar_file, source) catch |err| {
         std.log.err("Error parsing grammar file: {}\n", .{err});
         std.process.exit(7);
     };
@@ -107,5 +107,5 @@ pub fn main() !void {
     // Success message
     std.debug.print("✅ Successfully generated parser: {s}\n", .{final_output});
     std.debug.print("   from grammar: {s}\n", .{grammar_file});
-    std.debug.print("   using prepegz version\n", .{});
+    std.debug.print("   using pegz version\n", .{});
 }

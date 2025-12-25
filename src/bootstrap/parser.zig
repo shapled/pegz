@@ -661,7 +661,7 @@ pub const Parser = struct {
         const rule_ref = try self.allocator.create(ast.RuleRefExpr);
         rule_ref.* = ast.RuleRefExpr{
             .pos = self.tok.pos,
-            .name = identifier,
+            .name = identifier.*,
             .nullable = false,
         };
 

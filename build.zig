@@ -21,12 +21,12 @@ pub fn build(b: *std.Build) void {
     bootstrap_exe.root_module.addImport("pegz_common", common_module);
     b.installArtifact(bootstrap_exe);
 
-    // Generate src/prepegz/grammar.zig from grammars/prepegz.pegz (instead of parser.zig)
+    // Generate src/prepegz/parser.zig from grammars/prepegz.pegz
     const generate_prepegz_parser = b.addRunArtifact(bootstrap_exe);
     generate_prepegz_parser.addArgs(&[_][]const u8{
         "./grammars/prepegz.pegz",
         "-o",
-        "src/prepegz/grammar.zig",
+        "src/prepegz/parser.zig",
     });
 
     // -------------------- Stage 2: Prepegz --------------------
@@ -68,9 +68,28 @@ pub fn build(b: *std.Build) void {
     // Ensure prepegz_exe is built before generating pegz/parser.zig
     generate_pegz_parser.step.dependOn(&prepegz_exe.step);
 
+    // -------------------- Stage 4: Pegz --------------------
+    // Compile the pegz executable using generated parser
+    const pegz_exe = b.addExecutable(.{
+        .name = "pegz",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/pegz/main.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
+    });
+    pegz_exe.root_module.addImport("pegz_common", common_module);
+    // Add bootstrap as a dependency so pegz can reuse its parser
+    pegz_exe.root_module.addImport("bootstrap", bootstrap_mod);
+
+    // Ensure src/pegz/parser.zig is generated before compiling pegz_exe
+    pegz_exe.step.dependOn(&generate_pegz_parser.step);
+    b.installArtifact(pegz_exe);
+
     // -------------------- Final Build Steps --------------------
     const install_step = b.getInstallStep();
     install_step.dependOn(&generate_prepegz_parser.step);
     install_step.dependOn(&prepegz_exe.step);
     install_step.dependOn(&generate_pegz_parser.step);
+    install_step.dependOn(&pegz_exe.step);
 }
