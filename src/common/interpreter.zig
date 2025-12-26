@@ -67,6 +67,7 @@ pub const ParseError = error{
     RuleNotFound,
     UnimplementedExpression,
     UnimplementedMatcher,
+    ThrownFailure,
 };
 
 /// Interpreter engine - executes expression trees at runtime
@@ -176,25 +177,26 @@ pub const Interpreter = struct {
 
     /// Execute an expression and return the result
     pub fn execExpr(self: *Interpreter, expr: *const ast.Expression) !Value {
-        switch (expr.*) {
-            .seq => |seq| return self.execSeq(seq),
-            .choice => |choice| return self.execChoice(choice),
-            .action => |action| return self.execAction(action),
-            .labeled => |labeled| return self.execLabeled(labeled),
-            .rule_ref => |ref| return self.execRuleRef(ref),
-            .lit_matcher => |lit| return self.execLitMatcher(lit),
-            .char_class_matcher => |class| return self.execCharClassMatcher(class),
-            .any_matcher => |any| return self.execAnyMatcher(any),
-            .and_expr => |and_expr| return self.execAndExpr(and_expr),
-            .not => |not| return self.execNotExpr(not),
-            .zero_or_one => |z| return self.execZeroOrOne(z),
-            .zero_or_more => |z| return self.execZeroOrMore(z),
-            .one_or_more => |o| return self.execOneOrMore(o),
-            else => {
-                std.log.err("execExpr: unimplemented expression type\n", .{});
-                return error.UnimplementedExpression;
-            },
-        }
+        return switch (expr.*) {
+            .seq => |seq| self.execSeq(seq),
+            .choice => |choice| self.execChoice(choice),
+            .action => |action| self.execAction(action),
+            .labeled => |labeled| self.execLabeled(labeled),
+            .rule_ref => |ref| self.execRuleRef(ref),
+            .lit_matcher => |lit| self.execLitMatcher(lit),
+            .char_class_matcher => |class| self.execCharClassMatcher(class),
+            .any_matcher => |any| self.execAnyMatcher(any),
+            .and_expr => |and_expr| self.execAndExpr(and_expr),
+            .not => |not| self.execNotExpr(not),
+            .zero_or_one => |z| self.execZeroOrOne(z),
+            .zero_or_more => |z| self.execZeroOrMore(z),
+            .one_or_more => |o| self.execOneOrMore(o),
+            .recovery => |recovery| self.execRecoveryExpr(recovery),
+            .throw => |throw| self.execThrowExpr(throw),
+            .state_code => |state_code| self.execStateCodeExpr(state_code),
+            .and_code => |and_code| self.execAndCodeExpr(and_code),
+            .not_code => |not_code| self.execNotCodeExpr(not_code),
+        };
     }
 
     fn execSeq(_: *Interpreter, _: *const ast.SeqExpr) !Value {
@@ -338,6 +340,40 @@ pub const Interpreter = struct {
     }
 
     fn execOneOrMore(_: *Interpreter, _: *const ast.OneOrMoreExpr) !Value {
+        return ParseError.NoMatch;
+    }
+
+    // ========== Advanced Expression Type Implementations ==========
+
+    /// RecoveryExpr: try expr, if it fails with matching labels, try recover_expr
+    fn execRecoveryExpr(self: *Interpreter, recovery: *const ast.RecoveryExpr) !Value {
+        _ = recovery.labels;
+        // For now, just try the recovery expression directly
+        // TODO: implement proper recovery with label matching
+        return self.execExpr(&recovery.recover_expr);
+    }
+
+    /// ThrowExpr: throw a failure with a label
+    fn execThrowExpr(_: *Interpreter, _: *const ast.ThrowExpr) !Value {
+        // Throwing creates a labeled failure
+        return ParseError.ThrownFailure;
+    }
+
+    /// StateCodeExpr: execute state-modifying code (always succeeds)
+    fn execStateCodeExpr(_: *Interpreter, _: *const ast.StateCodeExpr) !Value {
+        // State code modifies internal state but always succeeds
+        return Value{ .boolean = true };
+    }
+
+    /// AndCodeExpr: AND predicate with code (always succeeds, doesn't consume input)
+    fn execAndCodeExpr(_: *Interpreter, _: *const ast.AndCodeExpr) !Value {
+        // AND predicate with code - check condition without consuming
+        return Value{ .boolean = true };
+    }
+
+    /// NotCodeExpr: NOT predicate with code (always fails, doesn't consume input)
+    fn execNotCodeExpr(_: *Interpreter, _: *const ast.NotCodeExpr) !Value {
+        // NOT predicate with code - check condition without consuming
         return ParseError.NoMatch;
     }
 };

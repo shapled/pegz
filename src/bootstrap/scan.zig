@@ -117,7 +117,7 @@ pub const Scanner = struct {
                         result.lit = try self.allocator.dupe(u8, &[_]u8{@intCast(r)});
                     }
                 },
-                ':', ';', '(', ')', '.', '&', '!', '?', '+', '*', '\n' => {
+                ':', ';', '(', ')', '{', '}', '.', '&', '!', '?', '+', '*', '%', '#', '\n' => {
                     result.id = @enumFromInt(r);
                     result.lit = try self.allocator.dupe(u8, &[_]u8{@intCast(r)});
                 },

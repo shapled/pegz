@@ -25,6 +25,8 @@ pub const Tid = enum(i32) {
     semicolon = ';', // optional ';' to terminate rules
     lparen = '(', // parenthesis to group expressions '('
     rparen = ')', // ')'
+    lbrace = '{', // left brace for code blocks and recovery expressions
+    rbrace = '}', // right brace for code blocks and throw expressions
     dot = '.', // any matcher '.'
     ampersand = '&', // and-predicate '&'
     exclamation = '!', // not-predicate '!'
@@ -32,6 +34,8 @@ pub const Tid = enum(i32) {
     plus = '+', // one-or-more '+'
     star = '*', // zero-or-more '*'
     slash = '/', // ordered choice '/'
+    percent = '%', // throw expression '%'
+    hash = '#', // state code '#'
 
     const Self = @This();
 
@@ -53,6 +57,8 @@ pub const Tid = enum(i32) {
             .semicolon => "semicolon",
             .lparen => "lparen",
             .rparen => "rparen",
+            .lbrace => "lbrace",
+            .rbrace => "rbrace",
             .dot => "dot",
             .ampersand => "ampersand",
             .exclamation => "exclamation",
@@ -60,6 +66,8 @@ pub const Tid = enum(i32) {
             .plus => "plus",
             .star => "star",
             .slash => "slash",
+            .percent => "percent",
+            .hash => "hash",
         };
     }
 

@@ -48,6 +48,9 @@ const PosValue = struct {
 
 pub const CodeBlock = PosValue;
 
+/// FailureLabel is a label used for error recovery
+pub const FailureLabel = []const u8;
+
 pub const Grammar = struct {
     pos: Pos,
     init: ?*CodeBlock,

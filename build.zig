@@ -55,12 +55,11 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(prepegz_exe);
 
     // -------------------- Stage 3: Generate pegz/parser.zig --------------------
-    // This step would use grammars/pegz.pegz, but we use prepegz.pegz as placeholder
+    // Use the full pegz.pegz grammar with advanced features
     const generate_pegz_parser = b.addRunArtifact(prepegz_exe);
 
-    // If you have pegz.pegz, replace ./grammars/prepegz.pegz with ./grammars/pegz.pegz
     generate_pegz_parser.addArgs(&[_][]const u8{
-        "./grammars/prepegz.pegz",  // Replace with ./grammars/pegz.pegz when available
+        "./grammars/pegz.pegz",  // Full-featured pegz grammar
         "-o",
         "src/pegz/parser.zig",
     });

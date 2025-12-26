@@ -1,0 +1,430 @@
+{
+package main
+}
+
+# Pegz Grammar - Full-featured PEG parser generator grammar
+# This is a self-hosting grammar that supports error recovery, throw expressions,
+# Unicode character classes, and comprehensive error checking.
+
+Grammar ← __ initializer:( Initializer __ )? rules:( Rule __ )+ EOF {
+    const pos = c.astPos();
+
+    // Create the grammar
+    const g = try c.allocator.create(ast.Grammar);
+    g.* = ast.Grammar{
+        .pos = pos,
+        .init = null,
+        .rules = std.ArrayList(*ast.Rule).init(c.allocator),
+    };
+
+    // Set initializer if present
+    if (initializer) |init_val| {
+        g.init = @as(*ast.CodeBlock, @ptrCast(init_val));
+    }
+
+    // Add rules
+    const rules_slice = @as([]const []const u8, @ptrCast(rules));
+    for (rules_slice) |rule_val| {
+        const rule_ptr = @as(*ast.Rule, @ptrCast(rule_val));
+        try g.rules.append(c.allocator, rule_ptr);
+    }
+
+    return g;
+}
+
+Initializer ← code:CodeBlock EOS {
+    return code;
+}
+
+Rule ← name:IdentifierName __ display:( StringLiteral __ )? RuleDefOp __ expr:Expression EOS {
+    const pos = c.astPos();
+
+    const rule = try c.allocator.create(ast.Rule);
+    rule.* = ast.Rule{
+        .pos = pos,
+        .name = name.*,
+        .display_name = undefined,
+        .expr = undefined,
+        .visited = false,
+        .nullable = false,
+        .left_recursive = false,
+        .leader = false,
+    };
+
+    // Set display name
+    if (display) |display_val| {
+        rule.display_name = @as(ast.StringLit, @ptrCast(display_val));
+    } else {
+        rule.display_name = ast.StringLit{
+            .pos = pos,
+            .value = "",
+        };
+    }
+
+    // Set expression
+    const expr_ptr = try c.allocator.create(ast.Expression);
+    expr_ptr.* = expr;
+    rule.expr = expr_ptr;
+
+    return rule;
+}
+
+# Expression entry point - RecoveryExpr is the top level
+Expression ← RecoveryExpr
+
+# Recovery expression: expr //{label1, label2} recover_expr
+# Allows error recovery with labeled failures
+RecoveryExpr ← expr:ChoiceExpr recoverExprs:( __ "//{" __ Labels __ "}" __ ChoiceExpr )* {
+    const recover_slice = @as([]const []const u8, @ptrCast(recoverExprs));
+    var current_expr = expr;
+
+    for (recover_slice) |sl| {
+        const pos = c.astPos();
+        const recovery = try ast.RecoveryExpr.create(c.allocator, pos, current_expr, undefined, &[_][]const u8{});
+
+        // Extract labels and recover expr from the match
+        // sl structure: [whitespace, "//{", whitespace, labels, whitespace, "}", whitespace, recover_expr]
+        const sl_array = @as([9][]const u8, @ptrCast(sl));
+        const labels = @as([]ast.FailureLabel, @ptrCast(sl_array[3]));
+        const recover_expr = @as(ast.Expression, @ptrCast(sl_array[7]));
+
+        recovery.*.recover_expr = recover_expr;
+        recovery.*.labels = std.ArrayList([]const u8).init(c.allocator);
+        for (labels) |label| {
+            try recovery.labels.append(c.allocator, label);
+        }
+
+        const recovery_ptr = try c.allocator.create(ast.Expression);
+        recovery_ptr.* = ast.Expression{ .recovery = recovery };
+        current_expr = recovery_ptr.*;
+    }
+
+    return current_expr;
+}
+
+# Labels: comma-separated list of identifier names
+Labels ← label:IdentifierName labels:( __ "," __ IdentifierName )* {
+    const pos = c.astPos();
+
+    const labels_array = std.ArrayList([]const u8).init(c.allocator);
+    try labels_array.append(c.allocator, label.value);
+
+    const labels_slice = @as([]const []const u8, @ptrCast(labels));
+    for (labels_slice) |sl| {
+        const sl_array = @as([4][]const u8, @ptrCast(sl));
+        const label_name = @as(ast.Identifier, @ptrCast(sl_array[3]));
+        try labels_array.append(c.allocator, label_name.value);
+    }
+
+    return labels_array.toOwnedSlice(c.allocator);
+}
+
+ChoiceExpr ← first:ActionExpr rest:( __ "/" __ ActionExpr )* {
+    const rest_slice = @as([]const []const u8, @ptrCast(rest));
+    if (rest_slice.len == 0) {
+        return first;
+    }
+
+    const pos = c.astPos();
+    const choice = try ast.ChoiceExpr.create(c.allocator, pos, &[_]ast.Expression{first});
+
+    for (rest_slice) |sl| {
+        const sl_array = @as([4][]const u8, @ptrCast(sl));
+        const expr = @as(ast.Expression, @ptrCast(sl_array[3]));
+        try choice.alternatives.append(c.allocator, expr);
+    }
+
+    return ast.Expression{ .choice = choice };
+}
+
+ActionExpr ← expr:SeqExpr code:( __ CodeBlock )? {
+    if (code == null) {
+        return expr;
+    }
+
+    const pos = c.astPos();
+    const code_block = @as(ast.CodeBlock, @ptrCast(code.?));
+    const act = try ast.ActionExpr.create(c.allocator, pos, expr, code_block, 0);
+    return ast.Expression{ .action = act };
+}
+
+SeqExpr ← first:LabeledExpr rest:( __ LabeledExpr )* {
+    const rest_slice = @as([]const []const u8, @ptrCast(rest));
+    if (rest_slice.len == 0) {
+        return first;
+    }
+
+    const pos = c.astPos();
+    const seq = try ast.SeqExpr.create(c.allocator, pos, &[_]ast.Expression{first});
+
+    for (rest_slice) |sl| {
+        const sl_array = @as([2][]const u8, @ptrCast(sl));
+        const expr = @as(ast.Expression, @ptrCast(sl_array[1]));
+        try seq.exprs.append(c.allocator, expr);
+    }
+
+    return ast.Expression{ .seq = seq };
+}
+
+LabeledExpr ← label:Identifier __ ':' __ expr:PrefixedExpr {
+    const pos = c.astPos();
+    const lab = try ast.LabeledExpr.create(c.allocator, pos, label, expr);
+    return ast.Expression{ .labeled = lab };
+} / PrefixedExpr / ThrowExpr
+
+PrefixedExpr ← op:PrefixedOp __ expr:SuffixedExpr {
+    const pos = c.astPos();
+    const op_str = @as([]const u8, @ptrCast(op));
+
+    if (std.mem.eql(u8, op_str, "&")) {
+        const and_expr = try ast.AndExpr.create(c.allocator, pos, expr);
+        return ast.Expression{ .and_expr = and_expr };
+    }
+
+    const not_expr = try ast.NotExpr.create(c.allocator, pos, expr);
+    return ast.Expression{ .not = not_expr };
+} / SuffixedExpr
+
+PrefixedOp ← ( '&' / '!' ) {
+    return c.text;
+}
+
+SuffixedExpr ← expr:PrimaryExpr __ op:SuffixedOp {
+    const pos = c.astPos();
+    const op_str = @as([]const u8, @ptrCast(op));
+
+    if (std.mem.eql(u8, op_str, "?")) {
+        const zero_or_one = try ast.ZeroOrOneExpr.create(c.allocator, pos, expr);
+        return ast.Expression{ .zero_or_one = zero_or_one };
+    } else if (std.mem.eql(u8, op_str, "*")) {
+        const zero_or_more = try ast.ZeroOrMoreExpr.create(c.allocator, pos, expr);
+        return ast.Expression{ .zero_or_more = zero_or_more };
+    } else if (std.mem.eql(u8, op_str, "+")) {
+        const one_or_more = try ast.OneOrMoreExpr.create(c.allocator, pos, expr);
+        return ast.Expression{ .one_or_more = one_or_more };
+    } else {
+        return error.UnknownOperator;
+    }
+} / PrimaryExpr
+
+SuffixedOp ← ( '?' / '*' / '+' ) {
+    return c.text;
+}
+
+PrimaryExpr ← LitMatcher / CharClassMatcher / AnyMatcher / RuleRefExpr / SemanticPredExpr / "(" __ expr:Expression __ ")" {
+    return expr;
+}
+
+RuleRefExpr ← name:IdentifierName !( __ ( StringLiteral __ )? RuleDefOp ) {
+    const ref = try ast.RuleRefExpr.create(c.allocator, c.astPos(), name);
+    return ast.Expression{ .rule_ref = ref };
+}
+
+# Semantic predicates: #, &, ! followed by code block
+SemanticPredExpr ← op:SemanticPredOp __ code:CodeBlock {
+    const pos = c.astPos();
+    const op_str = @as([]const u8, @ptrCast(op));
+
+    if (std.mem.eql(u8, op_str, "#")) {
+        const state_code = try ast.StateCodeExpr.create(c.allocator, pos, code, 0);
+        return ast.Expression{ .state_code = state_code };
+    } else if (std.mem.eql(u8, op_str, "&")) {
+        const and_code = try ast.AndCodeExpr.create(c.allocator, pos, code, 0);
+        return ast.Expression{ .and_code = and_code };
+    } else {
+        const not_code = try ast.NotCodeExpr.create(c.allocator, pos, code, 0);
+        return ast.Expression{ .not_code = not_code };
+    }
+}
+
+SemanticPredOp ← ( '#' / '&' / '!' ) {
+    return c.text;
+}
+
+# Throw expression: %{label} - throws a failure label
+ThrowExpr ← '%' '{' label:IdentifierName '}' {
+    const pos = c.astPos();
+    const throw_expr = try ast.ThrowExpr.create(c.allocator, pos, label.value);
+    return ast.Expression{ .throw = throw_expr };
+} / '%' '{' IdentifierName EOF {
+    return error.ThrowExprNotTerminated;
+}
+
+RuleDefOp ← '=' / "<-" / '\u2190' / '\u27f5'
+
+# Whitespace and comments
+SourceChar ← .
+Comment ← MultiLineComment / SingleLineComment
+MultiLineComment ← "/*" ( !"*/" SourceChar )* "*/"
+MultiLineCommentNoLineTerminator ← "/*" ( !( "*/" / EOL ) SourceChar )* "*/"
+SingleLineComment ← !("//{") "//" ( !EOL SourceChar )*
+
+# Identifiers with Unicode support
+Identifier ← IdentifierName
+IdentifierName ← IdentifierStart IdentifierPart* {
+    return ast.Identifier{
+        .pos = c.astPos(),
+        .value = try c.allocator.dupe(u8, c.text),
+    };
+}
+
+# Unicode identifier support: \pL for letters, \p{Nd} for decimal numbers
+IdentifierStart ← [\pL_]
+IdentifierPart ← IdentifierStart / [\p{Nd}]
+
+# String literals with escape sequences and error checking
+LitMatcher ← lit:StringLiteral ignore:"i"? {
+    const raw_str = lit.value;
+
+    // Unquote the string (handle basic escaping)
+    const unquoted = try std.mem.replaceOwned(u8, c.allocator, raw_str, "\"", "");
+    const lit_matcher = try ast.LitMatcher.create(c.allocator, c.astPos(), unquoted, ignore != null);
+    return ast.Expression{ .lit_matcher = lit_matcher };
+}
+
+StringLiteral ← ( '"' DoubleStringChar* '"' / "'" SingleStringChar "'" / '`' RawStringChar* '`' ) {
+    return ast.StringLit{
+        .pos = c.astPos(),
+        .value = try c.allocator.dupe(u8, c.text),
+    };
+} / UnterminatedString
+
+UnterminatedString ← ( '"' DoubleStringChar* ( EOL / EOF )
+                     / "'" SingleStringChar* ( EOL / EOF )
+                     / '`' RawStringChar* EOF ) {
+    return error.StringLiteralNotTerminated;
+}
+
+DoubleStringChar ← !( '"' / "\\" / EOL ) SourceChar / "\\" DoubleStringEscape
+SingleStringChar ← !( "'" / "\\" / EOL ) SourceChar / "\\" SingleStringEscape
+RawStringChar ← !'`' SourceChar
+
+DoubleStringEscape ← ( '"' / CommonEscapeSequence )
+    / ( SourceChar / EOL / EOF ) {
+        return error.InvalidEscapeCharacter;
+}
+
+SingleStringEscape ← ( "'" / CommonEscapeSequence )
+    / ( SourceChar / EOL / EOF ) {
+        return error.InvalidEscapeCharacter;
+}
+
+# Escape sequences: \a, \b, \n, \f, \r, \t, \v, \\, \ooo, \xhh, \uhhhh, \Uhhhhhhhh
+CommonEscapeSequence ← SingleCharEscape / OctalEscape / HexEscape / LongUnicodeEscape / ShortUnicodeEscape
+
+SingleCharEscape ← 'a' / 'b' / 'n' / 'f' / 'r' / 't' / 'v' / '\\'
+
+OctalEscape ← OctalDigit OctalDigit OctalDigit
+    / OctalDigit ( SourceChar / EOL / EOF ) {
+        return error.InvalidOctalEscape;
+    }
+
+HexEscape ← 'x' HexDigit HexDigit
+    / 'x' ( SourceChar / EOL / EOF ) {
+        return error.InvalidHexEscape;
+    }
+
+LongUnicodeEscape ← 'U' HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit
+    / 'U' ( SourceChar / EOL / EOF ) {
+        return error.InvalidUnicodeEscape;
+    }
+
+ShortUnicodeEscape ← 'u' HexDigit HexDigit HexDigit HexDigit
+    / 'u' ( SourceChar / EOL / EOF ) {
+        return error.InvalidUnicodeEscape;
+    }
+
+OctalDigit ← [0-7]
+DecimalDigit ← [0-9]
+HexDigit ← [0-9a-f]i
+
+# Character class matcher with Unicode support
+CharClassMatcher ← '[' ( ClassCharRange / ClassChar / "\\" UnicodeClassEscape )* ']' 'i'? {
+    const pos = c.astPos();
+    const char_class = try ast.CharClassMatcher.create(
+        c.allocator,
+        pos,
+        try c.allocator.dupe(u8, c.text),
+        false,
+        false,
+        &[_]u8{},
+        &[_]struct { u8, u8 }{},
+        &[_][]const u8{},
+    );
+    return ast.Expression{ .char_class_matcher = char_class };
+} / UnterminatedCharClass
+
+UnterminatedCharClass ← '[' ( !( EOL ) SourceChar )* ( EOL / EOF ) {
+    return error.CharClassNotTerminated;
+}
+
+ClassCharRange ← ClassChar '-' ClassChar
+ClassChar ← !( "]" / "\\" / EOL ) SourceChar / "\\" CharClassEscape
+
+CharClassEscape ← ( ']' / CommonEscapeSequence )
+    / !'p' ( SourceChar / EOL / EOF ) {
+        return error.InvalidEscapeCharacter;
+    }
+
+# Unicode class escapes: \p{L}, \p{N}, \p{P}, \p{Z}, \p{S}, \p{C}
+# Or single-char form: \pL, \pN, etc.
+UnicodeClassEscape ← 'p' (
+      SingleCharUnicodeClass
+    / !'{' ( SourceChar / EOL / EOF ) {
+        return error.InvalidUnicodeClassEscape;
+    }
+    / '{' ident:IdentifierName '}' {
+        // Validate Unicode class name
+        const valid_classes = &[_][]const u8{"L", "N", "P", "Z", "S", "C", "M"};
+        var valid = false;
+        for (valid_classes) |cls| {
+            if (std.mem.eql(u8, ident.value, cls)) {
+                valid = true;
+                break;
+            }
+        }
+        if (!valid) {
+            return error.InvalidUnicodeClassEscape;
+        }
+    }
+    / '{' IdentifierName ( ']' / EOL / EOF ) {
+        return error.UnicodeClassNotTerminated;
+    }
+)
+
+SingleCharUnicodeClass ← [LMNCPZS]
+
+# Any character matcher
+AnyMatcher ← "." {
+    const any_matcher = try ast.AnyMatcher.create(c.allocator, c.astPos(), ".");
+    return ast.Expression{ .any_matcher = any_matcher };
+}
+
+# Code blocks with error checking
+CodeBlock ← '{' Code '}' {
+    const pos = c.astPos();
+    const code_block = try c.allocator.create(ast.CodeBlock);
+    code_block.* = ast.CodeBlock{
+        .pos = pos,
+        .value = try c.allocator.dupe(u8, c.text),
+    };
+    return code_block;
+} / '{' Code EOF {
+    return error.CodeBlockNotTerminated;
+}
+
+Code ← ( ( Comment / CodeStringLiteral / ![{}] SourceChar )+ / '{' Code '}' )*
+
+CodeStringLiteral ← '"' (`\"` / `\\` / [^"\r\n])* '"' /
+                    '`' [^`]* '`' /
+                    '\'' (`\'` / `\\` / [^']+ '\''
+
+# Whitespace handling
+__ ← ( Whitespace / EOL / Comment )*
+_ ← ( Whitespace / MultiLineCommentNoLineTerminator )*
+
+Whitespace ← [ \t\r]
+EOL ← '\n'
+EOS ← __ ';' / _ SingleLineComment? EOL / __ EOF
+
+EOF ← !.
