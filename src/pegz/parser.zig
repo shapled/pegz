@@ -451,7 +451,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.LitMatcher.create(
                                                                         allocator,
                                                                         .{ .line = 68, .column = 42, .offset = 1656 },
-                                                                        "\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                                                        "/",
                                                                         false,
                                                                     ),
                                                                 ),
@@ -745,7 +745,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 110, .column = 36, .offset = 2914 },
-                                                        "\xaa\xaa\xaa:\xaa\xaa\xaa'\xaa\xaa",
+                                                        ":",
                                                         false,
                                                     ),
                                                 ),
@@ -928,7 +928,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 143, .column = 17, .offset = 3983 },
-                                            "\xaa\xaa\xaa&\xaa\xaa\xaa'\xaa\xaa",
+                                            "&",
                                             false,
                                         ),
                                     ),
@@ -936,7 +936,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 143, .column = 23, .offset = 3989 },
-                                            "\xaa\xaa\xaa!\xaa\xaa\xaa'\xaa\xaa",
+                                            "!",
                                             false,
                                         ),
                                     ),
@@ -1076,7 +1076,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 179, .column = 17, .offset = 5187 },
-                                            "\xaa\xaa\xaa?\xaa\xaa\xaa'\xaa\xaa",
+                                            "?",
                                             false,
                                         ),
                                     ),
@@ -1084,7 +1084,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 179, .column = 23, .offset = 5193 },
-                                            "\xaa\xaa\xaa*\xaa\xaa\xaa'\xaa\xaa",
+                                            "*",
                                             false,
                                         ),
                                     ),
@@ -1092,7 +1092,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 179, .column = 29, .offset = 5199 },
-                                            "\xaa\xaa\xaa+\xaa\xaa\xaa'\xaa\xaa",
+                                            "+",
                                             false,
                                         ),
                                     ),
@@ -1187,7 +1187,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 183, .column = 94, .offset = 5323 },
-                                                        "\xaa\xaa\xaa(\xaa\xaa\xaa\"\xaa\xaa",
+                                                        "(",
                                                         false,
                                                     ),
                                                 ),
@@ -1235,7 +1235,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 183, .column = 120, .offset = 5349 },
-                                                        "\xaa\xaa\xaa)\xaa\xaa\xaa\"\xaa\xaa",
+                                                        ")",
                                                         false,
                                                     ),
                                                 ),
@@ -1480,7 +1480,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 216, .column = 21, .offset = 6415 },
-                                            "\xaa\xaa\xaa&\xaa\xaa\xaa'\xaa\xaa",
+                                            "&",
                                             false,
                                         ),
                                     ),
@@ -1488,7 +1488,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 216, .column = 27, .offset = 6421 },
-                                            "\xaa\xaa\xaa!\xaa\xaa\xaa'\xaa\xaa",
+                                            "!",
                                             false,
                                         ),
                                     ),
@@ -1524,7 +1524,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 220, .column = 14, .offset = 6465 },
-                                    "\xaa\xaa\xaa=\xaa\xaa\xaa'\xaa\xaa",
+                                    "=",
                                     false,
                                 ),
                             ),
@@ -1532,7 +1532,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 220, .column = 20, .offset = 6471 },
-                                    "\xaa\xaa\xaa<\xaa\xaa\xaa-\xaa\xaa\xaa\"\xaa\xaa",
+                                    "<-",
                                     false,
                                 ),
                             ),
@@ -1540,7 +1540,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 220, .column = 27, .offset = 6478 },
-                                    "\xaa\xaa\xaa\\\xaa\xaa\xaau\xaa\xaa\xaa2\xaa\xaa\xaa1\xaa\xaa\xaa9\xaa\xaa\xaa0\xaa\xaa\xaa'\xaa\xaa",
+                                    "\\u2190",
                                     false,
                                 ),
                             ),
@@ -1548,7 +1548,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 220, .column = 38, .offset = 6489 },
-                                    "\xaa\xaa\xaa\\\xaa\xaa\xaau\xaa\xaa\xaa2\xaa\xaa\xaa7\xaa\xaa\xaaf\xaa\xaa\xaa5\xaa\xaa\xaa'\xaa\xaa",
+                                    "\\u27f5",
                                     false,
                                 ),
                             ),
@@ -1638,7 +1638,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 224, .column = 21, .offset = 6586 },
-                                    "\xaa\xaa\xaa/\xaa\xaa\xaa*\xaa\xaa\xaa\"\xaa\xaa",
+                                    "/*",
                                     false,
                                 ),
                             ),
@@ -1659,7 +1659,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.LitMatcher.create(
                                                                 allocator,
                                                                 .{ .line = 224, .column = 29, .offset = 6594 },
-                                                                "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                                                "*/",
                                                                 false,
                                                             ),
                                                         ),
@@ -1684,7 +1684,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 224, .column = 48, .offset = 6613 },
-                                    "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                    "*/",
                                     false,
                                 ),
                             ),
@@ -1713,7 +1713,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 225, .column = 37, .offset = 6655 },
-                                    "\xaa\xaa\xaa/\xaa\xaa\xaa*\xaa\xaa\xaa\"\xaa\xaa",
+                                    "/*",
                                     false,
                                 ),
                             ),
@@ -1739,7 +1739,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                         try ast.LitMatcher.create(
                                                                             allocator,
                                                                             .{ .line = 225, .column = 47, .offset = 6665 },
-                                                                            "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                                                            "*/",
                                                                             false,
                                                                         ),
                                                                     ),
@@ -1777,7 +1777,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 225, .column = 74, .offset = 6692 },
-                                    "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                    "*/",
                                     false,
                                 ),
                             ),
@@ -1806,7 +1806,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 226, .column = 22, .offset = 6719 },
-                                    "\xaa\xaa\xaa/\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                    "//",
                                     false,
                                 ),
                             ),
@@ -1951,7 +1951,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 235, .column = 20, .offset = 6963 },
-                        "[\xaa\xaa\xaaa\xaa\xaa\xaa-\xaa\xaa\xaaz\xaa\xaa\xaa_\xaa\xaa\xaa]\xaa\xaa\xaai\xaa\xaa\xaa",
+                        "[a-z_]i",
                         false,
                         false,
                         &[_]u8{},
@@ -1991,7 +1991,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.CharClassMatcher.create(
                                     allocator,
                                     .{ .line = 236, .column = 37, .offset = 7008 },
-                                    "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa9\xaa\xaa\xaa]\xaa\xaa\xaa",
+                                    "[0-9]",
                                     false,
                                     false,
                                     &[_]u8{},
@@ -2060,7 +2060,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                         try ast.LitMatcher.create(
                                                             allocator,
                                                             .{ .line = 238, .column = 40, .offset = 7055 },
-                                                            "\xaa\xaa\xaai\xaa\xaa\xaa\"\xaa\xaa",
+                                                            "i",
                                                             false,
                                                         ),
                                                     ),
@@ -2109,7 +2109,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 249, .column = 20, .offset = 7455 },
-                                                        "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                                        "\"",
                                                         false,
                                                     ),
                                                 ),
@@ -2133,7 +2133,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 249, .column = 42, .offset = 7477 },
-                                                        "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                                        "\"",
                                                         false,
                                                     ),
                                                 ),
@@ -2149,7 +2149,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 249, .column = 48, .offset = 7483 },
-                                                        "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                                        "'",
                                                         false,
                                                     ),
                                                 ),
@@ -2167,7 +2167,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 249, .column = 69, .offset = 7504 },
-                                                        "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                                        "'",
                                                         false,
                                                     ),
                                                 ),
@@ -2183,7 +2183,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 249, .column = 75, .offset = 7510 },
-                                                        "\xaa\xaa\xaa`\xaa\xaa\xaa'\xaa\xaa",
+                                                        "`",
                                                         false,
                                                     ),
                                                 ),
@@ -2207,7 +2207,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 249, .column = 94, .offset = 7529 },
-                                                        "\xaa\xaa\xaa`\xaa\xaa\xaa'\xaa\xaa",
+                                                        "`",
                                                         false,
                                                     ),
                                                 ),
@@ -2260,7 +2260,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.LitMatcher.create(
                                                                     allocator,
                                                                     .{ .line = 255, .column = 24, .offset = 7674 },
-                                                                    "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                                                    "\"",
                                                                     false,
                                                                 ),
                                                             ),
@@ -2268,7 +2268,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.LitMatcher.create(
                                                                     allocator,
                                                                     .{ .line = 255, .column = 30, .offset = 7680 },
-                                                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    "\\",
                                                                     false,
                                                                 ),
                                                             ),
@@ -2309,7 +2309,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.LitMatcher.create(
                                                 allocator,
                                                 .{ .line = 255, .column = 56, .offset = 7706 },
-                                                "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                "\\",
                                                 false,
                                             ),
                                         ),
@@ -2365,7 +2365,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.LitMatcher.create(
                                                                     allocator,
                                                                     .{ .line = 256, .column = 24, .offset = 7754 },
-                                                                    "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    "'",
                                                                     false,
                                                                 ),
                                                             ),
@@ -2373,7 +2373,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.LitMatcher.create(
                                                                     allocator,
                                                                     .{ .line = 256, .column = 30, .offset = 7760 },
-                                                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    "\\",
                                                                     false,
                                                                 ),
                                                             ),
@@ -2414,7 +2414,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.LitMatcher.create(
                                                 allocator,
                                                 .{ .line = 256, .column = 56, .offset = 7786 },
-                                                "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                "\\",
                                                 false,
                                             ),
                                         ),
@@ -2460,7 +2460,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 257, .column = 19, .offset = 7829 },
-                                            "\xaa\xaa\xaa`\xaa\xaa\xaa'\xaa\xaa",
+                                            "`",
                                             false,
                                         ),
                                     ),
@@ -2501,7 +2501,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 259, .column = 23, .offset = 7868 },
-                                    "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                    "\"",
                                     false,
                                 ),
                             ),
@@ -2540,7 +2540,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 260, .column = 23, .offset = 7918 },
-                                    "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                    "'",
                                     false,
                                 ),
                             ),
@@ -2650,7 +2650,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 21, .offset = 8076 },
-                                    "\xaa\xaa\xaaa\xaa\xaa\xaa'\xaa\xaa",
+                                    "a",
                                     false,
                                 ),
                             ),
@@ -2658,7 +2658,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 27, .offset = 8082 },
-                                    "\xaa\xaa\xaab\xaa\xaa\xaa'\xaa\xaa",
+                                    "b",
                                     false,
                                 ),
                             ),
@@ -2666,7 +2666,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 33, .offset = 8088 },
-                                    "\xaa\xaa\xaan\xaa\xaa\xaa'\xaa\xaa",
+                                    "n",
                                     false,
                                 ),
                             ),
@@ -2674,7 +2674,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 39, .offset = 8094 },
-                                    "\xaa\xaa\xaaf\xaa\xaa\xaa'\xaa\xaa",
+                                    "f",
                                     false,
                                 ),
                             ),
@@ -2682,7 +2682,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 45, .offset = 8100 },
-                                    "\xaa\xaa\xaar\xaa\xaa\xaa'\xaa\xaa",
+                                    "r",
                                     false,
                                 ),
                             ),
@@ -2690,7 +2690,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 51, .offset = 8106 },
-                                    "\xaa\xaa\xaat\xaa\xaa\xaa'\xaa\xaa",
+                                    "t",
                                     false,
                                 ),
                             ),
@@ -2698,7 +2698,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 57, .offset = 8112 },
-                                    "\xaa\xaa\xaav\xaa\xaa\xaa'\xaa\xaa",
+                                    "v",
                                     false,
                                 ),
                             ),
@@ -2706,7 +2706,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 263, .column = 63, .offset = 8118 },
-                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa'\xaa\xaa",
+                                    "\\",
                                     false,
                                 ),
                             ),
@@ -2786,7 +2786,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 265, .column = 14, .offset = 8186 },
-                                    "\xaa\xaa\xaax\xaa\xaa\xaa'\xaa\xaa",
+                                    "x",
                                     false,
                                 ),
                             ),
@@ -2835,7 +2835,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 266, .column = 22, .offset = 8230 },
-                                    "\xaa\xaa\xaaU\xaa\xaa\xaa'\xaa\xaa",
+                                    "U",
                                     false,
                                 ),
                             ),
@@ -2944,7 +2944,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 267, .column = 23, .offset = 8329 },
-                                    "\xaa\xaa\xaau\xaa\xaa\xaa'\xaa\xaa",
+                                    "u",
                                     false,
                                 ),
                             ),
@@ -3008,7 +3008,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 269, .column = 15, .offset = 8385 },
-                        "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa7\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        "[0-7]",
                         false,
                         false,
                         &[_]u8{},
@@ -3033,7 +3033,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 270, .column = 17, .offset = 8408 },
-                        "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa9\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        "[0-9]",
                         false,
                         false,
                         &[_]u8{},
@@ -3058,7 +3058,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 271, .column = 13, .offset = 8427 },
-                        "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa9\xaa\xaa\xaaa\xaa\xaa\xaa-\xaa\xaa\xaaf\xaa\xaa\xaa]\xaa\xaa\xaai\xaa\xaa\xaa",
+                        "[0-9a-f]i",
                         false,
                         false,
                         &[_]u8{},
@@ -3092,7 +3092,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 273, .column = 21, .offset = 8459 },
-                                            "\xaa\xaa\xaa[\xaa\xaa\xaa'\xaa\xaa",
+                                            "[",
                                             false,
                                         ),
                                     ),
@@ -3134,7 +3134,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                         try ast.LitMatcher.create(
                                                                             allocator,
                                                                             .{ .line = 273, .column = 56, .offset = 8494 },
-                                                                            "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                            "\\",
                                                                             false,
                                                                         ),
                                                                     ),
@@ -3160,7 +3160,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 273, .column = 83, .offset = 8521 },
-                                            "\xaa\xaa\xaa]\xaa\xaa\xaa'\xaa\xaa",
+                                            "]",
                                             false,
                                         ),
                                     ),
@@ -3172,7 +3172,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.LitMatcher.create(
                                                     allocator,
                                                     .{ .line = 273, .column = 87, .offset = 8525 },
-                                                    "\xaa\xaa\xaai\xaa\xaa\xaa'\xaa\xaa",
+                                                    "i",
                                                     false,
                                                 ),
                                             ),
@@ -3220,7 +3220,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 291, .column = 29, .offset = 9193 },
-                                    "\xaa\xaa\xaa-\xaa\xaa\xaa'\xaa\xaa",
+                                    "-",
                                     false,
                                 ),
                             ),
@@ -3273,7 +3273,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.LitMatcher.create(
                                                                     allocator,
                                                                     .{ .line = 292, .column = 17, .offset = 9224 },
-                                                                    "\xaa\xaa\xaa]\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    "]",
                                                                     false,
                                                                 ),
                                                             ),
@@ -3281,7 +3281,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.LitMatcher.create(
                                                                     allocator,
                                                                     .{ .line = 292, .column = 23, .offset = 9230 },
-                                                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    "\\",
                                                                     false,
                                                                 ),
                                                             ),
@@ -3322,7 +3322,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.LitMatcher.create(
                                                 allocator,
                                                 .{ .line = 292, .column = 49, .offset = 9256 },
-                                                "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                "\\",
                                                 false,
                                             ),
                                         ),
@@ -3364,7 +3364,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 293, .column = 20, .offset = 9297 },
-                                    "\xaa\xaa\xaa]\xaa\xaa\xaa'\xaa\xaa",
+                                    "]",
                                     false,
                                 ),
                             ),
@@ -3403,7 +3403,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 295, .column = 23, .offset = 9348 },
-                                    "\xaa\xaa\xaap\xaa\xaa\xaa'\xaa\xaa",
+                                    "p",
                                     false,
                                 ),
                             ),
@@ -3431,7 +3431,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                         try ast.LitMatcher.create(
                                                             allocator,
                                                             .{ .line = 295, .column = 54, .offset = 9379 },
-                                                            "\xaa\xaa\xaa{\xaa\xaa\xaa'\xaa\xaa",
+                                                            "{",
                                                             false,
                                                         ),
                                                     ),
@@ -3449,7 +3449,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                         try ast.LitMatcher.create(
                                                             allocator,
                                                             .{ .line = 295, .column = 71, .offset = 9396 },
-                                                            "\xaa\xaa\xaa}\xaa\xaa\xaa'\xaa\xaa",
+                                                            "}",
                                                             false,
                                                         ),
                                                     ),
@@ -3479,7 +3479,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 296, .column = 27, .offset = 9429 },
-                        "[\xaa\xaa\xaaL\xaa\xaa\xaaM\xaa\xaa\xaaN\xaa\xaa\xaaC\xaa\xaa\xaaP\xaa\xaa\xaaZ\xaa\xaa\xaaS\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        "[LMNCPZS]",
                         false,
                         false,
                         &[_]u8{},
@@ -3508,7 +3508,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.CharClassMatcher.create(
                                 allocator,
                                 .{ .line = 297, .column = 17, .offset = 9456 },
-                                "[\xaa\xaa\xaaa\xaa\xaa\xaa-\xaa\xaa\xaaz\xaa\xaa\xaa_\xaa\xaa\xaa]\xaa\xaa\xaai\xaa\xaa\xaa",
+                                "[a-z_]i",
                                 false,
                                 false,
                                 &[_]u8{},
@@ -3539,7 +3539,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.LitMatcher.create(
                                 allocator,
                                 .{ .line = 299, .column = 15, .offset = 9481 },
-                                "\xaa\xaa\xaa.\xaa\xaa\xaa\"\xaa\xaa",
+                                ".",
                                 false,
                             ),
                         ),
@@ -3576,7 +3576,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 308, .column = 14, .offset = 9746 },
-                                            "\xaa\xaa\xaa{\xaa\xaa\xaa\"\xaa\xaa",
+                                            "{",
                                             false,
                                         ),
                                     ),
@@ -3594,7 +3594,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 308, .column = 23, .offset = 9755 },
-                                            "\xaa\xaa\xaa}\xaa\xaa\xaa\"\xaa\xaa",
+                                            "}",
                                             false,
                                         ),
                                     ),
@@ -3647,7 +3647,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.CharClassMatcher.create(
                                                                         allocator,
                                                                         .{ .line = 318, .column = 14, .offset = 10003 },
-                                                                        "[\xaa\xaa\xaa{\xaa\xaa\xaa}\xaa\xaa\xaa]\xaa\xaa\xaa",
+                                                                        "[{}]",
                                                                         false,
                                                                         false,
                                                                         &[_]u8{},
@@ -3681,7 +3681,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 318, .column = 35, .offset = 10024 },
-                                                        "\xaa\xaa\xaa{\xaa\xaa\xaa\"\xaa\xaa",
+                                                        "{",
                                                         false,
                                                     ),
                                                 ),
@@ -3699,7 +3699,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LitMatcher.create(
                                                         allocator,
                                                         .{ .line = 318, .column = 44, .offset = 10033 },
-                                                        "\xaa\xaa\xaa}\xaa\xaa\xaa\"\xaa\xaa",
+                                                        "}",
                                                         false,
                                                     ),
                                                 ),
@@ -3832,7 +3832,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 323, .column = 15, .offset = 10153 },
-                        "[\xaa\xaa\xaa \xaa\xaa\xaa\\\xaa\xaa\xaat\xaa\xaa\xaa\\\xaa\xaa\xaar\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        "[ \\t\\r]",
                         false,
                         false,
                         &[_]u8{},
@@ -3857,7 +3857,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.LitMatcher.create(
                         allocator,
                         .{ .line = 324, .column = 8, .offset = 10169 },
-                        "\xaa\xaa\xaa\\\xaa\xaa\xaan\xaa\xaa\xaa'\xaa\xaa",
+                        "\n",
                         false,
                     ),
                 ),
@@ -3898,7 +3898,7 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.LitMatcher.create(
                                                 allocator,
                                                 .{ .line = 325, .column = 11, .offset = 10185 },
-                                                "\xaa\xaa\xaa;\xaa\xaa\xaa'\xaa\xaa",
+                                                ";",
                                                 false,
                                             ),
                                         ),

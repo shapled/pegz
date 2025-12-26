@@ -559,6 +559,14 @@ pub const Parser = struct {
                 var ignore_case = false;
                 var lit_str = self.tok.lit;
 
+                // DEBUG: Print token lit before unquoting
+                std.debug.print("token.lit before unquote: [{s}] (len={d})\n", .{lit_str, lit_str.len});
+                std.debug.print("token.lit bytes: ", .{});
+                for (lit_str) |c| {
+                    std.debug.print("{x} ", .{c});
+                }
+                std.debug.print("\n", .{});
+
                 if (std.mem.endsWith(u8, lit_str, "i")) {
                     ignore_case = true;
                     lit_str = lit_str[0 .. lit_str.len - 1];
@@ -661,11 +669,16 @@ pub const Parser = struct {
             return quoted;
         }
 
+        // DEBUG: Print input
+        std.debug.print("unquote input: [{s}] (len={d})\n", .{quoted, quoted.len});
+
         // Remove surrounding quotes and handle basic escapes
         var result: std.ArrayList(u8) = .{};
         defer result.deinit(self.allocator);
 
         const content = quoted[1 .. quoted.len - 1];
+        std.debug.print("content after removing quotes: [{s}] (len={d})\n", .{content, content.len});
+
         var i: usize = 0;
 
         while (i < content.len) {
@@ -694,7 +707,15 @@ pub const Parser = struct {
             }
         }
 
-        return result.toOwnedSlice(self.allocator);
+        const output = try result.toOwnedSlice(self.allocator);
+        std.debug.print("unquote output: [{s}] (len={d})\n", .{output, output.len});
+        std.debug.print("output bytes: ", .{});
+        for (output) |c| {
+            std.debug.print("{x} ", .{c});
+        }
+        std.debug.print("\n", .{});
+
+        return output;
     }
 
     pub fn deinit(self: *Parser) void {

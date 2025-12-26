@@ -1,0 +1,32 @@
+# Simple test grammar for unit testing
+# This grammar tests basic PEG syntax
+
+# Simple rule matching a literal
+Hello <- 'hello, world'
+
+# Rule with choice
+Greeting <- 'Hello' / 'Hi' / 'Hey'
+
+# Rule with sequence
+Sentence <- Subject Verb Object
+
+Subject <- 'I' / 'You' / 'They'
+Verb <- 'eat' / 'run' / 'sleep'
+Object <- 'food' / 'fast' / 'well'
+
+# Rule with repetition
+Numbers <- Number+
+
+Number <- [0-9]
+
+# Rule with optional
+Maybe <- 'yes'?
+
+# Rule with and predicate
+Start <- &'a' [a-z]+
+
+# Rule with not predicate
+NotQuote <- [^"]+
+
+# Rule with any matcher
+AnyChar <- .

@@ -1,0 +1,16 @@
+# Simple calculator grammar
+# Evaluates arithmetic expressions with +, -, *, /
+
+Expr    <- Sum
+
+Sum     <- Product (('+' / '-') Product)*
+
+Product <- Power (('*' / '/') Power)*
+
+Power   <- Primary ('^' Power)?
+
+Primary  <- Number
+          / '(' Expr ')'
+          / ('+' / '-') Primary
+
+Number  <- [0-9]+

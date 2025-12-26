@@ -1,0 +1,34 @@
+# Edge cases test grammar
+# Tests various edge cases and boundary conditions
+
+# Empty string alternative
+EmptyStr <- ''
+
+# Single character alternatives
+SingleChar <- 'a' / 'b' / 'c'
+
+# Nested choice
+NestedChoice <- ('a' / 'b') / ('c' / 'd')
+
+# Nested sequence
+NestedSeq <- ('a' 'b') ('c' 'd')
+
+# Complex character class
+ComplexClass <- [a-zA-Z0-9_]
+
+# Inverted character class
+InvertedClass <- [^0-9]
+
+# Multiple repetitions
+MultiRep <- 'a'+ 'b'* 'c'?
+
+# Deeply nested expressions
+Deep <- ('a' ('b' ('c' 'd')))
+
+# Rule reference chains
+RuleA <- RuleB
+RuleB <- RuleC
+RuleC <- 'final'
+
+# Mixed operators
+Mixed <- 'a' 'b'+ ('c' / 'd')* 'e'?

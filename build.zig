@@ -42,7 +42,7 @@ pub fn build(b: *std.Build) void {
     prepegz_exe.root_module.addImport("pegz_common", common_module);
     // Add bootstrap as a dependency so prepegz can reuse its parser
     const bootstrap_mod = b.createModule(.{
-        .root_source_file = b.path("src/bootstrap/parser.zig"),
+        .root_source_file = b.path("src/bootstrap/mod.zig"),
         .target = b.graph.host,
         .optimize = optimize,
     });
@@ -92,4 +92,114 @@ pub fn build(b: *std.Build) void {
     install_step.dependOn(&prepegz_exe.step);
     install_step.dependOn(&generate_pegz_parser.step);
     install_step.dependOn(&pegz_exe.step);
+
+    // -------------------- Testing --------------------
+    const test_step = b.step("test", "Run all tests");
+
+    // Test bootstrap scanner
+    const scanner_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/scanner_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    scanner_test_module.addImport("pegz_common", common_module);
+    scanner_test_module.addImport("bootstrap", bootstrap_mod);
+
+    const scanner_tests = b.addTest(.{
+        .name = "scan-test",
+        .root_module = scanner_test_module,
+    });
+    const run_scanner_tests = b.addRunArtifact(scanner_tests);
+    test_step.dependOn(&run_scanner_tests.step);
+
+    // Test tokenizer
+    const tokenizer_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/tokenizer_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    tokenizer_test_module.addImport("pegz_common", common_module);
+    tokenizer_test_module.addImport("bootstrap", bootstrap_mod);
+
+    const tokenizer_tests = b.addTest(.{
+        .name = "token-test",
+        .root_module = tokenizer_test_module,
+    });
+    const run_tokenizer_tests = b.addRunArtifact(tokenizer_tests);
+    test_step.dependOn(&run_tokenizer_tests.step);
+
+    // Test AST
+    const ast_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/ast_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    ast_test_module.addImport("pegz_common", common_module);
+
+    const ast_tests = b.addTest(.{
+        .name = "ast-test",
+        .root_module = ast_test_module,
+    });
+    const run_ast_tests = b.addRunArtifact(ast_tests);
+    test_step.dependOn(&run_ast_tests.step);
+
+    // Test common interpreter (embedded test)
+    const interpreter_test_module = b.createModule(.{
+        .root_source_file = b.path("src/common/interpreter.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    interpreter_test_module.addImport("pegz_common", common_module);
+
+    const interpreter_tests = b.addTest(.{
+        .name = "interpreter-test",
+        .root_module = interpreter_test_module,
+    });
+    const run_interpreter_tests = b.addRunArtifact(interpreter_tests);
+    test_step.dependOn(&run_interpreter_tests.step);
+
+    // Test unit interpreter_test
+    const unit_interpreter_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/interpreter_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    unit_interpreter_test_module.addImport("pegz_common", common_module);
+
+    const unit_interpreter_tests = b.addTest(.{
+        .name = "unit-interpreter-test",
+        .root_module = unit_interpreter_test_module,
+    });
+    const run_unit_interpreter_tests = b.addRunArtifact(unit_interpreter_tests);
+    test_step.dependOn(&run_unit_interpreter_tests.step);
+
+    // Test unit builder_test
+    const unit_builder_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/builder_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    unit_builder_test_module.addImport("pegz_common", common_module);
+
+    const unit_builder_tests = b.addTest(.{
+        .name = "unit-builder-test",
+        .root_module = unit_builder_test_module,
+    });
+    const run_unit_builder_tests = b.addRunArtifact(unit_builder_tests);
+    test_step.dependOn(&run_unit_builder_tests.step);
+
+    // Test integration parser_test
+    const integration_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/integration/parser_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    integration_test_module.addImport("pegz_common", common_module);
+
+    const integration_tests = b.addTest(.{
+        .name = "integration-test",
+        .root_module = integration_test_module,
+    });
+    const run_integration_tests = b.addRunArtifact(integration_tests);
+    test_step.dependOn(&run_integration_tests.step);
 }

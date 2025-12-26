@@ -31,7 +31,7 @@ pub const Scanner = struct {
     blacklisted: blacklisted_idents.HashMap,
 
     pub fn init(allocator: std.mem.Allocator, filename: []const u8, reader: *std.io.Reader, errh: ?ErrorFn) !Scanner {
-        const tok_buffer: std.ArrayList(u8) = .empty;
+        const tok_buffer = std.ArrayList(u8){};
         var scanner = Scanner{
             .allocator = allocator,
             .reader = reader,
@@ -232,8 +232,8 @@ pub const Scanner = struct {
         // scanEscape is always called as part of a greater token, so do not
         // reset tok_buffer, and write cur before calling read.
         var buf: [4]u8 = undefined;
-        _ = try std.unicode.utf8Encode(self.cur, &buf);
-        try self.tok_buffer.appendSlice(self.allocator, &buf);
+        const len = try std.unicode.utf8Encode(self.cur, &buf);
+        try self.tok_buffer.appendSlice(self.allocator, buf[0..len]);
 
         var n: usize = undefined;
         var base: u8 = undefined;
@@ -242,16 +242,14 @@ pub const Scanner = struct {
 
         self.read();
         if (self.cur == quote) {
-            var buf2: [4]u8 = undefined;
-            _ = try std.unicode.utf8Encode(self.cur, &buf2);
-            try self.tok_buffer.appendSlice(self.allocator, &buf2);
+            const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+            try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
             return true;
         }
         switch (self.cur) {
             'a', 'b', 'f', 'n', 'r', 't', 'v', '\\' => {
-                var buf2: [4]u8 = undefined;
-                _ = try std.unicode.utf8Encode(self.cur, &buf2);
-                try self.tok_buffer.appendSlice(self.allocator, &buf2);
+                const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                 return true;
             },
             '0', '1', '2', '3', '4', '5', '6', '7' => {
@@ -260,24 +258,24 @@ pub const Scanner = struct {
                 max = 255;
             },
             'x' => {
-                _ = try std.unicode.utf8Encode(self.cur, &buf);
-                try self.tok_buffer.appendSlice(self.allocator, &buf);
+                const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                 self.read();
                 n = 2;
                 base = 16;
                 max = 255;
             },
             'u' => {
-                _ = try std.unicode.utf8Encode(self.cur, &buf);
-                try self.tok_buffer.appendSlice(self.allocator, &buf);
+                const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                 self.read();
                 n = 4;
                 base = 16;
                 max = std.math.maxInt(u21);
             },
             'U' => {
-                _ = try std.unicode.utf8Encode(self.cur, &buf);
-                try self.tok_buffer.appendSlice(self.allocator, &buf);
+                const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                 self.read();
                 n = 8;
                 base = 16;
@@ -286,14 +284,14 @@ pub const Scanner = struct {
             'p' => {
                 // unicode character class, only valid if quote is ']'
                 if (quote == ']') {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                     unicode_class = true;
                     self.read();
                 } else {
                     // fallthrough to default case
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                     const msg = "unknown escape sequence";
                     if (self.cur == std.math.maxInt(u21) or self.cur == '\n') {
                         self.errorf("{s}", .{msg});
@@ -305,8 +303,8 @@ pub const Scanner = struct {
                 }
             },
             else => {
-                _ = try std.unicode.utf8Encode(self.cur, &buf);
-                try self.tok_buffer.appendSlice(self.allocator, &buf);
+                const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                 const msg = "unknown escape sequence";
                 if (self.cur == std.math.maxInt(u21) or self.cur == '\n') {
                     self.errorf("escape sequence not terminated", .{});
@@ -328,8 +326,8 @@ pub const Scanner = struct {
                     // unicode class name, read until '}'
                     var cnt: usize = 0;
                     while (true) {
-                        _ = try std.unicode.utf8Encode(self.cur, &buf);
-                        try self.tok_buffer.appendSlice(self.allocator, &buf);
+                        const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                        try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                         self.read();
                         cnt += 1;
 
@@ -342,8 +340,8 @@ pub const Scanner = struct {
                                 if (cnt < 2) {
                                     self.errorf("empty Unicode character class escape sequence", .{});
                                 }
-                                _ = try std.unicode.utf8Encode(self.cur, &buf);
-                                try self.tok_buffer.appendSlice(self.allocator, &buf);
+                                const len3 = try std.unicode.utf8Encode(self.cur, &buf);
+                                try self.tok_buffer.appendSlice(self.allocator, buf[0..len3]);
                                 return true;
                             },
                             else => {},
@@ -352,8 +350,8 @@ pub const Scanner = struct {
                 },
                 else => {
                     // single letter class
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                     return true;
                 },
             }
@@ -361,8 +359,8 @@ pub const Scanner = struct {
 
         var x: u32 = 0;
         while (n > 0) {
-            _ = try std.unicode.utf8Encode(self.cur, &buf);
-            try self.tok_buffer.appendSlice(self.allocator, &buf);
+            const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+            try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
             const d = digitVal(self.cur);
             if (d >= base) {
                 const msg = std.fmt.allocPrint(self.allocator, "illegal character {u} in escape sequence", .{self.cur}) catch "illegal character in escape sequence";
@@ -394,8 +392,8 @@ pub const Scanner = struct {
     fn scanClass(self: *Scanner) ![]const u8 {
         self.tok_buffer.clearAndFree(self.allocator);
         var buf: [4]u8 = undefined;
-        _ = try std.unicode.utf8Encode(self.cur, &buf);
-        try self.tok_buffer.appendSlice(self.allocator, &buf); // opening '['
+        const len = try std.unicode.utf8Encode(self.cur, &buf);
+        try self.tok_buffer.appendSlice(self.allocator, buf[0..len]); // opening '['
 
         var noread = false;
         while (true) {
@@ -414,20 +412,20 @@ pub const Scanner = struct {
                     return self.tok_buffer.toOwnedSlice(self.allocator);
                 },
                 ']' => {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                     self.read();
                     // can have an optional "i" ignore case suffix
                     if (self.cur == 'i') {
-                        _ = try std.unicode.utf8Encode(self.cur, &buf);
-                        try self.tok_buffer.appendSlice(self.allocator, &buf);
+                        const len3 = try std.unicode.utf8Encode(self.cur, &buf);
+                        try self.tok_buffer.appendSlice(self.allocator, buf[0..len3]);
                         self.read();
                     }
                     return self.tok_buffer.toOwnedSlice(self.allocator);
                 },
                 else => {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len4 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len4]);
                 },
             }
         }
@@ -436,8 +434,8 @@ pub const Scanner = struct {
     fn scanRawString(self: *Scanner) ![]const u8 {
         self.tok_buffer.clearAndFree(self.allocator);
         var buf: [4]u8 = undefined;
-        _ = try std.unicode.utf8Encode(self.cur, &buf);
-        try self.tok_buffer.appendSlice(self.allocator, &buf); // opening '`'
+        const len = try std.unicode.utf8Encode(self.cur, &buf);
+        try self.tok_buffer.appendSlice(self.allocator, buf[0..len]); // opening '`'
 
         var has_cr = false;
         while (true) {
@@ -448,13 +446,13 @@ pub const Scanner = struct {
                     break;
                 },
                 '`' => {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                     self.read();
                     // can have an optional "i" ignore case suffix
                     if (self.cur == 'i') {
-                        _ = try std.unicode.utf8Encode(self.cur, &buf);
-                        try self.tok_buffer.appendSlice(self.allocator, &buf);
+                        const len3 = try std.unicode.utf8Encode(self.cur, &buf);
+                        try self.tok_buffer.appendSlice(self.allocator, buf[0..len3]);
                         self.read();
                     }
                     break;
@@ -464,8 +462,8 @@ pub const Scanner = struct {
                     // fallthrough
                 },
                 else => {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len4 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len4]);
                 },
             }
         }
@@ -490,8 +488,8 @@ pub const Scanner = struct {
     fn scanString(self: *Scanner) ![]const u8 {
         self.tok_buffer.clearAndFree(self.allocator);
         var buf: [4]u8 = undefined;
-        _ = try std.unicode.utf8Encode(self.cur, &buf);
-        try self.tok_buffer.appendSlice(self.allocator, &buf); // opening '"'
+        const len = try std.unicode.utf8Encode(self.cur, &buf);
+        try self.tok_buffer.appendSlice(self.allocator, buf[0..len]); // opening '"'
 
         var noread = false;
         while (true) {
@@ -510,20 +508,20 @@ pub const Scanner = struct {
                     return self.tok_buffer.toOwnedSlice(self.allocator);
                 },
                 '"' => {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                     self.read();
                     // can have an optional "i" ignore case suffix
                     if (self.cur == 'i') {
-                        _ = try std.unicode.utf8Encode(self.cur, &buf);
-                        try self.tok_buffer.appendSlice(self.allocator, &buf);
+                        const len3 = try std.unicode.utf8Encode(self.cur, &buf);
+                        try self.tok_buffer.appendSlice(self.allocator, buf[0..len3]);
                         self.read();
                     }
                     return self.tok_buffer.toOwnedSlice(self.allocator);
                 },
                 else => {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len4 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len4]);
                 },
             }
         }
@@ -532,8 +530,8 @@ pub const Scanner = struct {
     fn scanChar(self: *Scanner) ![]const u8 {
         self.tok_buffer.clearAndFree(self.allocator);
         var buf: [4]u8 = undefined;
-        _ = try std.unicode.utf8Encode(self.cur, &buf);
-        try self.tok_buffer.appendSlice(self.allocator, &buf); // opening "'"
+        const len = try std.unicode.utf8Encode(self.cur, &buf);
+        try self.tok_buffer.appendSlice(self.allocator, buf[0..len]); // opening "'"
 
         // must be followed by one char (which may be an escape) and a single
         // quote, but read until we find that closing quote.
@@ -556,24 +554,24 @@ pub const Scanner = struct {
                     return self.tok_buffer.toOwnedSlice(self.allocator);
                 },
                 '\'' => {
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
                     self.read();
                     if (cnt != 1) {
                         self.errorf("rune literal is not a single rune", .{});
                     }
                     // can have an optional "i" ignore case suffix
                     if (self.cur == 'i') {
-                        _ = try std.unicode.utf8Encode(self.cur, &buf);
-                        try self.tok_buffer.appendSlice(self.allocator, &buf);
+                        const len3 = try std.unicode.utf8Encode(self.cur, &buf);
+                        try self.tok_buffer.appendSlice(self.allocator, buf[0..len3]);
                         self.read();
                     }
                     return self.tok_buffer.toOwnedSlice(self.allocator);
                 },
                 else => {
                     cnt += 1;
-                    _ = try std.unicode.utf8Encode(self.cur, &buf);
-                    try self.tok_buffer.appendSlice(self.allocator, &buf);
+                    const len4 = try std.unicode.utf8Encode(self.cur, &buf);
+                    try self.tok_buffer.appendSlice(self.allocator, buf[0..len4]);
                 },
             }
         }
@@ -582,14 +580,14 @@ pub const Scanner = struct {
     fn scanRuleDef(self: *Scanner) ![]const u8 {
         self.tok_buffer.clearAndFree(self.allocator);
         var buf: [4]u8 = undefined;
-        _ = try std.unicode.utf8Encode(self.cur, &buf);
-        try self.tok_buffer.appendSlice(self.allocator, &buf);
+        const len = try std.unicode.utf8Encode(self.cur, &buf);
+        try self.tok_buffer.appendSlice(self.allocator, buf[0..len]);
         const r = self.cur;
         self.read();
         if (r == '<') {
             if (self.cur != std.math.maxInt(u21)) {
-                _ = try std.unicode.utf8Encode(self.cur, &buf);
-                try self.tok_buffer.appendSlice(self.allocator, &buf);
+                const len2 = try std.unicode.utf8Encode(self.cur, &buf);
+                try self.tok_buffer.appendSlice(self.allocator, buf[0..len2]);
             }
             if (self.cur != '-') {
                 self.errorf("rule definition not terminated", .{});
