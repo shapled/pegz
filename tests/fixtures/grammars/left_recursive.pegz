@@ -1,0 +1,9 @@
+// Test grammar for left recursion detection
+// This grammar demonstrates direct and indirect left recursion
+
+# Direct left recursion test
+# Expr <- Expr "+" Term / Term
+# Term <- Factor
+# Factor <- "number"
+
+# Should detect Expr as left recursive with leader flag

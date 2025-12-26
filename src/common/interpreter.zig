@@ -68,6 +68,21 @@ pub const ParseError = error{
     UnimplementedExpression,
     UnimplementedMatcher,
     ThrownFailure,
+    LeftRecursionDetected,
+};
+
+/// Memoization cache entry
+const MemoEntry = struct {
+    pos: usize,
+    result: MatchResult,
+};
+
+/// Match result with position information
+const MatchResult = struct {
+    success: bool,
+    end_pos: usize,
+    line: usize,
+    column: usize,
 };
 
 /// Interpreter engine - executes expression trees at runtime
@@ -84,6 +99,10 @@ pub const Interpreter = struct {
     line: usize = 1,
     column: usize = 1,
 
+    // Memoization and left recursion support
+    memo: std.StringHashMap(std.AutoHashMap(usize, MemoEntry)),
+    left_rec_stack: std.ArrayList([]const u8),  // Track left recursive rules being parsed
+
     pub fn init(allocator: std.mem.Allocator, grammar: *const ast.Grammar) !Interpreter {
         var interp = Interpreter{
             .allocator = allocator,
@@ -91,6 +110,8 @@ pub const Interpreter = struct {
             .vstack = std.ArrayList(Value).initCapacity(allocator, 0) catch unreachable,
             .cur = undefined,
             .rule_funcs = std.StringHashMap(*const fn (*Current, []const Value) anyerror!Value).init(allocator),
+            .memo = std.StringHashMap(std.AutoHashMap(usize, MemoEntry)).init(allocator),
+            .left_rec_stack = std.ArrayList([]const u8).initCapacity(allocator, 0) catch unreachable,
         };
 
         const current_obj = try allocator.create(Current);
@@ -108,6 +129,15 @@ pub const Interpreter = struct {
     pub fn deinit(self: *Interpreter) void {
         self.vstack.deinit(self.allocator);
         self.rule_funcs.deinit();
+
+        // Clean up memoization table
+        var memo_iter = self.memo.iterator();
+        while (memo_iter.next()) |entry| {
+            entry.value_ptr.*.deinit();
+        }
+        self.memo.deinit();
+
+        self.left_rec_stack.deinit(self.allocator);
         self.allocator.destroy(self.cur);
     }
 
@@ -346,7 +376,7 @@ pub const Interpreter = struct {
     // ========== Advanced Expression Type Implementations ==========
 
     /// RecoveryExpr: try expr, if it fails with matching labels, try recover_expr
-    fn execRecoveryExpr(self: *Interpreter, recovery: *const ast.RecoveryExpr) !Value {
+    fn execRecoveryExpr(self: *Interpreter, recovery: *const ast.RecoveryExpr) anyerror!Value {
         _ = recovery.labels;
         // For now, just try the recovery expression directly
         // TODO: implement proper recovery with label matching
@@ -354,7 +384,9 @@ pub const Interpreter = struct {
     }
 
     /// ThrowExpr: throw a failure with a label
-    fn execThrowExpr(_: *Interpreter, _: *const ast.ThrowExpr) !Value {
+    fn execThrowExpr(self: *Interpreter, throw: *const ast.ThrowExpr) !Value {
+        _ = self;
+        _ = throw;
         // Throwing creates a labeled failure
         return ParseError.ThrownFailure;
     }

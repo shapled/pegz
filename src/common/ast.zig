@@ -225,16 +225,46 @@ pub const Expression = union(enum) {
     }
     pub fn isNullable(self: *Self) bool {
         return switch (self.*) {
-            inline else => |case| {
-                return case.nullable;
-            },
+            .action => |e| e.isNullable(),
+            .and_code => |e| e.isNullable(),
+            .and_expr => |e| e.isNullable(),
+            .any_matcher => |e| e.isNullable(),
+            .char_class_matcher => |e| e.isNullable(),
+            .choice => |e| e.isNullable(),
+            .labeled => |e| e.isNullable(),
+            .lit_matcher => |e| e.isNullable(),
+            .not_code => |e| e.isNullable(),
+            .not => |e| e.isNullable(),
+            .one_or_more => |e| e.isNullable(),
+            .recovery => |e| e.isNullable(),
+            .rule_ref => |e| e.isNullable(),
+            .seq => |e| e.isNullable(),
+            .state_code => |e| e.isNullable(),
+            .throw => |e| e.isNullable(),
+            .zero_or_more => |e| e.isNullable(),
+            .zero_or_one => |e| e.isNullable(),
         };
     }
-    pub fn initialNames(self: *Self, gpa: std.mem.Allocator) !StringHashMap(void) {
+    pub fn initialNames(self: *Self, gpa: std.mem.Allocator) anyerror!StringHashMap(void) {
         return switch (self.*) {
-            inline else => |case| {
-                return case.initialNames(gpa);
-            },
+            .action => |e| e.initialNames(gpa),
+            .and_code => |e| e.initialNames(gpa),
+            .and_expr => |e| e.initialNames(gpa),
+            .any_matcher => |e| e.initialNames(gpa),
+            .char_class_matcher => |e| e.initialNames(gpa),
+            .choice => |e| e.initialNames(gpa),
+            .labeled => |e| e.initialNames(gpa),
+            .lit_matcher => |e| e.initialNames(gpa),
+            .not_code => |e| e.initialNames(gpa),
+            .not => |e| e.initialNames(gpa),
+            .one_or_more => |e| e.initialNames(gpa),
+            .recovery => |e| e.initialNames(gpa),
+            .rule_ref => |e| e.initialNames(gpa),
+            .seq => |e| e.initialNames(gpa),
+            .state_code => |e| e.initialNames(gpa),
+            .throw => |e| e.initialNames(gpa),
+            .zero_or_more => |e| e.initialNames(gpa),
+            .zero_or_one => |e| e.initialNames(gpa),
         };
     }
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -300,6 +330,10 @@ pub const RecoveryExpr = struct {
 
     pub fn nullableVisit(self: *Self, rules: StringHashMap(*Rule)) bool {
         self.nullable = self.expr.nullableVisit(rules) or self.recover_expr.nullableVisit(rules);
+        return self.nullable;
+    }
+
+    pub fn isNullable(self: *Self) bool {
         return self.nullable;
     }
 
@@ -475,7 +509,7 @@ pub const SeqExpr = struct {
     }
 
     pub fn nullableVisit(self: *Self, rules: StringHashMap(*Rule)) bool {
-        for (self.exprs) |*item| {
+        for (self.exprs.items) |*item| {
             if (!item.nullableVisit(rules)) {
                 self.nullable = false;
                 return false;
@@ -491,7 +525,7 @@ pub const SeqExpr = struct {
 
     pub fn initialNames(self: *Self, gpa: std.mem.Allocator) !StringHashMap(void) {
         var names = StringHashMap(void).init(gpa);
-        for (self.exprs) |*item| {
+        for (self.exprs.items) |*item| {
             var item_names = try item.initialNames(gpa);
             var it = item_names.iterator();
             while (it.next()) |entry| {
@@ -1245,7 +1279,7 @@ pub const ChoiceExpr = struct {
     }
 
     pub fn nullableVisit(self: *Self, rules: StringHashMap(*Rule)) bool {
-        for (self.alternatives) |*alt| {
+        for (self.alternatives.items) |*alt| {
             if (alt.nullableVisit(rules)) {
                 self.nullable = true;
                 return true;
@@ -1261,8 +1295,9 @@ pub const ChoiceExpr = struct {
 
     pub fn initialNames(self: *Self, gpa: std.mem.Allocator) !StringHashMap(void) {
         var names = StringHashMap(void).init(gpa);
-        for (self.alternatives) |*alt| {
-            var alt_names = try alt.initialNames(gpa);
+        errdefer names.deinit();
+        for (self.alternatives.items) |*alt| {
+            const alt_names = try alt.initialNames(gpa);
             var it = alt_names.iterator();
             while (it.next()) |entry| {
                 try names.put(entry.key_ptr.*, {});

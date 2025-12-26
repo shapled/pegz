@@ -187,6 +187,50 @@ pub fn build(b: *std.Build) void {
     const run_unit_builder_tests = b.addRunArtifact(unit_builder_tests);
     test_step.dependOn(&run_unit_builder_tests.step);
 
+    // Test unit scc_test
+    const unit_scc_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/scc_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    unit_scc_test_module.addImport("pegz_common", common_module);
+
+    const unit_scc_tests = b.addTest(.{
+        .name = "unit-scc-test",
+        .root_module = unit_scc_test_module,
+    });
+    const run_unit_scc_tests = b.addRunArtifact(unit_scc_tests);
+    test_step.dependOn(&run_unit_scc_tests.step);
+
+    // Test unit left_recursion_test
+    const unit_left_recursion_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/left_recursion_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    unit_left_recursion_test_module.addImport("pegz_common", common_module);
+
+    const unit_left_recursion_tests = b.addTest(.{
+        .name = "unit-left-recursion-test",
+        .root_module = unit_left_recursion_test_module,
+    });
+    const run_unit_left_recursion_tests = b.addRunArtifact(unit_left_recursion_tests);
+    test_step.dependOn(&run_unit_left_recursion_tests.step);
+
+    // Test unit ast_optimize_test
+    const unit_ast_optimize_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/ast_optimize_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    unit_ast_optimize_test_module.addImport("pegz_common", common_module);
+    const unit_ast_optimize_tests = b.addTest(.{
+        .name = "unit-ast-optimize-test",
+        .root_module = unit_ast_optimize_test_module,
+    });
+    const run_unit_ast_optimize_tests = b.addRunArtifact(unit_ast_optimize_tests);
+    test_step.dependOn(&run_unit_ast_optimize_tests.step);
+
     // Test integration parser_test
     const integration_test_module = b.createModule(.{
         .root_source_file = b.path("tests/integration/parser_test.zig"),

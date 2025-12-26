@@ -1,6 +1,8 @@
 const std = @import("std");
 const ast = @import("ast.zig");
 const interpreter_mod = @import("interpreter.zig");
+const left_recursion_mod = @import("left_recursion.zig");
+const ast_optimize_mod = @import("ast_optimize.zig");
 
 // Helper function to escape strings for Zig code generation
 fn escapeZigString(s: []const u8, allocator: std.mem.Allocator) ![]const u8 {
@@ -139,11 +141,39 @@ pub const Builder = struct {
     }
 
     fn prepareGrammar(self: *Builder, grammar: *ast.Grammar) !bool {
-        _ = self;
-        _ = grammar;
-        // This would implement grammar preparation and left recursion detection
-        // For now, return false (no left recursion detected)
-        return false;
+        std.debug.print("[Builder] prepareGrammar: start\n", .{});
+
+        // Step 1: Detect left recursion
+        const result = try left_recursion_mod.prepareGrammar(self.allocator, grammar);
+
+        if (result.err) |err| {
+            std.debug.print("[Builder] prepareGrammar: left recursion error: {}\n", .{err});
+            if (err == left_recursion_mod.LeftRecursionError.NoLeader) {
+                self.err = BuilderError.LeftRecursionError;
+                return BuilderError.LeftRecursionError;
+            }
+        }
+
+        const have_left_recursion = result.have_left_recursion;
+        std.debug.print("[Builder] prepareGrammar: have_left_recursion = {}\n", .{have_left_recursion});
+
+        // Step 2: Optimize grammar if option is enabled
+        if (self.options.optimize) {
+            std.debug.print("[Builder] prepareGrammar: optimizing grammar\n", .{});
+            const optimized_grammar = try ast_optimize_mod.optimizeGrammar(self.allocator, grammar);
+
+            // Update grammar rules with optimized versions
+            for (optimized_grammar.rules.items, 0..) |optimized_rule, i| {
+                if (i < grammar.rules.items.len) {
+                    grammar.rules.items[i] = optimized_rule;
+                }
+            }
+
+            std.debug.print("[Builder] prepareGrammar: optimization complete\n", .{});
+        }
+
+        std.debug.print("[Builder] prepareGrammar: complete\n", .{});
+        return have_left_recursion;
     }
 
     fn writeInit(self: *Builder, init_code: ?*ast.CodeBlock) !void {
