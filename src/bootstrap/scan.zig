@@ -478,7 +478,7 @@ pub const Scanner = struct {
     }
 
     fn stripCR(allocator: std.mem.Allocator, bytes: []const u8) ![]const u8 {
-        var result: std.ArrayList(u8) = .empty;
+        var result = try std.ArrayList(u8).initCapacity(allocator, 0);
         for (bytes) |ch| {
             if (ch != '\r') {
                 try result.append(allocator, ch);

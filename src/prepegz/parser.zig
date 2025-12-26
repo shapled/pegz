@@ -20,11 +20,11 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                 .{ .line = 5, .column = 2, .offset = 18 },
                 ast.Identifier.init(
                     .{ .line = 5, .column = 2, .offset = 18 },
-                    "Grammar",
+                    "Grammar"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -34,126 +34,127 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 5, .column = 12, .offset = 30 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 5, .column = 12, .offset = 30 },
                                             ast.Identifier.init(
                                                 .{ .line = 5, .column = 12, .offset = 30 },
-                                                "__",
+                                                "__"
                                             ),
                                         ),
-),
+                                    ),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 5, .column = 15, .offset = 33 },
-                                        ast.Identifier.init(
-                                            .{ .line = 5, .column = 15, .offset = 33 },
-                                            "initializer",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 5, .column = 15, .offset = 33 },
+                                                "initializer"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.ZeroOrOneExpr.create(
                                                     allocator,
                                                     .{ .line = 5, .column = 29, .offset = 47 },
-                                                ast.Expression.init(
-                                                    try ast.SeqExpr.create(
-                                                        allocator,
-                                                        .{ .line = 5, .column = 29, .offset = 47 },
-                                                        &.{
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 5, .column = 29, .offset = 47 },
-                                                                    ast.Identifier.init(
+                                                    ast.Expression.init(
+                                                        try ast.SeqExpr.create(
+                                                            allocator,
+                                                            .{ .line = 5, .column = 29, .offset = 47 },
+                                                            &[_]ast.Expression{
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 5, .column = 29, .offset = 47 },
-                                                                        "Initializer",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 5, .column = 29, .offset = 47 },
+                                                                            "Initializer"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 5, .column = 41, .offset = 59 },
-                                                                    ast.Identifier.init(
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 5, .column = 41, .offset = 59 },
-                                                                        "__",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 5, .column = 41, .offset = 59 },
+                                                                            "__"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                        },
+                                                            },
+                                                        ),
+                                                    ),
                                                 ),
-),
                                             ),
-),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 5, .column = 47, .offset = 65 },
-                                        ast.Identifier.init(
-                                            .{ .line = 5, .column = 47, .offset = 65 },
-                                            "rules",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 5, .column = 47, .offset = 65 },
+                                                "rules"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.OneOrMoreExpr.create(
                                                     allocator,
                                                     .{ .line = 5, .column = 55, .offset = 73 },
-                                                ast.Expression.init(
-                                                    try ast.SeqExpr.create(
-                                                        allocator,
-                                                        .{ .line = 5, .column = 55, .offset = 73 },
-                                                        &.{
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 5, .column = 55, .offset = 73 },
-                                                                    ast.Identifier.init(
+                                                    ast.Expression.init(
+                                                        try ast.SeqExpr.create(
+                                                            allocator,
+                                                            .{ .line = 5, .column = 55, .offset = 73 },
+                                                            &[_]ast.Expression{
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 5, .column = 55, .offset = 73 },
-                                                                        "Rule",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 5, .column = 55, .offset = 73 },
+                                                                            "Rule"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 5, .column = 60, .offset = 78 },
-                                                                    ast.Identifier.init(
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 5, .column = 60, .offset = 78 },
-                                                                        "__",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 5, .column = 60, .offset = 78 },
+                                                                            "__"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                        },
+                                                            },
+                                                        ),
+                                                    ),
                                                 ),
-),
                                             ),
-),
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 5, .column = 66, .offset = 84 },
-                        "{\n    const pos = c.astPos();\n\n    // create the grammar, assign its initializer\n    const g = try c.allocator.create(ast.Grammar);\n    g.* = ast.Grammar{\n        .pos = pos,\n        .init = null,\n        .rules = std.ArrayList(*ast.Rule).init(c.allocator),\n    };\n\n    if (initializer) |init_val| {\n        g.init = @as(*ast.CodeBlock, @ptrCast(init_val));\n    }\n\n    const rules_slice = @as([]const []const u8, @ptrCast(rules));\n    for (rules_slice) |rule_val| {\n        const rule_ptr = @as(*ast.Rule, @ptrCast(rule_val));\n        try g.rules.append(c.allocator, rule_ptr);\n    }\n\n    return g;\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 5, .column = 66, .offset = 84 },
+                            "{\n    const pos = c.astPos();\n\n    // create the grammar, assign its initializer\n    const g = try c.allocator.create(ast.Grammar);\n    g.* = ast.Grammar{\n        .pos = pos,\n        .init = null,\n        .rules = std.ArrayList(*ast.Rule).init(c.allocator),\n    };\n\n    if (initializer) |init_val| {\n        g.init = @as(*ast.CodeBlock, @ptrCast(init_val));\n    }\n\n    const rules_slice = @as([]const []const u8, @ptrCast(rules));\n    for (rules_slice) |rule_val| {\n        const rule_ptr = @as(*ast.Rule, @ptrCast(rule_val));\n        try g.rules.append(c.allocator, rule_ptr);\n    }\n\n    return g;\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 29, .column = 2, .offset = 686 },
                 ast.Identifier.init(
                     .{ .line = 29, .column = 2, .offset = 686 },
-                    "Initializer",
+                    "Initializer"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -163,58 +164,59 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 29, .column = 16, .offset = 702 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 29, .column = 16, .offset = 702 },
-                                        ast.Identifier.init(
-                                            .{ .line = 29, .column = 16, .offset = 702 },
-                                            "code",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 29, .column = 16, .offset = 702 },
+                                                "code"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 29, .column = 21, .offset = 707 },
                                                     ast.Identifier.init(
                                                         .{ .line = 29, .column = 21, .offset = 707 },
-                                                        "CodeBlock",
+                                                        "CodeBlock"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 29, .column = 31, .offset = 717 },
                                             ast.Identifier.init(
                                                 .{ .line = 29, .column = 31, .offset = 717 },
-                                                "EOS",
+                                                "EOS"
                                             ),
                                         ),
-),
+                                    ),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 29, .column = 35, .offset = 721 },
-                        "{\n    return code;\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 29, .column = 35, .offset = 721 },
+                            "{\n    return code;\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 33, .column = 2, .offset = 743 },
                 ast.Identifier.init(
                     .{ .line = 33, .column = 2, .offset = 743 },
-                    "Rule",
+                    "Rule"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -224,152 +226,153 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 33, .column = 9, .offset = 752 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 9, .offset = 752 },
-                                        ast.Identifier.init(
-                                            .{ .line = 33, .column = 9, .offset = 752 },
-                                            "name",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 33, .column = 9, .offset = 752 },
+                                                "name"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 33, .column = 14, .offset = 757 },
                                                     ast.Identifier.init(
                                                         .{ .line = 33, .column = 14, .offset = 757 },
-                                                        "IdentifierName",
+                                                        "IdentifierName"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 29, .offset = 772 },
                                             ast.Identifier.init(
                                                 .{ .line = 33, .column = 29, .offset = 772 },
-                                                "__",
+                                                "__"
                                             ),
                                         ),
-),
+                                    ),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 32, .offset = 775 },
-                                        ast.Identifier.init(
-                                            .{ .line = 33, .column = 32, .offset = 775 },
-                                            "display",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 33, .column = 32, .offset = 775 },
+                                                "display"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.ZeroOrOneExpr.create(
                                                     allocator,
                                                     .{ .line = 33, .column = 42, .offset = 785 },
-                                                ast.Expression.init(
-                                                    try ast.SeqExpr.create(
-                                                        allocator,
-                                                        .{ .line = 33, .column = 42, .offset = 785 },
-                                                        &.{
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 33, .column = 42, .offset = 785 },
-                                                                    ast.Identifier.init(
+                                                    ast.Expression.init(
+                                                        try ast.SeqExpr.create(
+                                                            allocator,
+                                                            .{ .line = 33, .column = 42, .offset = 785 },
+                                                            &[_]ast.Expression{
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 33, .column = 42, .offset = 785 },
-                                                                        "StringLiteral",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 33, .column = 42, .offset = 785 },
+                                                                            "StringLiteral"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 33, .column = 56, .offset = 799 },
-                                                                    ast.Identifier.init(
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 33, .column = 56, .offset = 799 },
-                                                                        "__",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 33, .column = 56, .offset = 799 },
+                                                                            "__"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                        },
+                                                            },
+                                                        ),
+                                                    ),
                                                 ),
-),
                                             ),
-),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 62, .offset = 805 },
                                             ast.Identifier.init(
                                                 .{ .line = 33, .column = 62, .offset = 805 },
-                                                "RuleDefOp",
+                                                "RuleDefOp"
                                             ),
                                         ),
-),
+                                    ),
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 72, .offset = 815 },
                                             ast.Identifier.init(
                                                 .{ .line = 33, .column = 72, .offset = 815 },
-                                                "__",
+                                                "__"
                                             ),
                                         ),
-),
+                                    ),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 75, .offset = 818 },
-                                        ast.Identifier.init(
-                                            .{ .line = 33, .column = 75, .offset = 818 },
-                                            "expr",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 33, .column = 75, .offset = 818 },
+                                                "expr"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 33, .column = 80, .offset = 823 },
                                                     ast.Identifier.init(
                                                         .{ .line = 33, .column = 80, .offset = 823 },
-                                                        "Expression",
+                                                        "Expression"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 91, .offset = 834 },
                                             ast.Identifier.init(
                                                 .{ .line = 33, .column = 91, .offset = 834 },
-                                                "EOS",
+                                                "EOS"
                                             ),
                                         ),
-),
+                                    ),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 33, .column = 95, .offset = 838 },
-                        "{\n    const pos = c.astPos();\n\n    const rule = try c.allocator.create(ast.Rule);\n    rule.* = ast.Rule{\n        .pos = pos,\n        .name = name.*,\n        .display_name = undefined,\n        .expression = undefined,\n        .expr = undefined,\n        .visited = false,\n        .nullable = false,\n        .left_recursive = false,\n        .leader = false,\n    };\n\n    if (display) |display_val| {\n        rule.display_name = @as(ast.StringLit, @ptrCast(display_val));\n    } else {\n        rule.display_name = ast.StringLit{\n            .pos = pos,\n            .value = \"\",\n        };\n    }\n\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n    rule.expr = expr_ptr;\n    rule.expression = expr;\n\n    return rule;\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 33, .column = 95, .offset = 838 },
+                            "{\n    const pos = c.astPos();\n\n    const rule = try c.allocator.create(ast.Rule);\n    rule.* = ast.Rule{\n        .pos = pos,\n        .name = name.*,\n        .display_name = undefined,\n        .expression = undefined,\n        .expr = undefined,\n        .visited = false,\n        .nullable = false,\n        .left_recursive = false,\n        .leader = false,\n    };\n\n    if (display) |display_val| {\n        rule.display_name = @as(ast.StringLit, @ptrCast(display_val));\n    } else {\n        rule.display_name = ast.StringLit{\n            .pos = pos,\n            .value = \"\",\n        };\n    }\n\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n    rule.expr = expr_ptr;\n    rule.expression = expr;\n\n    return rule;\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 66, .column = 2, .offset = 1587 },
                 ast.Identifier.init(
                     .{ .line = 66, .column = 2, .offset = 1587 },
-                    "Expression",
+                    "Expression"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.RuleRefExpr.create(
@@ -377,21 +380,22 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                         .{ .line = 66, .column = 15, .offset = 1602 },
                         ast.Identifier.init(
                             .{ .line = 66, .column = 15, .offset = 1602 },
-                            "ChoiceExpr",
+                            "ChoiceExpr"
                         ),
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 68, .column = 2, .offset = 1614 },
                 ast.Identifier.init(
                     .{ .line = 68, .column = 2, .offset = 1614 },
-                    "ChoiceExpr",
+                    "ChoiceExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -401,110 +405,111 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 68, .column = 15, .offset = 1629 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 68, .column = 15, .offset = 1629 },
-                                        ast.Identifier.init(
-                                            .{ .line = 68, .column = 15, .offset = 1629 },
-                                            "first",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 68, .column = 15, .offset = 1629 },
+                                                "first"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 68, .column = 21, .offset = 1635 },
                                                     ast.Identifier.init(
                                                         .{ .line = 68, .column = 21, .offset = 1635 },
-                                                        "ActionExpr",
+                                                        "ActionExpr"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 68, .column = 32, .offset = 1646 },
-                                        ast.Identifier.init(
-                                            .{ .line = 68, .column = 32, .offset = 1646 },
-                                            "rest",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 68, .column = 32, .offset = 1646 },
+                                                "rest"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.ZeroOrMoreExpr.create(
                                                     allocator,
                                                     .{ .line = 68, .column = 39, .offset = 1653 },
-                                                ast.Expression.init(
-                                                    try ast.SeqExpr.create(
-                                                        allocator,
-                                                        .{ .line = 68, .column = 39, .offset = 1653 },
-                                                        &.{
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 68, .column = 39, .offset = 1653 },
-                                                                    ast.Identifier.init(
+                                                    ast.Expression.init(
+                                                        try ast.SeqExpr.create(
+                                                            allocator,
+                                                            .{ .line = 68, .column = 39, .offset = 1653 },
+                                                            &[_]ast.Expression{
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 68, .column = 39, .offset = 1653 },
-                                                                        "__",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 68, .column = 39, .offset = 1653 },
+                                                                            "__"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.LitMatcher.create(
-                                                                    allocator,
-                                                                    .{ .line = 68, .column = 42, .offset = 1656 },
-                                                                "ªªª/ªªª\"ªª",
-                                                                false,
-                                                            ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 68, .column = 46, .offset = 1660 },
-                                                                    ast.Identifier.init(
+                                                                ast.Expression.init(
+                                                                    try ast.LitMatcher.create(
+                                                                        allocator,
+                                                                        .{ .line = 68, .column = 42, .offset = 1656 },
+                                                                        "\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                                                        false,
+                                                                    ),
+                                                                ),
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 68, .column = 46, .offset = 1660 },
-                                                                        "__",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 68, .column = 46, .offset = 1660 },
+                                                                            "__"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 68, .column = 49, .offset = 1663 },
-                                                                    ast.Identifier.init(
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 68, .column = 49, .offset = 1663 },
-                                                                        "ActionExpr",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 68, .column = 49, .offset = 1663 },
+                                                                            "ActionExpr"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                        },
+                                                            },
+                                                        ),
+                                                    ),
                                                 ),
-),
                                             ),
-),
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 68, .column = 63, .offset = 1677 },
-                        "{\n    const rest_slice = @as([]const []const u8, @ptrCast(rest));\n    if (rest_slice.len == 0) {\n        return first;\n    }\n\n    const pos = c.astPos();\n    const choice = try ast.ChoiceExpr.init(c.allocator, pos);\n    try choice.alternatives.append(c.allocator, first);\n\n    for (rest_slice) |sl| {\n        const expr = @as(ast.Expression, @ptrCast(sl));\n        try choice.alternatives.append(c.allocator, expr);\n    }\n\n    return ast.Expression{ .choice = choice };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 68, .column = 63, .offset = 1677 },
+                            "{\n    const rest_slice = @as([]const []const u8, @ptrCast(rest));\n    if (rest_slice.len == 0) {\n        return first;\n    }\n\n    const pos = c.astPos();\n    const choice = try ast.ChoiceExpr.init(c.allocator, pos);\n    try choice.alternatives.append(c.allocator, first);\n\n    for (rest_slice) |sl| {\n        const expr = @as(ast.Expression, @ptrCast(sl));\n        try choice.alternatives.append(c.allocator, expr);\n    }\n\n    return ast.Expression{ .choice = choice };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 86, .column = 2, .offset = 2150 },
                 ast.Identifier.init(
                     .{ .line = 86, .column = 2, .offset = 2150 },
-                    "ActionExpr",
+                    "ActionExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -514,92 +519,93 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 86, .column = 15, .offset = 2165 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 86, .column = 15, .offset = 2165 },
-                                        ast.Identifier.init(
-                                            .{ .line = 86, .column = 15, .offset = 2165 },
-                                            "expr",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 86, .column = 15, .offset = 2165 },
+                                                "expr"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 86, .column = 20, .offset = 2170 },
                                                     ast.Identifier.init(
                                                         .{ .line = 86, .column = 20, .offset = 2170 },
-                                                        "SeqExpr",
+                                                        "SeqExpr"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 86, .column = 28, .offset = 2178 },
-                                        ast.Identifier.init(
-                                            .{ .line = 86, .column = 28, .offset = 2178 },
-                                            "code",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 86, .column = 28, .offset = 2178 },
+                                                "code"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.ZeroOrOneExpr.create(
                                                     allocator,
                                                     .{ .line = 86, .column = 35, .offset = 2185 },
-                                                ast.Expression.init(
-                                                    try ast.SeqExpr.create(
-                                                        allocator,
-                                                        .{ .line = 86, .column = 35, .offset = 2185 },
-                                                        &.{
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 86, .column = 35, .offset = 2185 },
-                                                                    ast.Identifier.init(
+                                                    ast.Expression.init(
+                                                        try ast.SeqExpr.create(
+                                                            allocator,
+                                                            .{ .line = 86, .column = 35, .offset = 2185 },
+                                                            &[_]ast.Expression{
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 86, .column = 35, .offset = 2185 },
-                                                                        "__",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 86, .column = 35, .offset = 2185 },
+                                                                            "__"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 86, .column = 38, .offset = 2188 },
-                                                                    ast.Identifier.init(
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 86, .column = 38, .offset = 2188 },
-                                                                        "CodeBlock",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 86, .column = 38, .offset = 2188 },
+                                                                            "CodeBlock"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                        },
+                                                            },
+                                                        ),
+                                                    ),
                                                 ),
-),
                                             ),
-),
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 86, .column = 51, .offset = 2201 },
-                        "{\n    if (code == null) {\n        return expr;\n    }\n\n    const pos = c.astPos();\n    const act = try ast.ActionExpr.init(c.allocator, pos, expr, code.?, 0);\n    return ast.Expression{ .action = act };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 86, .column = 51, .offset = 2201 },
+                            "{\n    if (code == null) {\n        return expr;\n    }\n\n    const pos = c.astPos();\n    const act = try ast.ActionExpr.init(c.allocator, pos, expr, code.?, 0);\n    return ast.Expression{ .action = act };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 96, .column = 2, .offset = 2406 },
                 ast.Identifier.init(
                     .{ .line = 96, .column = 2, .offset = 2406 },
-                    "SeqExpr",
+                    "SeqExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -609,308 +615,311 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 96, .column = 12, .offset = 2418 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 96, .column = 12, .offset = 2418 },
-                                        ast.Identifier.init(
-                                            .{ .line = 96, .column = 12, .offset = 2418 },
-                                            "first",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 96, .column = 12, .offset = 2418 },
+                                                "first"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 96, .column = 18, .offset = 2424 },
                                                     ast.Identifier.init(
                                                         .{ .line = 96, .column = 18, .offset = 2424 },
-                                                        "LabeledExpr",
+                                                        "LabeledExpr"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 96, .column = 30, .offset = 2436 },
-                                        ast.Identifier.init(
-                                            .{ .line = 96, .column = 30, .offset = 2436 },
-                                            "rest",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 96, .column = 30, .offset = 2436 },
+                                                "rest"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.ZeroOrMoreExpr.create(
                                                     allocator,
                                                     .{ .line = 96, .column = 37, .offset = 2443 },
-                                                ast.Expression.init(
-                                                    try ast.SeqExpr.create(
-                                                        allocator,
-                                                        .{ .line = 96, .column = 37, .offset = 2443 },
-                                                        &.{
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 96, .column = 37, .offset = 2443 },
-                                                                    ast.Identifier.init(
+                                                    ast.Expression.init(
+                                                        try ast.SeqExpr.create(
+                                                            allocator,
+                                                            .{ .line = 96, .column = 37, .offset = 2443 },
+                                                            &[_]ast.Expression{
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 96, .column = 37, .offset = 2443 },
-                                                                        "__",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 96, .column = 37, .offset = 2443 },
+                                                                            "__"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 96, .column = 40, .offset = 2446 },
-                                                                    ast.Identifier.init(
+                                                                ast.Expression.init(
+                                                                    try ast.RuleRefExpr.create(
+                                                                        allocator,
                                                                         .{ .line = 96, .column = 40, .offset = 2446 },
-                                                                        "LabeledExpr",
+                                                                        ast.Identifier.init(
+                                                                            .{ .line = 96, .column = 40, .offset = 2446 },
+                                                                            "LabeledExpr"
+                                                                        ),
                                                                     ),
                                                                 ),
-),
-                                                        },
+                                                            },
+                                                        ),
+                                                    ),
                                                 ),
-),
                                             ),
-),
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 96, .column = 55, .offset = 2461 },
-                        "{\n    const rest_slice = @as([]const []const u8, @ptrCast(rest));\n    if (rest_slice.len == 0) {\n        return first;\n    }\n    const seq = try ast.SeqExpr.init(c.allocator, c.astPos());\n    try seq.exprs.append(c.allocator, first);\n    for (rest_slice) |sl| {\n        const expr = @as(ast.Expression, @ptrCast(sl));\n        try seq.exprs.append(c.allocator, expr);\n    }\n    return ast.Expression{ .seq = seq };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 96, .column = 55, .offset = 2461 },
+                            "{\n    const rest_slice = @as([]const []const u8, @ptrCast(rest));\n    if (rest_slice.len == 0) {\n        return first;\n    }\n    const seq = try ast.SeqExpr.init(c.allocator, c.astPos());\n    try seq.exprs.append(c.allocator, first);\n    for (rest_slice) |sl| {\n        const expr = @as(ast.Expression, @ptrCast(sl));\n        try seq.exprs.append(c.allocator, expr);\n    }\n    return ast.Expression{ .seq = seq };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 110, .column = 2, .offset = 2878 },
                 ast.Identifier.init(
                     .{ .line = 110, .column = 2, .offset = 2878 },
-                    "LabeledExpr",
+                    "LabeledExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 110, .column = 16, .offset = 2894 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.ActionExpr.create(
-                                allocator,
-                                .{ .line = 110, .column = 16, .offset = 2894 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 110, .column = 16, .offset = 2894 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.LabeledExpr.create(
-                                                    allocator,
-                                                    .{ .line = 110, .column = 16, .offset = 2894 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 110, .column = 16, .offset = 2894 },
-                                                    "label",
-                                                ),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 110, .column = 22, .offset = 2900 },
-                                                            ast.Identifier.init(
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.ActionExpr.create(
+                                    allocator,
+                                    .{ .line = 110, .column = 16, .offset = 2894 },
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 110, .column = 16, .offset = 2894 },
+                                            &[_]ast.Expression{
+                                                ast.Expression.init(
+                                                    try ast.LabeledExpr.create(
+                                                        allocator,
+                                                        .{ .line = 110, .column = 16, .offset = 2894 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 110, .column = 16, .offset = 2894 },
+                                                            "label"
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 110, .column = 22, .offset = 2900 },
-                                                                "Identifier",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 110, .column = 22, .offset = 2900 },
+                                                                    "Identifier"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 110, .column = 33, .offset = 2911 },
-                                                    ast.Identifier.init(
+                                                    ),
+                                                ),
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
                                                         .{ .line = 110, .column = 33, .offset = 2911 },
-                                                        "__",
+                                                        ast.Identifier.init(
+                                                            .{ .line = 110, .column = 33, .offset = 2911 },
+                                                            "__"
+                                                        ),
                                                     ),
                                                 ),
-),
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 110, .column = 36, .offset = 2914 },
-                                                "ªªª:ªªª'ªª",
-                                                false,
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 110, .column = 40, .offset = 2918 },
-                                                    ast.Identifier.init(
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 110, .column = 36, .offset = 2914 },
+                                                        "\xaa\xaa\xaa:\xaa\xaa\xaa'\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
                                                         .{ .line = 110, .column = 40, .offset = 2918 },
-                                                        "__",
+                                                        ast.Identifier.init(
+                                                            .{ .line = 110, .column = 40, .offset = 2918 },
+                                                            "__"
+                                                        ),
                                                     ),
                                                 ),
-),
-                                            ast.Expression.init(
-                                                try ast.LabeledExpr.create(
-                                                    allocator,
-                                                    .{ .line = 110, .column = 43, .offset = 2921 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 110, .column = 43, .offset = 2921 },
-                                                    "expr",
-                                                ),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 110, .column = 48, .offset = 2926 },
-                                                            ast.Identifier.init(
+                                                ast.Expression.init(
+                                                    try ast.LabeledExpr.create(
+                                                        allocator,
+                                                        .{ .line = 110, .column = 43, .offset = 2921 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 110, .column = 43, .offset = 2921 },
+                                                            "expr"
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 110, .column = 48, .offset = 2926 },
-                                                                "PrefixedExpr",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 110, .column = 48, .offset = 2926 },
+                                                                    "PrefixedExpr"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                            ),
-),
-                                        },
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                    ast.CodeBlock.init(
+                                        .{ .line = 110, .column = 61, .offset = 2939 },
+                                        "{\n    const pos = c.astPos();\n    const lab = try c.allocator.create(ast.LabeledExpr);\n    const label_ptr = try c.allocator.create(ast.Identifier);\n    label_ptr.* = label.*;\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n\n    lab.* = ast.LabeledExpr{\n        .pos = pos,\n        .label = label_ptr,\n        .expr = expr_ptr,\n    };\n    return ast.Expression{ .labeled = lab };\n}"
+                                    ),
+                                    0,
                                 ),
-),
-                            ast.CodeBlock.init(
-                                .{ .line = 110, .column = 61, .offset = 2939 },
-                                "{\n    const pos = c.astPos();\n    const lab = try c.allocator.create(ast.LabeledExpr);\n    const label_ptr = try c.allocator.create(ast.Identifier);\n    label_ptr.* = label.*;\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n\n    lab.* = ast.LabeledExpr{\n        .pos = pos,\n        .label = label_ptr,\n        .expr = expr_ptr,\n    };\n    return ast.Expression{ .labeled = lab };\n}",
                             ),
-                            0,
-                            ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 124, .column = 6, .offset = 3359 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 124, .column = 6, .offset = 3359 },
-                                    "PrefixedExpr",
+                                    ast.Identifier.init(
+                                        .{ .line = 124, .column = 6, .offset = 3359 },
+                                        "PrefixedExpr"
+                                    ),
                                 ),
                             ),
-),
-                    },
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 126, .column = 2, .offset = 3373 },
                 ast.Identifier.init(
                     .{ .line = 126, .column = 2, .offset = 3373 },
-                    "PrefixedExpr",
+                    "PrefixedExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 126, .column = 17, .offset = 3390 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.ActionExpr.create(
-                                allocator,
-                                .{ .line = 126, .column = 17, .offset = 3390 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 126, .column = 17, .offset = 3390 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.LabeledExpr.create(
-                                                    allocator,
-                                                    .{ .line = 126, .column = 17, .offset = 3390 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 126, .column = 17, .offset = 3390 },
-                                                    "op",
-                                                ),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 126, .column = 20, .offset = 3393 },
-                                                            ast.Identifier.init(
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.ActionExpr.create(
+                                    allocator,
+                                    .{ .line = 126, .column = 17, .offset = 3390 },
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 126, .column = 17, .offset = 3390 },
+                                            &[_]ast.Expression{
+                                                ast.Expression.init(
+                                                    try ast.LabeledExpr.create(
+                                                        allocator,
+                                                        .{ .line = 126, .column = 17, .offset = 3390 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 126, .column = 17, .offset = 3390 },
+                                                            "op"
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 126, .column = 20, .offset = 3393 },
-                                                                "PrefixedOp",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 126, .column = 20, .offset = 3393 },
+                                                                    "PrefixedOp"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 126, .column = 31, .offset = 3404 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 126, .column = 31, .offset = 3404 },
-                                                        "__",
                                                     ),
                                                 ),
-),
-                                            ast.Expression.init(
-                                                try ast.LabeledExpr.create(
-                                                    allocator,
-                                                    .{ .line = 126, .column = 34, .offset = 3407 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 126, .column = 34, .offset = 3407 },
-                                                    "expr",
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 126, .column = 31, .offset = 3404 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 126, .column = 31, .offset = 3404 },
+                                                            "__"
+                                                        ),
+                                                    ),
                                                 ),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 126, .column = 39, .offset = 3412 },
-                                                            ast.Identifier.init(
+                                                ast.Expression.init(
+                                                    try ast.LabeledExpr.create(
+                                                        allocator,
+                                                        .{ .line = 126, .column = 34, .offset = 3407 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 126, .column = 34, .offset = 3407 },
+                                                            "expr"
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 126, .column = 39, .offset = 3412 },
-                                                                "SuffixedExpr",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 126, .column = 39, .offset = 3412 },
+                                                                    "SuffixedExpr"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                            ),
-),
-                                        },
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                    ast.CodeBlock.init(
+                                        .{ .line = 126, .column = 52, .offset = 3425 },
+                                        "{\n    const pos = c.astPos();\n    const op_str = @as([]const u8, @ptrCast(op));\n    if (std.mem.eql(u8, op_str, \"&\")) {\n        const and_expr = try ast.AndExpr.init(c.allocator, pos, expr);\n        return ast.Expression{ .and_expr = and_expr };\n    }\n    const not_expr = try c.allocator.create(ast.NotExpr);\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n    not_expr.* = ast.NotExpr{\n        .pos = pos,\n        .expr = expr_ptr,\n    };\n    return ast.Expression{ .not = not_expr };\n}"
+                                    ),
+                                    0,
                                 ),
-),
-                            ast.CodeBlock.init(
-                                .{ .line = 126, .column = 52, .offset = 3425 },
-                                "{\n    const pos = c.astPos();\n    const op_str = @as([]const u8, @ptrCast(op));\n    if (std.mem.eql(u8, op_str, \"&\")) {\n        const and_expr = try ast.AndExpr.init(c.allocator, pos, expr);\n        return ast.Expression{ .and_expr = and_expr };\n    }\n    const not_expr = try c.allocator.create(ast.NotExpr);\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n    not_expr.* = ast.NotExpr{\n        .pos = pos,\n        .expr = expr_ptr,\n    };\n    return ast.Expression{ .not = not_expr };\n}",
                             ),
-                            0,
-                            ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 141, .column = 6, .offset = 3952 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 141, .column = 6, .offset = 3952 },
-                                    "SuffixedExpr",
+                                    ast.Identifier.init(
+                                        .{ .line = 141, .column = 6, .offset = 3952 },
+                                        "SuffixedExpr"
+                                    ),
                                 ),
                             ),
-),
-                    },
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 143, .column = 2, .offset = 3966 },
                 ast.Identifier.init(
                     .{ .line = 143, .column = 2, .offset = 3966 },
-                    "PrefixedOp",
+                    "PrefixedOp"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -920,143 +929,145 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.ChoiceExpr.create(
                                 allocator,
                                 .{ .line = 143, .column = 17, .offset = 3983 },
-                            &.{
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 143, .column = 17, .offset = 3983 },
-                                    "ªªª&ªªª'ªª",
-                                    false,
-                                ),
-),
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 143, .column = 23, .offset = 3989 },
-                                    "ªªª!ªªª'ªª",
-                                    false,
-                                ),
-),
-                            },
+                                &[_]ast.Expression{
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 143, .column = 17, .offset = 3983 },
+                                            "\xaa\xaa\xaa&\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 143, .column = 23, .offset = 3989 },
+                                            "\xaa\xaa\xaa!\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
+                                },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 143, .column = 29, .offset = 3995 },
-                        "{\n    return c.text;\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 143, .column = 29, .offset = 3995 },
+                            "{\n    return c.text;\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 147, .column = 2, .offset = 4019 },
                 ast.Identifier.init(
                     .{ .line = 147, .column = 2, .offset = 4019 },
-                    "SuffixedExpr",
+                    "SuffixedExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 147, .column = 17, .offset = 4036 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.ActionExpr.create(
-                                allocator,
-                                .{ .line = 147, .column = 17, .offset = 4036 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 147, .column = 17, .offset = 4036 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.LabeledExpr.create(
-                                                    allocator,
-                                                    .{ .line = 147, .column = 17, .offset = 4036 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 147, .column = 17, .offset = 4036 },
-                                                    "expr",
-                                                ),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 147, .column = 22, .offset = 4041 },
-                                                            ast.Identifier.init(
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.ActionExpr.create(
+                                    allocator,
+                                    .{ .line = 147, .column = 17, .offset = 4036 },
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 147, .column = 17, .offset = 4036 },
+                                            &[_]ast.Expression{
+                                                ast.Expression.init(
+                                                    try ast.LabeledExpr.create(
+                                                        allocator,
+                                                        .{ .line = 147, .column = 17, .offset = 4036 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 147, .column = 17, .offset = 4036 },
+                                                            "expr"
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 147, .column = 22, .offset = 4041 },
-                                                                "PrimaryExpr",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 147, .column = 22, .offset = 4041 },
+                                                                    "PrimaryExpr"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 147, .column = 34, .offset = 4053 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 147, .column = 34, .offset = 4053 },
-                                                        "__",
                                                     ),
                                                 ),
-),
-                                            ast.Expression.init(
-                                                try ast.LabeledExpr.create(
-                                                    allocator,
-                                                    .{ .line = 147, .column = 37, .offset = 4056 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 147, .column = 37, .offset = 4056 },
-                                                    "op",
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 147, .column = 34, .offset = 4053 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 147, .column = 34, .offset = 4053 },
+                                                            "__"
+                                                        ),
+                                                    ),
                                                 ),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 147, .column = 40, .offset = 4059 },
-                                                            ast.Identifier.init(
+                                                ast.Expression.init(
+                                                    try ast.LabeledExpr.create(
+                                                        allocator,
+                                                        .{ .line = 147, .column = 37, .offset = 4056 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 147, .column = 37, .offset = 4056 },
+                                                            "op"
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 147, .column = 40, .offset = 4059 },
-                                                                "SuffixedOp",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 147, .column = 40, .offset = 4059 },
+                                                                    "SuffixedOp"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                            ),
-),
-                                        },
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                    ast.CodeBlock.init(
+                                        .{ .line = 147, .column = 51, .offset = 4070 },
+                                        "{\n    const pos = c.astPos();\n    const op_str = @as([]const u8, @ptrCast(op));\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n\n    if (std.mem.eql(u8, op_str, \"?\")) {\n        const zero_or_one = try c.allocator.create(ast.ZeroOrOneExpr);\n        zero_or_one.* = ast.ZeroOrOneExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .zero_or_one = zero_or_one };\n    } else if (std.mem.eql(u8, op_str, \"*\")) {\n        const zero_or_more = try c.allocator.create(ast.ZeroOrMoreExpr);\n        zero_or_more.* = ast.ZeroOrMoreExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .zero_or_more = zero_or_more };\n    } else if (std.mem.eql(u8, op_str, \"+\")) {\n        const one_or_more = try c.allocator.create(ast.OneOrMoreExpr);\n        one_or_more.* = ast.OneOrMoreExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .one_or_more = one_or_more };\n    } else {\n        return error.UnknownOperator;\n    }\n}"
+                                    ),
+                                    0,
                                 ),
-),
-                            ast.CodeBlock.init(
-                                .{ .line = 147, .column = 51, .offset = 4070 },
-                                "{\n    const pos = c.astPos();\n    const op_str = @as([]const u8, @ptrCast(op));\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n\n    if (std.mem.eql(u8, op_str, \"?\")) {\n        const zero_or_one = try c.allocator.create(ast.ZeroOrOneExpr);\n        zero_or_one.* = ast.ZeroOrOneExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .zero_or_one = zero_or_one };\n    } else if (std.mem.eql(u8, op_str, \"*\")) {\n        const zero_or_more = try c.allocator.create(ast.ZeroOrMoreExpr);\n        zero_or_more.* = ast.ZeroOrMoreExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .zero_or_more = zero_or_more };\n    } else if (std.mem.eql(u8, op_str, \"+\")) {\n        const one_or_more = try c.allocator.create(ast.OneOrMoreExpr);\n        one_or_more.* = ast.OneOrMoreExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .one_or_more = one_or_more };\n    } else {\n        return error.UnknownOperator;\n    }\n}",
                             ),
-                            0,
-                            ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 177, .column = 6, .offset = 5156 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 177, .column = 6, .offset = 5156 },
-                                    "PrimaryExpr",
+                                    ast.Identifier.init(
+                                        .{ .line = 177, .column = 6, .offset = 5156 },
+                                        "PrimaryExpr"
+                                    ),
                                 ),
                             ),
-),
-                    },
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 179, .column = 2, .offset = 5170 },
                 ast.Identifier.init(
                     .{ .line = 179, .column = 2, .offset = 5170 },
-                    "SuffixedOp",
+                    "SuffixedOp"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -1066,197 +1077,199 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.ChoiceExpr.create(
                                 allocator,
                                 .{ .line = 179, .column = 17, .offset = 5187 },
-                            &.{
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 179, .column = 17, .offset = 5187 },
-                                    "ªªª?ªªª'ªª",
-                                    false,
-                                ),
-),
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 179, .column = 23, .offset = 5193 },
-                                    "ªªª*ªªª'ªª",
-                                    false,
-                                ),
-),
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 179, .column = 29, .offset = 5199 },
-                                    "ªªª+ªªª'ªª",
-                                    false,
-                                ),
-),
-                            },
+                                &[_]ast.Expression{
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 179, .column = 17, .offset = 5187 },
+                                            "\xaa\xaa\xaa?\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 179, .column = 23, .offset = 5193 },
+                                            "\xaa\xaa\xaa*\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 179, .column = 29, .offset = 5199 },
+                                            "\xaa\xaa\xaa+\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
+                                },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 179, .column = 35, .offset = 5205 },
-                        "{\n    return c.text;\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 179, .column = 35, .offset = 5205 },
+                            "{\n    return c.text;\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 183, .column = 2, .offset = 5229 },
                 ast.Identifier.init(
                     .{ .line = 183, .column = 2, .offset = 5229 },
-                    "PrimaryExpr",
+                    "PrimaryExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 183, .column = 16, .offset = 5245 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 183, .column = 16, .offset = 5245 },
-                                ast.Identifier.init(
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 183, .column = 16, .offset = 5245 },
-                                    "LitMatcher",
+                                    ast.Identifier.init(
+                                        .{ .line = 183, .column = 16, .offset = 5245 },
+                                        "LitMatcher"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 183, .column = 29, .offset = 5258 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 183, .column = 29, .offset = 5258 },
-                                    "CharClassMatcher",
+                                    ast.Identifier.init(
+                                        .{ .line = 183, .column = 29, .offset = 5258 },
+                                        "CharClassMatcher"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 183, .column = 48, .offset = 5277 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 183, .column = 48, .offset = 5277 },
-                                    "AnyMatcher",
+                                    ast.Identifier.init(
+                                        .{ .line = 183, .column = 48, .offset = 5277 },
+                                        "AnyMatcher"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 183, .column = 61, .offset = 5290 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 183, .column = 61, .offset = 5290 },
-                                    "RuleRefExpr",
+                                    ast.Identifier.init(
+                                        .{ .line = 183, .column = 61, .offset = 5290 },
+                                        "RuleRefExpr"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 183, .column = 75, .offset = 5304 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 183, .column = 75, .offset = 5304 },
-                                    "SemanticPredExpr",
+                                    ast.Identifier.init(
+                                        .{ .line = 183, .column = 75, .offset = 5304 },
+                                        "SemanticPredExpr"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.ActionExpr.create(
-                                allocator,
-                                .{ .line = 183, .column = 94, .offset = 5323 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 183, .column = 94, .offset = 5323 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 183, .column = 94, .offset = 5323 },
-                                                "ªªª(ªªª\"ªª",
-                                                false,
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 183, .column = 98, .offset = 5327 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 183, .column = 98, .offset = 5327 },
-                                                        "__",
+                            ast.Expression.init(
+                                try ast.ActionExpr.create(
+                                    allocator,
+                                    .{ .line = 183, .column = 94, .offset = 5323 },
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 183, .column = 94, .offset = 5323 },
+                                            &[_]ast.Expression{
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 183, .column = 94, .offset = 5323 },
+                                                        "\xaa\xaa\xaa(\xaa\xaa\xaa\"\xaa\xaa",
+                                                        false,
                                                     ),
                                                 ),
-),
-                                            ast.Expression.init(
-                                                try ast.LabeledExpr.create(
-                                                    allocator,
-                                                    .{ .line = 183, .column = 101, .offset = 5330 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 183, .column = 101, .offset = 5330 },
-                                                    "expr",
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 183, .column = 98, .offset = 5327 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 183, .column = 98, .offset = 5327 },
+                                                            "__"
+                                                        ),
+                                                    ),
                                                 ),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 183, .column = 106, .offset = 5335 },
-                                                            ast.Identifier.init(
+                                                ast.Expression.init(
+                                                    try ast.LabeledExpr.create(
+                                                        allocator,
+                                                        .{ .line = 183, .column = 101, .offset = 5330 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 183, .column = 101, .offset = 5330 },
+                                                            "expr"
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 183, .column = 106, .offset = 5335 },
-                                                                "Expression",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 183, .column = 106, .offset = 5335 },
+                                                                    "Expression"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 183, .column = 117, .offset = 5346 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 183, .column = 117, .offset = 5346 },
-                                                        "__",
                                                     ),
                                                 ),
-),
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 183, .column = 120, .offset = 5349 },
-                                                "ªªª)ªªª\"ªª",
-                                                false,
-                                            ),
-),
-                                        },
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 183, .column = 117, .offset = 5346 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 183, .column = 117, .offset = 5346 },
+                                                            "__"
+                                                        ),
+                                                    ),
+                                                ),
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 183, .column = 120, .offset = 5349 },
+                                                        "\xaa\xaa\xaa)\xaa\xaa\xaa\"\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                    ast.CodeBlock.init(
+                                        .{ .line = 183, .column = 124, .offset = 5353 },
+                                        "{\n    return expr;\n}"
+                                    ),
+                                    0,
                                 ),
-),
-                            ast.CodeBlock.init(
-                                .{ .line = 183, .column = 124, .offset = 5353 },
-                                "{\n    return expr;\n}",
                             ),
-                            0,
-                            ),
-),
-                    },
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 186, .column = 2, .offset = 5374 },
                 ast.Identifier.init(
                     .{ .line = 186, .column = 2, .offset = 5374 },
-                    "RuleRefExpr",
+                    "RuleRefExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -1266,116 +1279,117 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 186, .column = 16, .offset = 5390 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 186, .column = 16, .offset = 5390 },
-                                        ast.Identifier.init(
-                                            .{ .line = 186, .column = 16, .offset = 5390 },
-                                            "name",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 186, .column = 16, .offset = 5390 },
+                                                "name"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 186, .column = 21, .offset = 5395 },
                                                     ast.Identifier.init(
                                                         .{ .line = 186, .column = 21, .offset = 5395 },
-                                                        "IdentifierName",
+                                                        "IdentifierName"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.NotExpr.create(
                                             allocator,
                                             .{ .line = 186, .column = 39, .offset = 5413 },
-                                        ast.Expression.init(
-                                            try ast.SeqExpr.create(
-                                                allocator,
-                                                .{ .line = 186, .column = 39, .offset = 5413 },
-                                                &.{
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 186, .column = 39, .offset = 5413 },
-                                                            ast.Identifier.init(
+                                            ast.Expression.init(
+                                                try ast.SeqExpr.create(
+                                                    allocator,
+                                                    .{ .line = 186, .column = 39, .offset = 5413 },
+                                                    &[_]ast.Expression{
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
                                                                 .{ .line = 186, .column = 39, .offset = 5413 },
-                                                                "__",
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 186, .column = 39, .offset = 5413 },
+                                                                    "__"
+                                                                ),
                                                             ),
                                                         ),
-),
-                                                    ast.Expression.init(
-                                                        try ast.ZeroOrOneExpr.create(
-                                                            allocator,
-                                                            .{ .line = 186, .column = 44, .offset = 5418 },
                                                         ast.Expression.init(
-                                                            try ast.SeqExpr.create(
+                                                            try ast.ZeroOrOneExpr.create(
                                                                 allocator,
                                                                 .{ .line = 186, .column = 44, .offset = 5418 },
-                                                                &.{
-                                                                    ast.Expression.init(
-                                                                        try ast.RuleRefExpr.create(
-                                                                            allocator,
-                                                                            .{ .line = 186, .column = 44, .offset = 5418 },
-                                                                            ast.Identifier.init(
-                                                                                .{ .line = 186, .column = 44, .offset = 5418 },
-                                                                                "StringLiteral",
+                                                                ast.Expression.init(
+                                                                    try ast.SeqExpr.create(
+                                                                        allocator,
+                                                                        .{ .line = 186, .column = 44, .offset = 5418 },
+                                                                        &[_]ast.Expression{
+                                                                            ast.Expression.init(
+                                                                                try ast.RuleRefExpr.create(
+                                                                                    allocator,
+                                                                                    .{ .line = 186, .column = 44, .offset = 5418 },
+                                                                                    ast.Identifier.init(
+                                                                                        .{ .line = 186, .column = 44, .offset = 5418 },
+                                                                                        "StringLiteral"
+                                                                                    ),
+                                                                                ),
                                                                             ),
-                                                                        ),
-),
-                                                                    ast.Expression.init(
-                                                                        try ast.RuleRefExpr.create(
-                                                                            allocator,
-                                                                            .{ .line = 186, .column = 58, .offset = 5432 },
-                                                                            ast.Identifier.init(
-                                                                                .{ .line = 186, .column = 58, .offset = 5432 },
-                                                                                "__",
+                                                                            ast.Expression.init(
+                                                                                try ast.RuleRefExpr.create(
+                                                                                    allocator,
+                                                                                    .{ .line = 186, .column = 58, .offset = 5432 },
+                                                                                    ast.Identifier.init(
+                                                                                        .{ .line = 186, .column = 58, .offset = 5432 },
+                                                                                        "__"
+                                                                                    ),
+                                                                                ),
                                                                             ),
-                                                                        ),
-),
-                                                                },
-                                                        ),
-),
-                                                    ),
-),
-                                                    ast.Expression.init(
-                                                        try ast.RuleRefExpr.create(
-                                                            allocator,
-                                                            .{ .line = 186, .column = 64, .offset = 5438 },
-                                                            ast.Identifier.init(
-                                                                .{ .line = 186, .column = 64, .offset = 5438 },
-                                                                "RuleDefOp",
+                                                                        },
+                                                                    ),
+                                                                ),
                                                             ),
                                                         ),
-),
-                                                },
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
+                                                                .{ .line = 186, .column = 64, .offset = 5438 },
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 186, .column = 64, .offset = 5438 },
+                                                                    "RuleDefOp"
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    },
+                                                ),
+                                            ),
                                         ),
-),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 186, .column = 76, .offset = 5450 },
-                        "{\n    const ref = try c.allocator.create(ast.RuleRefExpr);\n    const name_ptr = try c.allocator.create(ast.Identifier);\n    name_ptr.* = name.*;\n    ref.* = ast.RuleRefExpr{\n        .pos = c.astPos(),\n        .name = name_ptr,\n        .nullable = false,\n    };\n    return ast.Expression{ .rule_ref = ref };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 186, .column = 76, .offset = 5450 },
+                            "{\n    const ref = try c.allocator.create(ast.RuleRefExpr);\n    const name_ptr = try c.allocator.create(ast.Identifier);\n    name_ptr.* = name.*;\n    ref.* = ast.RuleRefExpr{\n        .pos = c.astPos(),\n        .name = name_ptr,\n        .nullable = false,\n    };\n    return ast.Expression{ .rule_ref = ref };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 197, .column = 2, .offset = 5759 },
                 ast.Identifier.init(
                     .{ .line = 197, .column = 2, .offset = 5759 },
-                    "SemanticPredExpr",
+                    "SemanticPredExpr"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -1385,78 +1399,79 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 197, .column = 21, .offset = 5780 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 197, .column = 21, .offset = 5780 },
-                                        ast.Identifier.init(
-                                            .{ .line = 197, .column = 21, .offset = 5780 },
-                                            "op",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 197, .column = 21, .offset = 5780 },
+                                                "op"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 197, .column = 24, .offset = 5783 },
                                                     ast.Identifier.init(
                                                         .{ .line = 197, .column = 24, .offset = 5783 },
-                                                        "SemanticPredOp",
+                                                        "SemanticPredOp"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 197, .column = 39, .offset = 5798 },
                                             ast.Identifier.init(
                                                 .{ .line = 197, .column = 39, .offset = 5798 },
-                                                "__",
+                                                "__"
                                             ),
                                         ),
-),
+                                    ),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 197, .column = 42, .offset = 5801 },
-                                        ast.Identifier.init(
-                                            .{ .line = 197, .column = 42, .offset = 5801 },
-                                            "code",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 197, .column = 42, .offset = 5801 },
+                                                "code"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 197, .column = 47, .offset = 5806 },
                                                     ast.Identifier.init(
                                                         .{ .line = 197, .column = 47, .offset = 5806 },
-                                                        "CodeBlock",
+                                                        "CodeBlock"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 197, .column = 57, .offset = 5816 },
-                        "{\n    const op_str = @as([]const u8, @ptrCast(op));\n    if (std.mem.eql(u8, op_str, \"&\")) {\n        const and_code = try c.allocator.create(ast.AndCodeExpr);\n        and_code.* = ast.AndCodeExpr{\n            .pos = c.astPos(),\n            .code = code,\n            .func_ix = 0,\n        };\n        return ast.Expression{ .and_code = and_code };\n    }\n    const not_code = try c.allocator.create(ast.NotCodeExpr);\n    not_code.* = ast.NotCodeExpr{\n        .pos = c.astPos(),\n        .code = code,\n        .func_ix = 0,\n    };\n    return ast.Expression{ .not_code = not_code };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 197, .column = 57, .offset = 5816 },
+                            "{\n    const op_str = @as([]const u8, @ptrCast(op));\n    if (std.mem.eql(u8, op_str, \"&\")) {\n        const and_code = try c.allocator.create(ast.AndCodeExpr);\n        and_code.* = ast.AndCodeExpr{\n            .pos = c.astPos(),\n            .code = code,\n            .func_ix = 0,\n        };\n        return ast.Expression{ .and_code = and_code };\n    }\n    const not_code = try c.allocator.create(ast.NotCodeExpr);\n    not_code.* = ast.NotCodeExpr{\n        .pos = c.astPos(),\n        .code = code,\n        .func_ix = 0,\n    };\n    return ast.Expression{ .not_code = not_code };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 216, .column = 2, .offset = 6394 },
                 ast.Identifier.init(
                     .{ .line = 216, .column = 2, .offset = 6394 },
-                    "SemanticPredOp",
+                    "SemanticPredOp"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -1466,389 +1481,396 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.ChoiceExpr.create(
                                 allocator,
                                 .{ .line = 216, .column = 21, .offset = 6415 },
-                            &.{
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 216, .column = 21, .offset = 6415 },
-                                    "ªªª&ªªª'ªª",
-                                    false,
-                                ),
-),
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 216, .column = 27, .offset = 6421 },
-                                    "ªªª!ªªª'ªª",
-                                    false,
-                                ),
-),
-                            },
+                                &[_]ast.Expression{
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 216, .column = 21, .offset = 6415 },
+                                            "\xaa\xaa\xaa&\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 216, .column = 27, .offset = 6421 },
+                                            "\xaa\xaa\xaa!\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
+                                },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 216, .column = 33, .offset = 6427 },
-                        "{\n    return c.text;\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 216, .column = 33, .offset = 6427 },
+                            "{\n    return c.text;\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 220, .column = 2, .offset = 6451 },
                 ast.Identifier.init(
                     .{ .line = 220, .column = 2, .offset = 6451 },
-                    "RuleDefOp",
+                    "RuleDefOp"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 220, .column = 14, .offset = 6465 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 220, .column = 14, .offset = 6465 },
-                            "ªªª=ªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 220, .column = 20, .offset = 6471 },
-                            "ªªª<ªªª-ªªª\"ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 220, .column = 27, .offset = 6478 },
-                            "ªªª\\ªªªuªªª2ªªª1ªªª9ªªª0ªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 220, .column = 38, .offset = 6489 },
-                            "ªªª\\ªªªuªªª2ªªª7ªªªfªªª5ªªª'ªª",
-                            false,
-                        ),
-),
-                    },
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 220, .column = 14, .offset = 6465 },
+                                    "\xaa\xaa\xaa=\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 220, .column = 20, .offset = 6471 },
+                                    "\xaa\xaa\xaa<\xaa\xaa\xaa-\xaa\xaa\xaa\"\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 220, .column = 27, .offset = 6478 },
+                                    "\xaa\xaa\xaa\\\xaa\xaa\xaau\xaa\xaa\xaa2\xaa\xaa\xaa1\xaa\xaa\xaa9\xaa\xaa\xaa0\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 220, .column = 38, .offset = 6489 },
+                                    "\xaa\xaa\xaa\\\xaa\xaa\xaau\xaa\xaa\xaa2\xaa\xaa\xaa7\xaa\xaa\xaaf\xaa\xaa\xaa5\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 222, .column = 2, .offset = 6499 },
                 ast.Identifier.init(
                     .{ .line = 222, .column = 2, .offset = 6499 },
-                    "SourceChar",
+                    "SourceChar"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.AnyMatcher.create(
                         allocator,
                         .{ .line = 222, .column = 15, .offset = 6514 },
-                    ".",
+                        ".",
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 223, .column = 2, .offset = 6516 },
                 ast.Identifier.init(
                     .{ .line = 223, .column = 2, .offset = 6516 },
-                    "Comment",
+                    "Comment"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 223, .column = 12, .offset = 6528 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 223, .column = 12, .offset = 6528 },
-                                ast.Identifier.init(
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 223, .column = 12, .offset = 6528 },
-                                    "MultiLineComment",
+                                    ast.Identifier.init(
+                                        .{ .line = 223, .column = 12, .offset = 6528 },
+                                        "MultiLineComment"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 223, .column = 31, .offset = 6547 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 223, .column = 31, .offset = 6547 },
-                                    "SingleLineComment",
+                                    ast.Identifier.init(
+                                        .{ .line = 223, .column = 31, .offset = 6547 },
+                                        "SingleLineComment"
+                                    ),
                                 ),
                             ),
-),
-                    },
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 224, .column = 2, .offset = 6565 },
                 ast.Identifier.init(
                     .{ .line = 224, .column = 2, .offset = 6565 },
-                    "MultiLineComment",
+                    "MultiLineComment"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 224, .column = 21, .offset = 6586 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 224, .column = 21, .offset = 6586 },
-                                "ªªª/ªªª*ªªª\"ªª",
-                                false,
+                                    "\xaa\xaa\xaa/\xaa\xaa\xaa*\xaa\xaa\xaa\"\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.ZeroOrMoreExpr.create(
                                     allocator,
                                     .{ .line = 224, .column = 29, .offset = 6594 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 224, .column = 29, .offset = 6594 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.NotExpr.create(
-                                                    allocator,
-                                                    .{ .line = 224, .column = 29, .offset = 6594 },
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 224, .column = 29, .offset = 6594 },
+                                            &[_]ast.Expression{
                                                 ast.Expression.init(
-                                                    try ast.LitMatcher.create(
+                                                    try ast.NotExpr.create(
                                                         allocator,
                                                         .{ .line = 224, .column = 29, .offset = 6594 },
-                                                    "ªªª*ªªª/ªªª\"ªª",
-                                                    false,
-                                                ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 224, .column = 34, .offset = 6599 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 224, .column = 34, .offset = 6599 },
-                                                        "SourceChar",
+                                                        ast.Expression.init(
+                                                            try ast.LitMatcher.create(
+                                                                allocator,
+                                                                .{ .line = 224, .column = 29, .offset = 6594 },
+                                                                "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                                                false,
+                                                            ),
+                                                        ),
                                                     ),
                                                 ),
-),
-                                        },
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 224, .column = 34, .offset = 6599 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 224, .column = 34, .offset = 6599 },
+                                                            "SourceChar"
+                                                        ),
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
                                 ),
-),
                             ),
-),
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 224, .column = 48, .offset = 6613 },
-                                "ªªª*ªªª/ªªª\"ªª",
-                                false,
+                                    "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 225, .column = 2, .offset = 6618 },
                 ast.Identifier.init(
                     .{ .line = 225, .column = 2, .offset = 6618 },
-                    "MultiLineCommentNoLineTerminator",
+                    "MultiLineCommentNoLineTerminator"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 225, .column = 37, .offset = 6655 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 225, .column = 37, .offset = 6655 },
-                                "ªªª/ªªª*ªªª\"ªª",
-                                false,
+                                    "\xaa\xaa\xaa/\xaa\xaa\xaa*\xaa\xaa\xaa\"\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.ZeroOrMoreExpr.create(
                                     allocator,
                                     .{ .line = 225, .column = 47, .offset = 6665 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 225, .column = 47, .offset = 6665 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.NotExpr.create(
-                                                    allocator,
-                                                    .{ .line = 225, .column = 47, .offset = 6665 },
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 225, .column = 47, .offset = 6665 },
+                                            &[_]ast.Expression{
                                                 ast.Expression.init(
-                                                    try ast.ChoiceExpr.create(
+                                                    try ast.NotExpr.create(
                                                         allocator,
                                                         .{ .line = 225, .column = 47, .offset = 6665 },
-                                                    &.{
                                                         ast.Expression.init(
-                                                            try ast.LitMatcher.create(
+                                                            try ast.ChoiceExpr.create(
                                                                 allocator,
                                                                 .{ .line = 225, .column = 47, .offset = 6665 },
-                                                            "ªªª*ªªª/ªªª\"ªª",
-                                                            false,
-                                                        ),
-),
-                                                        ast.Expression.init(
-                                                            try ast.RuleRefExpr.create(
-                                                                allocator,
-                                                                .{ .line = 225, .column = 54, .offset = 6672 },
-                                                                ast.Identifier.init(
-                                                                    .{ .line = 225, .column = 54, .offset = 6672 },
-                                                                    "EOL",
-                                                                ),
+                                                                &[_]ast.Expression{
+                                                                    ast.Expression.init(
+                                                                        try ast.LitMatcher.create(
+                                                                            allocator,
+                                                                            .{ .line = 225, .column = 47, .offset = 6665 },
+                                                                            "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                                                            false,
+                                                                        ),
+                                                                    ),
+                                                                    ast.Expression.init(
+                                                                        try ast.RuleRefExpr.create(
+                                                                            allocator,
+                                                                            .{ .line = 225, .column = 54, .offset = 6672 },
+                                                                            ast.Identifier.init(
+                                                                                .{ .line = 225, .column = 54, .offset = 6672 },
+                                                                                "EOL"
+                                                                            ),
+                                                                        ),
+                                                                    ),
+                                                                },
                                                             ),
-),
-                                                    },
-                                                ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 225, .column = 60, .offset = 6678 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 225, .column = 60, .offset = 6678 },
-                                                        "SourceChar",
+                                                        ),
                                                     ),
                                                 ),
-),
-                                        },
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 225, .column = 60, .offset = 6678 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 225, .column = 60, .offset = 6678 },
+                                                            "SourceChar"
+                                                        ),
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
                                 ),
-),
                             ),
-),
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 225, .column = 74, .offset = 6692 },
-                                "ªªª*ªªª/ªªª\"ªª",
-                                false,
+                                    "\xaa\xaa\xaa*\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 226, .column = 2, .offset = 6697 },
                 ast.Identifier.init(
                     .{ .line = 226, .column = 2, .offset = 6697 },
-                    "SingleLineComment",
+                    "SingleLineComment"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 226, .column = 22, .offset = 6719 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 226, .column = 22, .offset = 6719 },
-                                "ªªª/ªªª/ªªª\"ªª",
-                                false,
+                                    "\xaa\xaa\xaa/\xaa\xaa\xaa/\xaa\xaa\xaa\"\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.ZeroOrMoreExpr.create(
                                     allocator,
                                     .{ .line = 226, .column = 30, .offset = 6727 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 226, .column = 30, .offset = 6727 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.NotExpr.create(
-                                                    allocator,
-                                                    .{ .line = 226, .column = 30, .offset = 6727 },
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 226, .column = 30, .offset = 6727 },
+                                            &[_]ast.Expression{
+                                                ast.Expression.init(
+                                                    try ast.NotExpr.create(
+                                                        allocator,
+                                                        .{ .line = 226, .column = 30, .offset = 6727 },
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
+                                                                .{ .line = 226, .column = 30, .offset = 6727 },
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 226, .column = 30, .offset = 6727 },
+                                                                    "EOL"
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
                                                 ast.Expression.init(
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
-                                                        .{ .line = 226, .column = 30, .offset = 6727 },
+                                                        .{ .line = 226, .column = 34, .offset = 6731 },
                                                         ast.Identifier.init(
-                                                            .{ .line = 226, .column = 30, .offset = 6727 },
-                                                            "EOL",
+                                                            .{ .line = 226, .column = 34, .offset = 6731 },
+                                                            "SourceChar"
                                                         ),
                                                     ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 226, .column = 34, .offset = 6731 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 226, .column = 34, .offset = 6731 },
-                                                        "SourceChar",
-                                                    ),
                                                 ),
-),
-                                        },
+                                            },
+                                        ),
+                                    ),
                                 ),
-),
                             ),
-),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 228, .column = 2, .offset = 6746 },
                 ast.Identifier.init(
                     .{ .line = 228, .column = 2, .offset = 6746 },
-                    "Identifier",
+                    "Identifier"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.RuleRefExpr.create(
@@ -1856,21 +1878,22 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                         .{ .line = 228, .column = 15, .offset = 6761 },
                         ast.Identifier.init(
                             .{ .line = 228, .column = 15, .offset = 6761 },
-                            "IdentifierName",
+                            "IdentifierName"
                         ),
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 229, .column = 2, .offset = 6776 },
                 ast.Identifier.init(
                     .{ .line = 229, .column = 2, .offset = 6776 },
-                    "IdentifierName",
+                    "IdentifierName"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -1880,120 +1903,123 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 229, .column = 19, .offset = 6795 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 229, .column = 19, .offset = 6795 },
                                             ast.Identifier.init(
                                                 .{ .line = 229, .column = 19, .offset = 6795 },
-                                                "IdentifierStart",
+                                                "IdentifierStart"
                                             ),
                                         ),
-),
+                                    ),
                                     ast.Expression.init(
                                         try ast.ZeroOrMoreExpr.create(
                                             allocator,
                                             .{ .line = 229, .column = 35, .offset = 6811 },
-                                        ast.Expression.init(
-                                            try ast.RuleRefExpr.create(
-                                                allocator,
-                                                .{ .line = 229, .column = 35, .offset = 6811 },
-                                                ast.Identifier.init(
+                                            ast.Expression.init(
+                                                try ast.RuleRefExpr.create(
+                                                    allocator,
                                                     .{ .line = 229, .column = 35, .offset = 6811 },
-                                                    "IdentifierPart",
+                                                    ast.Identifier.init(
+                                                        .{ .line = 229, .column = 35, .offset = 6811 },
+                                                        "IdentifierPart"
+                                                    ),
                                                 ),
                                             ),
-),
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 229, .column = 51, .offset = 6827 },
-                        "{\n    return ast.Identifier{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 229, .column = 51, .offset = 6827 },
+                            "{\n    return ast.Identifier{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 235, .column = 2, .offset = 6943 },
                 ast.Identifier.init(
                     .{ .line = 235, .column = 2, .offset = 6943 },
-                    "IdentifierStart",
+                    "IdentifierStart"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 235, .column = 20, .offset = 6963 },
-                    "[ªªªaªªª-ªªªzªªª_ªªª]ªªªiªªª",
-                    false,
-                    false,
-                    &.{},
-                    &.{},
-                    &.{},
+                        "[\xaa\xaa\xaaa\xaa\xaa\xaa-\xaa\xaa\xaaz\xaa\xaa\xaa_\xaa\xaa\xaa]\xaa\xaa\xaai\xaa\xaa\xaa",
+                        false,
+                        false,
+                        &[_]u8{},
+                        &[_]struct { u8, u8 }{},
+                        &[_][]const u8{},
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 236, .column = 2, .offset = 6971 },
                 ast.Identifier.init(
                     .{ .line = 236, .column = 2, .offset = 6971 },
-                    "IdentifierPart",
+                    "IdentifierPart"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 236, .column = 19, .offset = 6990 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 236, .column = 19, .offset = 6990 },
-                                ast.Identifier.init(
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 236, .column = 19, .offset = 6990 },
-                                    "IdentifierStart",
+                                    ast.Identifier.init(
+                                        .{ .line = 236, .column = 19, .offset = 6990 },
+                                        "IdentifierStart"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.CharClassMatcher.create(
-                                allocator,
-                                .{ .line = 236, .column = 37, .offset = 7008 },
-                            "[ªªª0ªªª-ªªª9ªªª]ªªª",
-                            false,
-                            false,
-                            &.{},
-                            &.{},
-                            &.{},
+                            ast.Expression.init(
+                                try ast.CharClassMatcher.create(
+                                    allocator,
+                                    .{ .line = 236, .column = 37, .offset = 7008 },
+                                    "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa9\xaa\xaa\xaa]\xaa\xaa\xaa",
+                                    false,
+                                    false,
+                                    &[_]u8{},
+                                    &[_]struct { u8, u8 }{},
+                                    &[_][]const u8{},
+                                ),
                             ),
-),
-                    },
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 238, .column = 2, .offset = 7015 },
                 ast.Identifier.init(
                     .{ .line = 238, .column = 2, .offset = 7015 },
-                    "LitMatcher",
+                    "LitMatcher"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -2003,72 +2029,73 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 238, .column = 15, .offset = 7030 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 238, .column = 15, .offset = 7030 },
-                                        ast.Identifier.init(
-                                            .{ .line = 238, .column = 15, .offset = 7030 },
-                                            "lit",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 238, .column = 15, .offset = 7030 },
+                                                "lit"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 238, .column = 19, .offset = 7034 },
                                                     ast.Identifier.init(
                                                         .{ .line = 238, .column = 19, .offset = 7034 },
-                                                        "StringLiteral",
+                                                        "StringLiteral"
                                                     ),
                                                 ),
-),
+                                            ),
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 238, .column = 33, .offset = 7048 },
-                                        ast.Identifier.init(
-                                            .{ .line = 238, .column = 33, .offset = 7048 },
-                                            "ignore",
-                                        ),
+                                            ast.Identifier.init(
+                                                .{ .line = 238, .column = 33, .offset = 7048 },
+                                                "ignore"
+                                            ),
                                             ast.Expression.init(
                                                 try ast.ZeroOrOneExpr.create(
                                                     allocator,
                                                     .{ .line = 238, .column = 40, .offset = 7055 },
-                                                ast.Expression.init(
-                                                    try ast.LitMatcher.create(
-                                                        allocator,
-                                                        .{ .line = 238, .column = 40, .offset = 7055 },
-                                                    "ªªªiªªª\"ªª",
-                                                    false,
+                                                    ast.Expression.init(
+                                                        try ast.LitMatcher.create(
+                                                            allocator,
+                                                            .{ .line = 238, .column = 40, .offset = 7055 },
+                                                            "\xaa\xaa\xaai\xaa\xaa\xaa\"\xaa\xaa",
+                                                            false,
+                                                        ),
+                                                    ),
                                                 ),
-),
                                             ),
-),
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 238, .column = 45, .offset = 7060 },
-                        "{\n    const raw_str = lit.value;\n    const unquoted = try std.mem.replaceOwned(u8, c.allocator, raw_str, \"\\\"\", \"\");\n    const lit_matcher = try c.allocator.create(ast.LitMatcher);\n    lit_matcher.* = ast.LitMatcher{\n        .pos = c.astPos(),\n        .value = unquoted,\n        .ignore_case = ignore != null,\n    };\n    return ast.Expression{ .lit_matcher = lit_matcher };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 238, .column = 45, .offset = 7060 },
+                            "{\n    const raw_str = lit.value;\n    const unquoted = try std.mem.replaceOwned(u8, c.allocator, raw_str, \"\\\"\", \"\");\n    const lit_matcher = try c.allocator.create(ast.LitMatcher);\n    lit_matcher.* = ast.LitMatcher{\n        .pos = c.astPos(),\n        .value = unquoted,\n        .ignore_case = ignore != null,\n    };\n    return ast.Expression{ .lit_matcher = lit_matcher };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 249, .column = 2, .offset = 7435 },
                 ast.Identifier.init(
                     .{ .line = 249, .column = 2, .offset = 7435 },
-                    "StringLiteral",
+                    "StringLiteral"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -2078,970 +2105,985 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.ChoiceExpr.create(
                                 allocator,
                                 .{ .line = 249, .column = 20, .offset = 7455 },
-                            &.{
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 249, .column = 20, .offset = 7455 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 20, .offset = 7455 },
-                                                "ªªª\"ªªª'ªª",
-                                                false,
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.ZeroOrMoreExpr.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 24, .offset = 7459 },
+                                &[_]ast.Expression{
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 249, .column = 20, .offset = 7455 },
+                                            &[_]ast.Expression{
                                                 ast.Expression.init(
-                                                    try ast.RuleRefExpr.create(
+                                                    try ast.LitMatcher.create(
                                                         allocator,
-                                                        .{ .line = 249, .column = 24, .offset = 7459 },
-                                                        ast.Identifier.init(
-                                                            .{ .line = 249, .column = 24, .offset = 7459 },
-                                                            "DoubleStringChar",
-                                                        ),
-                                                    ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 42, .offset = 7477 },
-                                                "ªªª\"ªªª'ªª",
-                                                false,
-                                            ),
-),
-                                        },
-                                ),
-),
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 249, .column = 48, .offset = 7483 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 48, .offset = 7483 },
-                                                "ªªª'ªªª\"ªª",
-                                                false,
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 52, .offset = 7487 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 249, .column = 52, .offset = 7487 },
-                                                        "SingleStringChar",
+                                                        .{ .line = 249, .column = 20, .offset = 7455 },
+                                                        "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                                        false,
                                                     ),
                                                 ),
-),
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 69, .offset = 7504 },
-                                                "ªªª'ªªª\"ªª",
-                                                false,
-                                            ),
-),
-                                        },
-                                ),
-),
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 249, .column = 75, .offset = 7510 },
-                                        &.{
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 75, .offset = 7510 },
-                                                "ªªª`ªªª'ªª",
-                                                false,
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.ZeroOrMoreExpr.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 79, .offset = 7514 },
+                                                ast.Expression.init(
+                                                    try ast.ZeroOrMoreExpr.create(
+                                                        allocator,
+                                                        .{ .line = 249, .column = 24, .offset = 7459 },
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
+                                                                .{ .line = 249, .column = 24, .offset = 7459 },
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 249, .column = 24, .offset = 7459 },
+                                                                    "DoubleStringChar"
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 249, .column = 42, .offset = 7477 },
+                                                        "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 249, .column = 48, .offset = 7483 },
+                                            &[_]ast.Expression{
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 249, .column = 48, .offset = 7483 },
+                                                        "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
                                                 ast.Expression.init(
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
-                                                        .{ .line = 249, .column = 79, .offset = 7514 },
+                                                        .{ .line = 249, .column = 52, .offset = 7487 },
                                                         ast.Identifier.init(
-                                                            .{ .line = 249, .column = 79, .offset = 7514 },
-                                                            "RawStringChar",
+                                                            .{ .line = 249, .column = 52, .offset = 7487 },
+                                                            "SingleStringChar"
                                                         ),
                                                     ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.LitMatcher.create(
-                                                    allocator,
-                                                    .{ .line = 249, .column = 94, .offset = 7529 },
-                                                "ªªª`ªªª'ªª",
-                                                false,
-                                            ),
-),
-                                        },
-                                ),
-),
-                            },
+                                                ),
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 249, .column = 69, .offset = 7504 },
+                                                        "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 249, .column = 75, .offset = 7510 },
+                                            &[_]ast.Expression{
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 249, .column = 75, .offset = 7510 },
+                                                        "\xaa\xaa\xaa`\xaa\xaa\xaa'\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
+                                                ast.Expression.init(
+                                                    try ast.ZeroOrMoreExpr.create(
+                                                        allocator,
+                                                        .{ .line = 249, .column = 79, .offset = 7514 },
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
+                                                                .{ .line = 249, .column = 79, .offset = 7514 },
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 249, .column = 79, .offset = 7514 },
+                                                                    "RawStringChar"
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 249, .column = 94, .offset = 7529 },
+                                                        "\xaa\xaa\xaa`\xaa\xaa\xaa'\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 249, .column = 100, .offset = 7535 },
-                        "{\n    return ast.StringLit{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 249, .column = 100, .offset = 7535 },
+                            "{\n    return ast.StringLit{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 255, .column = 2, .offset = 7650 },
                 ast.Identifier.init(
                     .{ .line = 255, .column = 2, .offset = 7650 },
-                    "DoubleStringChar",
+                    "DoubleStringChar"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 255, .column = 24, .offset = 7674 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 255, .column = 24, .offset = 7674 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.NotExpr.create(
-                                            allocator,
-                                            .{ .line = 255, .column = 24, .offset = 7674 },
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 255, .column = 24, .offset = 7674 },
+                                    &[_]ast.Expression{
                                         ast.Expression.init(
-                                            try ast.ChoiceExpr.create(
+                                            try ast.NotExpr.create(
                                                 allocator,
                                                 .{ .line = 255, .column = 24, .offset = 7674 },
-                                            &.{
                                                 ast.Expression.init(
-                                                    try ast.LitMatcher.create(
+                                                    try ast.ChoiceExpr.create(
                                                         allocator,
                                                         .{ .line = 255, .column = 24, .offset = 7674 },
-                                                    "ªªª\"ªªª'ªª",
-                                                    false,
-                                                ),
-),
-                                                ast.Expression.init(
-                                                    try ast.LitMatcher.create(
-                                                        allocator,
-                                                        .{ .line = 255, .column = 30, .offset = 7680 },
-                                                    "ªªª\\ªªª\\ªªª\"ªª",
-                                                    false,
-                                                ),
-),
-                                                ast.Expression.init(
-                                                    try ast.RuleRefExpr.create(
-                                                        allocator,
-                                                        .{ .line = 255, .column = 37, .offset = 7687 },
-                                                        ast.Identifier.init(
-                                                            .{ .line = 255, .column = 37, .offset = 7687 },
-                                                            "EOL",
-                                                        ),
+                                                        &[_]ast.Expression{
+                                                            ast.Expression.init(
+                                                                try ast.LitMatcher.create(
+                                                                    allocator,
+                                                                    .{ .line = 255, .column = 24, .offset = 7674 },
+                                                                    "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                                                    false,
+                                                                ),
+                                                            ),
+                                                            ast.Expression.init(
+                                                                try ast.LitMatcher.create(
+                                                                    allocator,
+                                                                    .{ .line = 255, .column = 30, .offset = 7680 },
+                                                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    false,
+                                                                ),
+                                                            ),
+                                                            ast.Expression.init(
+                                                                try ast.RuleRefExpr.create(
+                                                                    allocator,
+                                                                    .{ .line = 255, .column = 37, .offset = 7687 },
+                                                                    ast.Identifier.init(
+                                                                        .{ .line = 255, .column = 37, .offset = 7687 },
+                                                                        "EOL"
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        },
                                                     ),
-),
-                                            },
+                                                ),
+                                            ),
                                         ),
-),
-                                    ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 255, .column = 43, .offset = 7693 },
-                                            ast.Identifier.init(
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 255, .column = 43, .offset = 7693 },
-                                                "SourceChar",
+                                                ast.Identifier.init(
+                                                    .{ .line = 255, .column = 43, .offset = 7693 },
+                                                    "SourceChar"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 255, .column = 56, .offset = 7706 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.LitMatcher.create(
-                                            allocator,
-                                            .{ .line = 255, .column = 56, .offset = 7706 },
-                                        "ªªª\\ªªª\\ªªª\"ªª",
-                                        false,
-                                    ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 255, .column = 61, .offset = 7711 },
-                                            ast.Identifier.init(
+                                    },
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 255, .column = 56, .offset = 7706 },
+                                    &[_]ast.Expression{
+                                        ast.Expression.init(
+                                            try ast.LitMatcher.create(
+                                                allocator,
+                                                .{ .line = 255, .column = 56, .offset = 7706 },
+                                                "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                false,
+                                            ),
+                                        ),
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 255, .column = 61, .offset = 7711 },
-                                                "DoubleStringEscape",
+                                                ast.Identifier.init(
+                                                    .{ .line = 255, .column = 61, .offset = 7711 },
+                                                    "DoubleStringEscape"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                    },
+                                    },
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 256, .column = 2, .offset = 7730 },
                 ast.Identifier.init(
                     .{ .line = 256, .column = 2, .offset = 7730 },
-                    "SingleStringChar",
+                    "SingleStringChar"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 256, .column = 24, .offset = 7754 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 256, .column = 24, .offset = 7754 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.NotExpr.create(
-                                            allocator,
-                                            .{ .line = 256, .column = 24, .offset = 7754 },
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 256, .column = 24, .offset = 7754 },
+                                    &[_]ast.Expression{
                                         ast.Expression.init(
-                                            try ast.ChoiceExpr.create(
+                                            try ast.NotExpr.create(
                                                 allocator,
                                                 .{ .line = 256, .column = 24, .offset = 7754 },
-                                            &.{
                                                 ast.Expression.init(
-                                                    try ast.LitMatcher.create(
+                                                    try ast.ChoiceExpr.create(
                                                         allocator,
                                                         .{ .line = 256, .column = 24, .offset = 7754 },
-                                                    "ªªª'ªªª\"ªª",
-                                                    false,
-                                                ),
-),
-                                                ast.Expression.init(
-                                                    try ast.LitMatcher.create(
-                                                        allocator,
-                                                        .{ .line = 256, .column = 30, .offset = 7760 },
-                                                    "ªªª\\ªªª\\ªªª\"ªª",
-                                                    false,
-                                                ),
-),
-                                                ast.Expression.init(
-                                                    try ast.RuleRefExpr.create(
-                                                        allocator,
-                                                        .{ .line = 256, .column = 37, .offset = 7767 },
-                                                        ast.Identifier.init(
-                                                            .{ .line = 256, .column = 37, .offset = 7767 },
-                                                            "EOL",
-                                                        ),
+                                                        &[_]ast.Expression{
+                                                            ast.Expression.init(
+                                                                try ast.LitMatcher.create(
+                                                                    allocator,
+                                                                    .{ .line = 256, .column = 24, .offset = 7754 },
+                                                                    "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    false,
+                                                                ),
+                                                            ),
+                                                            ast.Expression.init(
+                                                                try ast.LitMatcher.create(
+                                                                    allocator,
+                                                                    .{ .line = 256, .column = 30, .offset = 7760 },
+                                                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    false,
+                                                                ),
+                                                            ),
+                                                            ast.Expression.init(
+                                                                try ast.RuleRefExpr.create(
+                                                                    allocator,
+                                                                    .{ .line = 256, .column = 37, .offset = 7767 },
+                                                                    ast.Identifier.init(
+                                                                        .{ .line = 256, .column = 37, .offset = 7767 },
+                                                                        "EOL"
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        },
                                                     ),
-),
-                                            },
+                                                ),
+                                            ),
                                         ),
-),
-                                    ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 256, .column = 43, .offset = 7773 },
-                                            ast.Identifier.init(
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 256, .column = 43, .offset = 7773 },
-                                                "SourceChar",
+                                                ast.Identifier.init(
+                                                    .{ .line = 256, .column = 43, .offset = 7773 },
+                                                    "SourceChar"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 256, .column = 56, .offset = 7786 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.LitMatcher.create(
-                                            allocator,
-                                            .{ .line = 256, .column = 56, .offset = 7786 },
-                                        "ªªª\\ªªª\\ªªª\"ªª",
-                                        false,
-                                    ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 256, .column = 61, .offset = 7791 },
-                                            ast.Identifier.init(
+                                    },
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 256, .column = 56, .offset = 7786 },
+                                    &[_]ast.Expression{
+                                        ast.Expression.init(
+                                            try ast.LitMatcher.create(
+                                                allocator,
+                                                .{ .line = 256, .column = 56, .offset = 7786 },
+                                                "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                false,
+                                            ),
+                                        ),
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 256, .column = 61, .offset = 7791 },
-                                                "SingleStringEscape",
+                                                ast.Identifier.init(
+                                                    .{ .line = 256, .column = 61, .offset = 7791 },
+                                                    "SingleStringEscape"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                    },
+                                    },
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 257, .column = 2, .offset = 7810 },
                 ast.Identifier.init(
                     .{ .line = 257, .column = 2, .offset = 7810 },
-                    "RawStringChar",
+                    "RawStringChar"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 257, .column = 19, .offset = 7829 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.NotExpr.create(
                                     allocator,
                                     .{ .line = 257, .column = 19, .offset = 7829 },
-                                ast.Expression.init(
-                                    try ast.LitMatcher.create(
-                                        allocator,
-                                        .{ .line = 257, .column = 19, .offset = 7829 },
-                                    "ªªª`ªªª'ªª",
-                                    false,
+                                    ast.Expression.init(
+                                        try ast.LitMatcher.create(
+                                            allocator,
+                                            .{ .line = 257, .column = 19, .offset = 7829 },
+                                            "\xaa\xaa\xaa`\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
+                                    ),
                                 ),
-),
                             ),
-),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 257, .column = 23, .offset = 7833 },
                                     ast.Identifier.init(
                                         .{ .line = 257, .column = 23, .offset = 7833 },
-                                        "SourceChar",
+                                        "SourceChar"
                                     ),
                                 ),
-),
+                            ),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 259, .column = 2, .offset = 7845 },
                 ast.Identifier.init(
                     .{ .line = 259, .column = 2, .offset = 7845 },
-                    "DoubleStringEscape",
+                    "DoubleStringEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 259, .column = 23, .offset = 7868 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 259, .column = 23, .offset = 7868 },
-                            "ªªª\"ªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 259, .column = 29, .offset = 7874 },
-                                ast.Identifier.init(
-                                    .{ .line = 259, .column = 29, .offset = 7874 },
-                                    "CommonEscapeSequence",
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 259, .column = 23, .offset = 7868 },
+                                    "\xaa\xaa\xaa\"\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
                                 ),
                             ),
-),
-                    },
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
+                                    .{ .line = 259, .column = 29, .offset = 7874 },
+                                    ast.Identifier.init(
+                                        .{ .line = 259, .column = 29, .offset = 7874 },
+                                        "CommonEscapeSequence"
+                                    ),
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 260, .column = 2, .offset = 7895 },
                 ast.Identifier.init(
                     .{ .line = 260, .column = 2, .offset = 7895 },
-                    "SingleStringEscape",
+                    "SingleStringEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 260, .column = 23, .offset = 7918 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 260, .column = 23, .offset = 7918 },
-                            "ªªª'ªªª\"ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 260, .column = 29, .offset = 7924 },
-                                ast.Identifier.init(
-                                    .{ .line = 260, .column = 29, .offset = 7924 },
-                                    "CommonEscapeSequence",
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 260, .column = 23, .offset = 7918 },
+                                    "\xaa\xaa\xaa'\xaa\xaa\xaa\"\xaa\xaa",
+                                    false,
                                 ),
                             ),
-),
-                    },
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
+                                    .{ .line = 260, .column = 29, .offset = 7924 },
+                                    ast.Identifier.init(
+                                        .{ .line = 260, .column = 29, .offset = 7924 },
+                                        "CommonEscapeSequence"
+                                    ),
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 262, .column = 2, .offset = 7946 },
                 ast.Identifier.init(
                     .{ .line = 262, .column = 2, .offset = 7946 },
-                    "CommonEscapeSequence",
+                    "CommonEscapeSequence"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 262, .column = 25, .offset = 7971 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 262, .column = 25, .offset = 7971 },
-                                ast.Identifier.init(
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 262, .column = 25, .offset = 7971 },
-                                    "SingleCharEscape",
+                                    ast.Identifier.init(
+                                        .{ .line = 262, .column = 25, .offset = 7971 },
+                                        "SingleCharEscape"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 262, .column = 44, .offset = 7990 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 262, .column = 44, .offset = 7990 },
-                                    "OctalEscape",
+                                    ast.Identifier.init(
+                                        .{ .line = 262, .column = 44, .offset = 7990 },
+                                        "OctalEscape"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 262, .column = 58, .offset = 8004 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 262, .column = 58, .offset = 8004 },
-                                    "HexEscape",
+                                    ast.Identifier.init(
+                                        .{ .line = 262, .column = 58, .offset = 8004 },
+                                        "HexEscape"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 262, .column = 70, .offset = 8016 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 262, .column = 70, .offset = 8016 },
-                                    "LongUnicodeEscape",
+                                    ast.Identifier.init(
+                                        .{ .line = 262, .column = 70, .offset = 8016 },
+                                        "LongUnicodeEscape"
+                                    ),
                                 ),
                             ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 262, .column = 90, .offset = 8036 },
-                                ast.Identifier.init(
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
                                     .{ .line = 262, .column = 90, .offset = 8036 },
-                                    "ShortUnicodeEscape",
+                                    ast.Identifier.init(
+                                        .{ .line = 262, .column = 90, .offset = 8036 },
+                                        "ShortUnicodeEscape"
+                                    ),
                                 ),
                             ),
-),
-                    },
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 263, .column = 2, .offset = 8055 },
                 ast.Identifier.init(
                     .{ .line = 263, .column = 2, .offset = 8055 },
-                    "SingleCharEscape",
+                    "SingleCharEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 263, .column = 21, .offset = 8076 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 21, .offset = 8076 },
-                            "ªªªaªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 27, .offset = 8082 },
-                            "ªªªbªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 33, .offset = 8088 },
-                            "ªªªnªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 39, .offset = 8094 },
-                            "ªªªfªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 45, .offset = 8100 },
-                            "ªªªrªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 51, .offset = 8106 },
-                            "ªªªtªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 57, .offset = 8112 },
-                            "ªªªvªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 263, .column = 63, .offset = 8118 },
-                            "ªªª\\ªªª\\ªªª'ªª",
-                            false,
-                        ),
-),
-                    },
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 21, .offset = 8076 },
+                                    "\xaa\xaa\xaaa\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 27, .offset = 8082 },
+                                    "\xaa\xaa\xaab\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 33, .offset = 8088 },
+                                    "\xaa\xaa\xaan\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 39, .offset = 8094 },
+                                    "\xaa\xaa\xaaf\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 45, .offset = 8100 },
+                                    "\xaa\xaa\xaar\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 51, .offset = 8106 },
+                                    "\xaa\xaa\xaat\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 57, .offset = 8112 },
+                                    "\xaa\xaa\xaav\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 263, .column = 63, .offset = 8118 },
+                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 264, .column = 2, .offset = 8123 },
                 ast.Identifier.init(
                     .{ .line = 264, .column = 2, .offset = 8123 },
-                    "OctalEscape",
+                    "OctalEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 264, .column = 16, .offset = 8139 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 264, .column = 16, .offset = 8139 },
                                     ast.Identifier.init(
                                         .{ .line = 264, .column = 16, .offset = 8139 },
-                                        "OctalDigit",
+                                        "OctalDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 264, .column = 27, .offset = 8150 },
                                     ast.Identifier.init(
                                         .{ .line = 264, .column = 27, .offset = 8150 },
-                                        "OctalDigit",
+                                        "OctalDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 264, .column = 38, .offset = 8161 },
                                     ast.Identifier.init(
                                         .{ .line = 264, .column = 38, .offset = 8161 },
-                                        "OctalDigit",
+                                        "OctalDigit"
                                     ),
                                 ),
-),
+                            ),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 265, .column = 2, .offset = 8172 },
                 ast.Identifier.init(
                     .{ .line = 265, .column = 2, .offset = 8172 },
-                    "HexEscape",
+                    "HexEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 265, .column = 14, .offset = 8186 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 265, .column = 14, .offset = 8186 },
-                                "ªªªxªªª'ªª",
-                                false,
+                                    "\xaa\xaa\xaax\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 265, .column = 18, .offset = 8190 },
                                     ast.Identifier.init(
                                         .{ .line = 265, .column = 18, .offset = 8190 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 265, .column = 27, .offset = 8199 },
                                     ast.Identifier.init(
                                         .{ .line = 265, .column = 27, .offset = 8199 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 266, .column = 2, .offset = 8208 },
                 ast.Identifier.init(
                     .{ .line = 266, .column = 2, .offset = 8208 },
-                    "LongUnicodeEscape",
+                    "LongUnicodeEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 266, .column = 22, .offset = 8230 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 266, .column = 22, .offset = 8230 },
-                                "ªªªUªªª'ªª",
-                                false,
+                                    "\xaa\xaa\xaaU\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 26, .offset = 8234 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 26, .offset = 8234 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 35, .offset = 8243 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 35, .offset = 8243 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 44, .offset = 8252 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 44, .offset = 8252 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 53, .offset = 8261 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 53, .offset = 8261 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 62, .offset = 8270 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 62, .offset = 8270 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 71, .offset = 8279 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 71, .offset = 8279 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 80, .offset = 8288 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 80, .offset = 8288 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 89, .offset = 8297 },
                                     ast.Identifier.init(
                                         .{ .line = 266, .column = 89, .offset = 8297 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 267, .column = 2, .offset = 8306 },
                 ast.Identifier.init(
                     .{ .line = 267, .column = 2, .offset = 8306 },
-                    "ShortUnicodeEscape",
+                    "ShortUnicodeEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 267, .column = 23, .offset = 8329 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 267, .column = 23, .offset = 8329 },
-                                "ªªªuªªª'ªª",
-                                false,
+                                    "\xaa\xaa\xaau\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 27, .offset = 8333 },
                                     ast.Identifier.init(
                                         .{ .line = 267, .column = 27, .offset = 8333 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 36, .offset = 8342 },
                                     ast.Identifier.init(
                                         .{ .line = 267, .column = 36, .offset = 8342 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 45, .offset = 8351 },
                                     ast.Identifier.init(
                                         .{ .line = 267, .column = 45, .offset = 8351 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 54, .offset = 8360 },
                                     ast.Identifier.init(
                                         .{ .line = 267, .column = 54, .offset = 8360 },
-                                        "HexDigit",
+                                        "HexDigit"
                                     ),
                                 ),
-),
+                            ),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 269, .column = 2, .offset = 8370 },
                 ast.Identifier.init(
                     .{ .line = 269, .column = 2, .offset = 8370 },
-                    "OctalDigit",
+                    "OctalDigit"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 269, .column = 15, .offset = 8385 },
-                    "[ªªª0ªªª-ªªª7ªªª]ªªª",
-                    false,
-                    false,
-                    &.{},
-                    &.{},
-                    &.{},
+                        "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa7\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        false,
+                        false,
+                        &[_]u8{},
+                        &[_]struct { u8, u8 }{},
+                        &[_][]const u8{},
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 270, .column = 2, .offset = 8391 },
                 ast.Identifier.init(
                     .{ .line = 270, .column = 2, .offset = 8391 },
-                    "DecimalDigit",
+                    "DecimalDigit"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 270, .column = 17, .offset = 8408 },
-                    "[ªªª0ªªª-ªªª9ªªª]ªªª",
-                    false,
-                    false,
-                    &.{},
-                    &.{},
-                    &.{},
+                        "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa9\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        false,
+                        false,
+                        &[_]u8{},
+                        &[_]struct { u8, u8 }{},
+                        &[_][]const u8{},
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 271, .column = 2, .offset = 8414 },
                 ast.Identifier.init(
                     .{ .line = 271, .column = 2, .offset = 8414 },
-                    "HexDigit",
+                    "HexDigit"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 271, .column = 13, .offset = 8427 },
-                    "[ªªª0ªªª-ªªª9ªªªaªªª-ªªªfªªª]ªªªiªªª",
-                    false,
-                    false,
-                    &.{},
-                    &.{},
-                    &.{},
+                        "[\xaa\xaa\xaa0\xaa\xaa\xaa-\xaa\xaa\xaa9\xaa\xaa\xaaa\xaa\xaa\xaa-\xaa\xaa\xaaf\xaa\xaa\xaa]\xaa\xaa\xaai\xaa\xaa\xaa",
+                        false,
+                        false,
+                        &[_]u8{},
+                        &[_]struct { u8, u8 }{},
+                        &[_][]const u8{},
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 273, .column = 2, .offset = 8438 },
                 ast.Identifier.init(
                     .{ .line = 273, .column = 2, .offset = 8438 },
-                    "CharClassMatcher",
+                    "CharClassMatcher"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -3051,442 +3093,449 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 273, .column = 21, .offset = 8459 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 273, .column = 21, .offset = 8459 },
-                                        "ªªª[ªªª'ªª",
-                                        false,
+                                            "\xaa\xaa\xaa[\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.ZeroOrMoreExpr.create(
                                             allocator,
                                             .{ .line = 273, .column = 27, .offset = 8465 },
-                                        ast.Expression.init(
-                                            try ast.ChoiceExpr.create(
-                                                allocator,
-                                                .{ .line = 273, .column = 27, .offset = 8465 },
-                                            &.{
-                                                ast.Expression.init(
-                                                    try ast.RuleRefExpr.create(
-                                                        allocator,
-                                                        .{ .line = 273, .column = 27, .offset = 8465 },
-                                                        ast.Identifier.init(
-                                                            .{ .line = 273, .column = 27, .offset = 8465 },
-                                                            "ClassCharRange",
-                                                        ),
-                                                    ),
-),
-                                                ast.Expression.init(
-                                                    try ast.RuleRefExpr.create(
-                                                        allocator,
-                                                        .{ .line = 273, .column = 44, .offset = 8482 },
-                                                        ast.Identifier.init(
-                                                            .{ .line = 273, .column = 44, .offset = 8482 },
-                                                            "ClassChar",
-                                                        ),
-                                                    ),
-),
-                                                ast.Expression.init(
-                                                    try ast.SeqExpr.create(
-                                                        allocator,
-                                                        .{ .line = 273, .column = 56, .offset = 8494 },
-                                                        &.{
-                                                            ast.Expression.init(
-                                                                try ast.LitMatcher.create(
-                                                                    allocator,
-                                                                    .{ .line = 273, .column = 56, .offset = 8494 },
-                                                                "ªªª\\ªªª\\ªªª\"ªª",
-                                                                false,
-                                                            ),
-),
-                                                            ast.Expression.init(
-                                                                try ast.RuleRefExpr.create(
-                                                                    allocator,
-                                                                    .{ .line = 273, .column = 61, .offset = 8499 },
-                                                                    ast.Identifier.init(
-                                                                        .{ .line = 273, .column = 61, .offset = 8499 },
-                                                                        "UnicodeClassEscape",
-                                                                    ),
+                                            ast.Expression.init(
+                                                try ast.ChoiceExpr.create(
+                                                    allocator,
+                                                    .{ .line = 273, .column = 27, .offset = 8465 },
+                                                    &[_]ast.Expression{
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
+                                                                .{ .line = 273, .column = 27, .offset = 8465 },
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 273, .column = 27, .offset = 8465 },
+                                                                    "ClassCharRange"
                                                                 ),
-),
-                                                        },
+                                                            ),
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
+                                                                .{ .line = 273, .column = 44, .offset = 8482 },
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 273, .column = 44, .offset = 8482 },
+                                                                    "ClassChar"
+                                                                ),
+                                                            ),
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.SeqExpr.create(
+                                                                allocator,
+                                                                .{ .line = 273, .column = 56, .offset = 8494 },
+                                                                &[_]ast.Expression{
+                                                                    ast.Expression.init(
+                                                                        try ast.LitMatcher.create(
+                                                                            allocator,
+                                                                            .{ .line = 273, .column = 56, .offset = 8494 },
+                                                                            "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                            false,
+                                                                        ),
+                                                                    ),
+                                                                    ast.Expression.init(
+                                                                        try ast.RuleRefExpr.create(
+                                                                            allocator,
+                                                                            .{ .line = 273, .column = 61, .offset = 8499 },
+                                                                            ast.Identifier.init(
+                                                                                .{ .line = 273, .column = 61, .offset = 8499 },
+                                                                                "UnicodeClassEscape"
+                                                                            ),
+                                                                        ),
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        ),
+                                                    },
                                                 ),
-),
-                                            },
+                                            ),
                                         ),
-),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 273, .column = 83, .offset = 8521 },
-                                        "ªªª]ªªª'ªª",
-                                        false,
+                                            "\xaa\xaa\xaa]\xaa\xaa\xaa'\xaa\xaa",
+                                            false,
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.ZeroOrOneExpr.create(
                                             allocator,
                                             .{ .line = 273, .column = 87, .offset = 8525 },
-                                        ast.Expression.init(
-                                            try ast.LitMatcher.create(
-                                                allocator,
-                                                .{ .line = 273, .column = 87, .offset = 8525 },
-                                            "ªªªiªªª'ªª",
-                                            false,
+                                            ast.Expression.init(
+                                                try ast.LitMatcher.create(
+                                                    allocator,
+                                                    .{ .line = 273, .column = 87, .offset = 8525 },
+                                                    "\xaa\xaa\xaai\xaa\xaa\xaa'\xaa\xaa",
+                                                    false,
+                                                ),
+                                            ),
                                         ),
-),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 273, .column = 92, .offset = 8530 },
-                        "{\n    const pos = c.astPos();\n    const char_class = try c.allocator.create(ast.CharClassMatcher);\n    const chars = std.ArrayList(u8).init(c.allocator);\n    const ranges = std.ArrayList(struct { u8, u8 }).init(c.allocator);\n    const unicode_classes = std.ArrayList([]const u8).init(c.allocator);\n\n    char_class.* = ast.CharClassMatcher{\n        .pos = pos,\n        .value = try c.allocator.dupe(u8, c.text),\n        .ignore_case = false,\n        .inverted = false,\n        .chars = chars,\n        .ranges = ranges,\n        .unicode_classes = unicode_classes,\n    };\n    return ast.Expression{ .char_class_matcher = char_class };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 273, .column = 92, .offset = 8530 },
+                            "{\n    const pos = c.astPos();\n    const char_class = try c.allocator.create(ast.CharClassMatcher);\n    const chars = std.ArrayList(u8).init(c.allocator);\n    const ranges = std.ArrayList(struct { u8, u8 }).init(c.allocator);\n    const unicode_classes = std.ArrayList([]const u8).init(c.allocator);\n\n    char_class.* = ast.CharClassMatcher{\n        .pos = pos,\n        .value = try c.allocator.dupe(u8, c.text),\n        .ignore_case = false,\n        .inverted = false,\n        .chars = chars,\n        .ranges = ranges,\n        .unicode_classes = unicode_classes,\n    };\n    return ast.Expression{ .char_class_matcher = char_class };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 291, .column = 2, .offset = 9164 },
                 ast.Identifier.init(
                     .{ .line = 291, .column = 2, .offset = 9164 },
-                    "ClassCharRange",
+                    "ClassCharRange"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 291, .column = 19, .offset = 9183 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 291, .column = 19, .offset = 9183 },
                                     ast.Identifier.init(
                                         .{ .line = 291, .column = 19, .offset = 9183 },
-                                        "ClassChar",
+                                        "ClassChar"
                                     ),
                                 ),
-),
+                            ),
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 291, .column = 29, .offset = 9193 },
-                                "ªªª-ªªª'ªª",
-                                false,
+                                    "\xaa\xaa\xaa-\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 291, .column = 33, .offset = 9197 },
                                     ast.Identifier.init(
                                         .{ .line = 291, .column = 33, .offset = 9197 },
-                                        "ClassChar",
+                                        "ClassChar"
                                     ),
                                 ),
-),
+                            ),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 292, .column = 2, .offset = 9207 },
                 ast.Identifier.init(
                     .{ .line = 292, .column = 2, .offset = 9207 },
-                    "ClassChar",
+                    "ClassChar"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 292, .column = 17, .offset = 9224 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 292, .column = 17, .offset = 9224 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.NotExpr.create(
-                                            allocator,
-                                            .{ .line = 292, .column = 17, .offset = 9224 },
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 292, .column = 17, .offset = 9224 },
+                                    &[_]ast.Expression{
                                         ast.Expression.init(
-                                            try ast.ChoiceExpr.create(
+                                            try ast.NotExpr.create(
                                                 allocator,
                                                 .{ .line = 292, .column = 17, .offset = 9224 },
-                                            &.{
                                                 ast.Expression.init(
-                                                    try ast.LitMatcher.create(
+                                                    try ast.ChoiceExpr.create(
                                                         allocator,
                                                         .{ .line = 292, .column = 17, .offset = 9224 },
-                                                    "ªªª]ªªª\"ªª",
-                                                    false,
-                                                ),
-),
-                                                ast.Expression.init(
-                                                    try ast.LitMatcher.create(
-                                                        allocator,
-                                                        .{ .line = 292, .column = 23, .offset = 9230 },
-                                                    "ªªª\\ªªª\\ªªª\"ªª",
-                                                    false,
-                                                ),
-),
-                                                ast.Expression.init(
-                                                    try ast.RuleRefExpr.create(
-                                                        allocator,
-                                                        .{ .line = 292, .column = 30, .offset = 9237 },
-                                                        ast.Identifier.init(
-                                                            .{ .line = 292, .column = 30, .offset = 9237 },
-                                                            "EOL",
-                                                        ),
+                                                        &[_]ast.Expression{
+                                                            ast.Expression.init(
+                                                                try ast.LitMatcher.create(
+                                                                    allocator,
+                                                                    .{ .line = 292, .column = 17, .offset = 9224 },
+                                                                    "\xaa\xaa\xaa]\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    false,
+                                                                ),
+                                                            ),
+                                                            ast.Expression.init(
+                                                                try ast.LitMatcher.create(
+                                                                    allocator,
+                                                                    .{ .line = 292, .column = 23, .offset = 9230 },
+                                                                    "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                                    false,
+                                                                ),
+                                                            ),
+                                                            ast.Expression.init(
+                                                                try ast.RuleRefExpr.create(
+                                                                    allocator,
+                                                                    .{ .line = 292, .column = 30, .offset = 9237 },
+                                                                    ast.Identifier.init(
+                                                                        .{ .line = 292, .column = 30, .offset = 9237 },
+                                                                        "EOL"
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        },
                                                     ),
-),
-                                            },
+                                                ),
+                                            ),
                                         ),
-),
-                                    ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 292, .column = 36, .offset = 9243 },
-                                            ast.Identifier.init(
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 292, .column = 36, .offset = 9243 },
-                                                "SourceChar",
+                                                ast.Identifier.init(
+                                                    .{ .line = 292, .column = 36, .offset = 9243 },
+                                                    "SourceChar"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 292, .column = 49, .offset = 9256 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.LitMatcher.create(
-                                            allocator,
-                                            .{ .line = 292, .column = 49, .offset = 9256 },
-                                        "ªªª\\ªªª\\ªªª\"ªª",
-                                        false,
-                                    ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 292, .column = 54, .offset = 9261 },
-                                            ast.Identifier.init(
+                                    },
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 292, .column = 49, .offset = 9256 },
+                                    &[_]ast.Expression{
+                                        ast.Expression.init(
+                                            try ast.LitMatcher.create(
+                                                allocator,
+                                                .{ .line = 292, .column = 49, .offset = 9256 },
+                                                "\xaa\xaa\xaa\\\xaa\xaa\xaa\\\xaa\xaa\xaa\"\xaa\xaa",
+                                                false,
+                                            ),
+                                        ),
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 292, .column = 54, .offset = 9261 },
-                                                "CharClassEscape",
+                                                ast.Identifier.init(
+                                                    .{ .line = 292, .column = 54, .offset = 9261 },
+                                                    "CharClassEscape"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                    },
+                                    },
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 293, .column = 2, .offset = 9277 },
                 ast.Identifier.init(
                     .{ .line = 293, .column = 2, .offset = 9277 },
-                    "CharClassEscape",
+                    "CharClassEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 293, .column = 20, .offset = 9297 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.LitMatcher.create(
-                                allocator,
-                                .{ .line = 293, .column = 20, .offset = 9297 },
-                            "ªªª]ªªª'ªª",
-                            false,
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.RuleRefExpr.create(
-                                allocator,
-                                .{ .line = 293, .column = 26, .offset = 9303 },
-                                ast.Identifier.init(
-                                    .{ .line = 293, .column = 26, .offset = 9303 },
-                                    "CommonEscapeSequence",
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.LitMatcher.create(
+                                    allocator,
+                                    .{ .line = 293, .column = 20, .offset = 9297 },
+                                    "\xaa\xaa\xaa]\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
                                 ),
                             ),
-),
-                    },
+                            ast.Expression.init(
+                                try ast.RuleRefExpr.create(
+                                    allocator,
+                                    .{ .line = 293, .column = 26, .offset = 9303 },
+                                    ast.Identifier.init(
+                                        .{ .line = 293, .column = 26, .offset = 9303 },
+                                        "CommonEscapeSequence"
+                                    ),
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 295, .column = 2, .offset = 9325 },
                 ast.Identifier.init(
                     .{ .line = 295, .column = 2, .offset = 9325 },
-                    "UnicodeClassEscape",
+                    "UnicodeClassEscape"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.SeqExpr.create(
                         allocator,
                         .{ .line = 295, .column = 23, .offset = 9348 },
-                        &.{
+                        &[_]ast.Expression{
                             ast.Expression.init(
                                 try ast.LitMatcher.create(
                                     allocator,
                                     .{ .line = 295, .column = 23, .offset = 9348 },
-                                "ªªªpªªª'ªª",
-                                false,
+                                    "\xaa\xaa\xaap\xaa\xaa\xaa'\xaa\xaa",
+                                    false,
+                                ),
                             ),
-),
                             ast.Expression.init(
                                 try ast.ChoiceExpr.create(
                                     allocator,
                                     .{ .line = 295, .column = 29, .offset = 9354 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 295, .column = 29, .offset = 9354 },
-                                            ast.Identifier.init(
+                                    &[_]ast.Expression{
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 295, .column = 29, .offset = 9354 },
-                                                "SingleCharUnicodeClass",
+                                                ast.Identifier.init(
+                                                    .{ .line = 295, .column = 29, .offset = 9354 },
+                                                    "SingleCharUnicodeClass"
+                                                ),
                                             ),
                                         ),
-),
-                                    ast.Expression.init(
-                                        try ast.SeqExpr.create(
-                                            allocator,
-                                            .{ .line = 295, .column = 54, .offset = 9379 },
-                                            &.{
-                                                ast.Expression.init(
-                                                    try ast.LitMatcher.create(
-                                                        allocator,
-                                                        .{ .line = 295, .column = 54, .offset = 9379 },
-                                                    "ªªª{ªªª'ªª",
-                                                    false,
-                                                ),
-),
-                                                ast.Expression.init(
-                                                    try ast.RuleRefExpr.create(
-                                                        allocator,
-                                                        .{ .line = 295, .column = 58, .offset = 9383 },
-                                                        ast.Identifier.init(
-                                                            .{ .line = 295, .column = 58, .offset = 9383 },
-                                                            "UnicodeClass",
+                                        ast.Expression.init(
+                                            try ast.SeqExpr.create(
+                                                allocator,
+                                                .{ .line = 295, .column = 54, .offset = 9379 },
+                                                &[_]ast.Expression{
+                                                    ast.Expression.init(
+                                                        try ast.LitMatcher.create(
+                                                            allocator,
+                                                            .{ .line = 295, .column = 54, .offset = 9379 },
+                                                            "\xaa\xaa\xaa{\xaa\xaa\xaa'\xaa\xaa",
+                                                            false,
                                                         ),
                                                     ),
-),
-                                                ast.Expression.init(
-                                                    try ast.LitMatcher.create(
-                                                        allocator,
-                                                        .{ .line = 295, .column = 71, .offset = 9396 },
-                                                    "ªªª}ªªª'ªª",
-                                                    false,
-                                                ),
-),
-                                            },
-                                    ),
-),
-                                },
+                                                    ast.Expression.init(
+                                                        try ast.RuleRefExpr.create(
+                                                            allocator,
+                                                            .{ .line = 295, .column = 58, .offset = 9383 },
+                                                            ast.Identifier.init(
+                                                                .{ .line = 295, .column = 58, .offset = 9383 },
+                                                                "UnicodeClass"
+                                                            ),
+                                                        ),
+                                                    ),
+                                                    ast.Expression.init(
+                                                        try ast.LitMatcher.create(
+                                                            allocator,
+                                                            .{ .line = 295, .column = 71, .offset = 9396 },
+                                                            "\xaa\xaa\xaa}\xaa\xaa\xaa'\xaa\xaa",
+                                                            false,
+                                                        ),
+                                                    ),
+                                                },
+                                            ),
+                                        ),
+                                    },
+                                ),
                             ),
-),
                         },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 296, .column = 2, .offset = 9402 },
                 ast.Identifier.init(
                     .{ .line = 296, .column = 2, .offset = 9402 },
-                    "SingleCharUnicodeClass",
+                    "SingleCharUnicodeClass"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 296, .column = 27, .offset = 9429 },
-                    "[ªªªLªªªMªªªNªªªCªªªPªªªZªªªSªªª]ªªª",
-                    false,
-                    false,
-                    &.{},
-                    &.{},
-                    &.{},
+                        "[\xaa\xaa\xaaL\xaa\xaa\xaaM\xaa\xaa\xaaN\xaa\xaa\xaaC\xaa\xaa\xaaP\xaa\xaa\xaaZ\xaa\xaa\xaaS\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        false,
+                        false,
+                        &[_]u8{},
+                        &[_]struct { u8, u8 }{},
+                        &[_][]const u8{},
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 297, .column = 2, .offset = 9439 },
                 ast.Identifier.init(
                     .{ .line = 297, .column = 2, .offset = 9439 },
-                    "UnicodeClass",
+                    "UnicodeClass"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.OneOrMoreExpr.create(
                         allocator,
                         .{ .line = 297, .column = 17, .offset = 9456 },
-                    ast.Expression.init(
-                        try ast.CharClassMatcher.create(
-                            allocator,
-                            .{ .line = 297, .column = 17, .offset = 9456 },
-                        "[ªªªaªªª-ªªªzªªª_ªªª]ªªªiªªª",
-                        false,
-                        false,
-                        &.{},
-                        &.{},
-                        &.{},
+                        ast.Expression.init(
+                            try ast.CharClassMatcher.create(
+                                allocator,
+                                .{ .line = 297, .column = 17, .offset = 9456 },
+                                "[\xaa\xaa\xaaa\xaa\xaa\xaa-\xaa\xaa\xaaz\xaa\xaa\xaa_\xaa\xaa\xaa]\xaa\xaa\xaai\xaa\xaa\xaa",
+                                false,
+                                false,
+                                &[_]u8{},
+                                &[_]struct { u8, u8 }{},
+                                &[_][]const u8{},
+                            ),
                         ),
-),
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 299, .column = 2, .offset = 9466 },
                 ast.Identifier.init(
                     .{ .line = 299, .column = 2, .offset = 9466 },
-                    "AnyMatcher",
+                    "AnyMatcher"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -3496,28 +3545,29 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.LitMatcher.create(
                                 allocator,
                                 .{ .line = 299, .column = 15, .offset = 9481 },
-                            "ªªª.ªªª\"ªª",
-                            false,
+                                "\xaa\xaa\xaa.\xaa\xaa\xaa\"\xaa\xaa",
+                                false,
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 299, .column = 19, .offset = 9485 },
-                        "{\n    const any_matcher = try c.allocator.create(ast.AnyMatcher);\n    any_matcher.* = ast.AnyMatcher{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n    return ast.Expression{ .any_matcher = any_matcher };\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 299, .column = 19, .offset = 9485 },
+                            "{\n    const any_matcher = try c.allocator.create(ast.AnyMatcher);\n    any_matcher.* = ast.AnyMatcher{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n    return ast.Expression{ .any_matcher = any_matcher };\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 308, .column = 2, .offset = 9732 },
                 ast.Identifier.init(
                     .{ .line = 308, .column = 2, .offset = 9732 },
-                    "CodeBlock",
+                    "CodeBlock"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ActionExpr.create(
@@ -3527,434 +3577,442 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                             try ast.SeqExpr.create(
                                 allocator,
                                 .{ .line = 308, .column = 14, .offset = 9746 },
-                                &.{
+                                &[_]ast.Expression{
                                     ast.Expression.init(
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 308, .column = 14, .offset = 9746 },
-                                        "ªªª{ªªª\"ªª",
-                                        false,
+                                            "\xaa\xaa\xaa{\xaa\xaa\xaa\"\xaa\xaa",
+                                            false,
+                                        ),
                                     ),
-),
                                     ast.Expression.init(
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 308, .column = 18, .offset = 9750 },
                                             ast.Identifier.init(
                                                 .{ .line = 308, .column = 18, .offset = 9750 },
-                                                "Code",
+                                                "Code"
                                             ),
                                         ),
-),
+                                    ),
                                     ast.Expression.init(
                                         try ast.LitMatcher.create(
                                             allocator,
                                             .{ .line = 308, .column = 23, .offset = 9755 },
-                                        "ªªª}ªªª\"ªª",
-                                        false,
+                                            "\xaa\xaa\xaa}\xaa\xaa\xaa\"\xaa\xaa",
+                                            false,
+                                        ),
                                     ),
-),
                                 },
+                            ),
                         ),
-),
-                    ast.CodeBlock.init(
-                        .{ .line = 308, .column = 27, .offset = 9759 },
-                        "{\n    const pos = c.astPos();\n    const code_block = try c.allocator.create(ast.CodeBlock);\n    code_block.* = ast.CodeBlock{\n        .pos = pos,\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n    return code_block;\n}",
+                        ast.CodeBlock.init(
+                            .{ .line = 308, .column = 27, .offset = 9759 },
+                            "{\n    const pos = c.astPos();\n    const code_block = try c.allocator.create(ast.CodeBlock);\n    code_block.* = ast.CodeBlock{\n        .pos = pos,\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n    return code_block;\n}"
+                        ),
+                        0,
                     ),
-                    0,
-                    ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 318, .column = 2, .offset = 9989 },
                 ast.Identifier.init(
                     .{ .line = 318, .column = 2, .offset = 9989 },
-                    "Code",
+                    "Code"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ZeroOrMoreExpr.create(
                         allocator,
                         .{ .line = 318, .column = 14, .offset = 10003 },
-                    ast.Expression.init(
-                        try ast.ChoiceExpr.create(
-                            allocator,
-                            .{ .line = 318, .column = 14, .offset = 10003 },
-                        &.{
-                            ast.Expression.init(
-                                try ast.OneOrMoreExpr.create(
-                                    allocator,
-                                    .{ .line = 318, .column = 14, .offset = 10003 },
-                                ast.Expression.init(
-                                    try ast.SeqExpr.create(
-                                        allocator,
-                                        .{ .line = 318, .column = 14, .offset = 10003 },
-                                        &.{
+                        ast.Expression.init(
+                            try ast.ChoiceExpr.create(
+                                allocator,
+                                .{ .line = 318, .column = 14, .offset = 10003 },
+                                &[_]ast.Expression{
+                                    ast.Expression.init(
+                                        try ast.OneOrMoreExpr.create(
+                                            allocator,
+                                            .{ .line = 318, .column = 14, .offset = 10003 },
                                             ast.Expression.init(
-                                                try ast.NotExpr.create(
+                                                try ast.SeqExpr.create(
                                                     allocator,
                                                     .{ .line = 318, .column = 14, .offset = 10003 },
+                                                    &[_]ast.Expression{
+                                                        ast.Expression.init(
+                                                            try ast.NotExpr.create(
+                                                                allocator,
+                                                                .{ .line = 318, .column = 14, .offset = 10003 },
+                                                                ast.Expression.init(
+                                                                    try ast.CharClassMatcher.create(
+                                                                        allocator,
+                                                                        .{ .line = 318, .column = 14, .offset = 10003 },
+                                                                        "[\xaa\xaa\xaa{\xaa\xaa\xaa}\xaa\xaa\xaa]\xaa\xaa\xaa",
+                                                                        false,
+                                                                        false,
+                                                                        &[_]u8{},
+                                                                        &[_]struct { u8, u8 }{},
+                                                                        &[_][]const u8{},
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                        ast.Expression.init(
+                                                            try ast.RuleRefExpr.create(
+                                                                allocator,
+                                                                .{ .line = 318, .column = 19, .offset = 10008 },
+                                                                ast.Identifier.init(
+                                                                    .{ .line = 318, .column = 19, .offset = 10008 },
+                                                                    "SourceChar"
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    },
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    ast.Expression.init(
+                                        try ast.SeqExpr.create(
+                                            allocator,
+                                            .{ .line = 318, .column = 35, .offset = 10024 },
+                                            &[_]ast.Expression{
                                                 ast.Expression.init(
-                                                    try ast.CharClassMatcher.create(
+                                                    try ast.LitMatcher.create(
                                                         allocator,
-                                                        .{ .line = 318, .column = 14, .offset = 10003 },
-                                                    "[ªªª{ªªª}ªªª]ªªª",
-                                                    false,
-                                                    false,
-                                                    &.{},
-                                                    &.{},
-                                                    &.{},
-                                                    ),
-),
-                                            ),
-),
-                                            ast.Expression.init(
-                                                try ast.RuleRefExpr.create(
-                                                    allocator,
-                                                    .{ .line = 318, .column = 19, .offset = 10008 },
-                                                    ast.Identifier.init(
-                                                        .{ .line = 318, .column = 19, .offset = 10008 },
-                                                        "SourceChar",
+                                                        .{ .line = 318, .column = 35, .offset = 10024 },
+                                                        "\xaa\xaa\xaa{\xaa\xaa\xaa\"\xaa\xaa",
+                                                        false,
                                                     ),
                                                 ),
-),
-                                        },
-                                ),
-),
-                            ),
-),
-                            ast.Expression.init(
-                                try ast.SeqExpr.create(
-                                    allocator,
-                                    .{ .line = 318, .column = 35, .offset = 10024 },
-                                    &.{
-                                        ast.Expression.init(
-                                            try ast.LitMatcher.create(
-                                                allocator,
-                                                .{ .line = 318, .column = 35, .offset = 10024 },
-                                            "ªªª{ªªª\"ªª",
-                                            false,
-                                        ),
-),
-                                        ast.Expression.init(
-                                            try ast.RuleRefExpr.create(
-                                                allocator,
-                                                .{ .line = 318, .column = 39, .offset = 10028 },
-                                                ast.Identifier.init(
-                                                    .{ .line = 318, .column = 39, .offset = 10028 },
-                                                    "Code",
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 318, .column = 39, .offset = 10028 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 318, .column = 39, .offset = 10028 },
+                                                            "Code"
+                                                        ),
+                                                    ),
                                                 ),
-                                            ),
-),
-                                        ast.Expression.init(
-                                            try ast.LitMatcher.create(
-                                                allocator,
-                                                .{ .line = 318, .column = 44, .offset = 10033 },
-                                            "ªªª}ªªª\"ªª",
-                                            false,
+                                                ast.Expression.init(
+                                                    try ast.LitMatcher.create(
+                                                        allocator,
+                                                        .{ .line = 318, .column = 44, .offset = 10033 },
+                                                        "\xaa\xaa\xaa}\xaa\xaa\xaa\"\xaa\xaa",
+                                                        false,
+                                                    ),
+                                                ),
+                                            },
                                         ),
-),
-                                    },
+                                    ),
+                                },
                             ),
-),
-                        },
+                        ),
                     ),
-),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 320, .column = 2, .offset = 10041 },
                 ast.Identifier.init(
                     .{ .line = 320, .column = 2, .offset = 10041 },
-                    "__",
+                    "__"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ZeroOrMoreExpr.create(
                         allocator,
                         .{ .line = 320, .column = 9, .offset = 10050 },
-                    ast.Expression.init(
-                        try ast.ChoiceExpr.create(
-                            allocator,
-                            .{ .line = 320, .column = 9, .offset = 10050 },
-                        &.{
-                            ast.Expression.init(
-                                try ast.RuleRefExpr.create(
-                                    allocator,
-                                    .{ .line = 320, .column = 9, .offset = 10050 },
-                                    ast.Identifier.init(
-                                        .{ .line = 320, .column = 9, .offset = 10050 },
-                                        "Whitespace",
+                        ast.Expression.init(
+                            try ast.ChoiceExpr.create(
+                                allocator,
+                                .{ .line = 320, .column = 9, .offset = 10050 },
+                                &[_]ast.Expression{
+                                    ast.Expression.init(
+                                        try ast.RuleRefExpr.create(
+                                            allocator,
+                                            .{ .line = 320, .column = 9, .offset = 10050 },
+                                            ast.Identifier.init(
+                                                .{ .line = 320, .column = 9, .offset = 10050 },
+                                                "Whitespace"
+                                            ),
+                                        ),
                                     ),
-                                ),
-),
-                            ast.Expression.init(
-                                try ast.RuleRefExpr.create(
-                                    allocator,
-                                    .{ .line = 320, .column = 22, .offset = 10063 },
-                                    ast.Identifier.init(
-                                        .{ .line = 320, .column = 22, .offset = 10063 },
-                                        "EOL",
+                                    ast.Expression.init(
+                                        try ast.RuleRefExpr.create(
+                                            allocator,
+                                            .{ .line = 320, .column = 22, .offset = 10063 },
+                                            ast.Identifier.init(
+                                                .{ .line = 320, .column = 22, .offset = 10063 },
+                                                "EOL"
+                                            ),
+                                        ),
                                     ),
-                                ),
-),
-                            ast.Expression.init(
-                                try ast.RuleRefExpr.create(
-                                    allocator,
-                                    .{ .line = 320, .column = 28, .offset = 10069 },
-                                    ast.Identifier.init(
-                                        .{ .line = 320, .column = 28, .offset = 10069 },
-                                        "Comment",
+                                    ast.Expression.init(
+                                        try ast.RuleRefExpr.create(
+                                            allocator,
+                                            .{ .line = 320, .column = 28, .offset = 10069 },
+                                            ast.Identifier.init(
+                                                .{ .line = 320, .column = 28, .offset = 10069 },
+                                                "Comment"
+                                            ),
+                                        ),
                                     ),
-                                ),
-),
-                        },
+                                },
+                            ),
+                        ),
                     ),
-),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 321, .column = 2, .offset = 10080 },
                 ast.Identifier.init(
                     .{ .line = 321, .column = 2, .offset = 10080 },
-                    "_",
+                    "_"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ZeroOrMoreExpr.create(
                         allocator,
                         .{ .line = 321, .column = 8, .offset = 10088 },
-                    ast.Expression.init(
-                        try ast.ChoiceExpr.create(
-                            allocator,
-                            .{ .line = 321, .column = 8, .offset = 10088 },
-                        &.{
-                            ast.Expression.init(
-                                try ast.RuleRefExpr.create(
-                                    allocator,
-                                    .{ .line = 321, .column = 8, .offset = 10088 },
-                                    ast.Identifier.init(
-                                        .{ .line = 321, .column = 8, .offset = 10088 },
-                                        "Whitespace",
+                        ast.Expression.init(
+                            try ast.ChoiceExpr.create(
+                                allocator,
+                                .{ .line = 321, .column = 8, .offset = 10088 },
+                                &[_]ast.Expression{
+                                    ast.Expression.init(
+                                        try ast.RuleRefExpr.create(
+                                            allocator,
+                                            .{ .line = 321, .column = 8, .offset = 10088 },
+                                            ast.Identifier.init(
+                                                .{ .line = 321, .column = 8, .offset = 10088 },
+                                                "Whitespace"
+                                            ),
+                                        ),
                                     ),
-                                ),
-),
-                            ast.Expression.init(
-                                try ast.RuleRefExpr.create(
-                                    allocator,
-                                    .{ .line = 321, .column = 21, .offset = 10101 },
-                                    ast.Identifier.init(
-                                        .{ .line = 321, .column = 21, .offset = 10101 },
-                                        "MultiLineCommentNoLineTerminator",
+                                    ast.Expression.init(
+                                        try ast.RuleRefExpr.create(
+                                            allocator,
+                                            .{ .line = 321, .column = 21, .offset = 10101 },
+                                            ast.Identifier.init(
+                                                .{ .line = 321, .column = 21, .offset = 10101 },
+                                                "MultiLineCommentNoLineTerminator"
+                                            ),
+                                        ),
                                     ),
-                                ),
-),
-                        },
+                                },
+                            ),
+                        ),
                     ),
-),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 323, .column = 2, .offset = 10138 },
                 ast.Identifier.init(
                     .{ .line = 323, .column = 2, .offset = 10138 },
-                    "Whitespace",
+                    "Whitespace"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.CharClassMatcher.create(
                         allocator,
                         .{ .line = 323, .column = 15, .offset = 10153 },
-                    "[ªªª ªªª\\ªªªtªªª\\ªªªrªªª]ªªª",
-                    false,
-                    false,
-                    &.{},
-                    &.{},
-                    &.{},
+                        "[\xaa\xaa\xaa \xaa\xaa\xaa\\\xaa\xaa\xaat\xaa\xaa\xaa\\\xaa\xaa\xaar\xaa\xaa\xaa]\xaa\xaa\xaa",
+                        false,
+                        false,
+                        &[_]u8{},
+                        &[_]struct { u8, u8 }{},
+                        &[_][]const u8{},
                     ),
-),
+                ),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 324, .column = 2, .offset = 10161 },
                 ast.Identifier.init(
                     .{ .line = 324, .column = 2, .offset = 10161 },
-                    "EOL",
+                    "EOL"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.LitMatcher.create(
                         allocator,
                         .{ .line = 324, .column = 8, .offset = 10169 },
-                    "ªªª\\ªªªnªªª'ªª",
-                    false,
+                        "\xaa\xaa\xaa\\\xaa\xaa\xaan\xaa\xaa\xaa'\xaa\xaa",
+                        false,
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 325, .column = 2, .offset = 10174 },
                 ast.Identifier.init(
                     .{ .line = 325, .column = 2, .offset = 10174 },
-                    "EOS",
+                    "EOS"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.ChoiceExpr.create(
                         allocator,
                         .{ .line = 325, .column = 8, .offset = 10182 },
-                    &.{
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 325, .column = 8, .offset = 10182 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 325, .column = 8, .offset = 10182 },
-                                            ast.Identifier.init(
-                                                .{ .line = 325, .column = 8, .offset = 10182 },
-                                                "__",
-                                            ),
-                                        ),
-),
-                                    ast.Expression.init(
-                                        try ast.LitMatcher.create(
-                                            allocator,
-                                            .{ .line = 325, .column = 11, .offset = 10185 },
-                                        "ªªª;ªªª'ªª",
-                                        false,
-                                    ),
-),
-                                },
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 325, .column = 17, .offset = 10191 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 325, .column = 17, .offset = 10191 },
-                                            ast.Identifier.init(
-                                                .{ .line = 325, .column = 17, .offset = 10191 },
-                                                "_",
-                                            ),
-                                        ),
-),
-                                    ast.Expression.init(
-                                        try ast.ZeroOrOneExpr.create(
-                                            allocator,
-                                            .{ .line = 325, .column = 19, .offset = 10193 },
+                        &[_]ast.Expression{
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 325, .column = 8, .offset = 10182 },
+                                    &[_]ast.Expression{
                                         ast.Expression.init(
                                             try ast.RuleRefExpr.create(
                                                 allocator,
-                                                .{ .line = 325, .column = 19, .offset = 10193 },
+                                                .{ .line = 325, .column = 8, .offset = 10182 },
                                                 ast.Identifier.init(
-                                                    .{ .line = 325, .column = 19, .offset = 10193 },
-                                                    "SingleLineComment",
+                                                    .{ .line = 325, .column = 8, .offset = 10182 },
+                                                    "__"
                                                 ),
                                             ),
-),
-                                    ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 325, .column = 38, .offset = 10212 },
-                                            ast.Identifier.init(
+                                        ),
+                                        ast.Expression.init(
+                                            try ast.LitMatcher.create(
+                                                allocator,
+                                                .{ .line = 325, .column = 11, .offset = 10185 },
+                                                "\xaa\xaa\xaa;\xaa\xaa\xaa'\xaa\xaa",
+                                                false,
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 325, .column = 17, .offset = 10191 },
+                                    &[_]ast.Expression{
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
+                                                .{ .line = 325, .column = 17, .offset = 10191 },
+                                                ast.Identifier.init(
+                                                    .{ .line = 325, .column = 17, .offset = 10191 },
+                                                    "_"
+                                                ),
+                                            ),
+                                        ),
+                                        ast.Expression.init(
+                                            try ast.ZeroOrOneExpr.create(
+                                                allocator,
+                                                .{ .line = 325, .column = 19, .offset = 10193 },
+                                                ast.Expression.init(
+                                                    try ast.RuleRefExpr.create(
+                                                        allocator,
+                                                        .{ .line = 325, .column = 19, .offset = 10193 },
+                                                        ast.Identifier.init(
+                                                            .{ .line = 325, .column = 19, .offset = 10193 },
+                                                            "SingleLineComment"
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 325, .column = 38, .offset = 10212 },
-                                                "EOL",
+                                                ast.Identifier.init(
+                                                    .{ .line = 325, .column = 38, .offset = 10212 },
+                                                    "EOL"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                        ast.Expression.init(
-                            try ast.SeqExpr.create(
-                                allocator,
-                                .{ .line = 325, .column = 44, .offset = 10218 },
-                                &.{
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 325, .column = 44, .offset = 10218 },
-                                            ast.Identifier.init(
+                                    },
+                                ),
+                            ),
+                            ast.Expression.init(
+                                try ast.SeqExpr.create(
+                                    allocator,
+                                    .{ .line = 325, .column = 44, .offset = 10218 },
+                                    &[_]ast.Expression{
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 325, .column = 44, .offset = 10218 },
-                                                "__",
+                                                ast.Identifier.init(
+                                                    .{ .line = 325, .column = 44, .offset = 10218 },
+                                                    "__"
+                                                ),
                                             ),
                                         ),
-),
-                                    ast.Expression.init(
-                                        try ast.RuleRefExpr.create(
-                                            allocator,
-                                            .{ .line = 325, .column = 47, .offset = 10221 },
-                                            ast.Identifier.init(
+                                        ast.Expression.init(
+                                            try ast.RuleRefExpr.create(
+                                                allocator,
                                                 .{ .line = 325, .column = 47, .offset = 10221 },
-                                                "EOF",
+                                                ast.Identifier.init(
+                                                    .{ .line = 325, .column = 47, .offset = 10221 },
+                                                    "EOF"
+                                                ),
                                             ),
                                         ),
-),
-                                },
-                        ),
-),
-                    },
+                                    },
+                                ),
+                            ),
+                        },
+                    ),
                 ),
-),
+                
             ),
             try ast.Rule.create(
                 allocator,
                 .{ .line = 327, .column = 2, .offset = 10226 },
                 ast.Identifier.init(
                     .{ .line = 327, .column = 2, .offset = 10226 },
-                    "EOF",
+                    "EOF"
                 ),
                 ast.StringLit.init(
                     .{ .line = 0, .column = 0, .offset = 0 },
-                    "",
+                    ""
                 ),
                 ast.Expression.init(
                     try ast.NotExpr.create(
                         allocator,
                         .{ .line = 327, .column = 9, .offset = 10235 },
-                    ast.Expression.init(
-                        try ast.AnyMatcher.create(
-                            allocator,
-                            .{ .line = 327, .column = 9, .offset = 10235 },
-                        ".",
+                        ast.Expression.init(
+                            try ast.AnyMatcher.create(
+                                allocator,
+                                .{ .line = 327, .column = 9, .offset = 10235 },
+                                ".",
+                            ),
+                        ),
                     ),
-),
                 ),
-),
+                
             ),
     },
 );

@@ -48,7 +48,7 @@ const ErrList = struct {
         }
 
         // Combine multiple errors
-        var result: std.ArrayList(u8) = .empty;
+        var result: std.ArrayList(u8) = .{};
         defer result.deinit(self.allocator);
 
         for (self.errors.items, 0..) |err, i| {
@@ -662,7 +662,7 @@ pub const Parser = struct {
         }
 
         // Remove surrounding quotes and handle basic escapes
-        var result: std.ArrayList(u8) = .empty;
+        var result: std.ArrayList(u8) = .{};
         defer result.deinit(self.allocator);
 
         const content = quoted[1 .. quoted.len - 1];
