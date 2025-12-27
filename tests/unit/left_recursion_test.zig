@@ -19,11 +19,11 @@ test "Left Recursion - direct left recursion" {
     const pos = ast.Pos.init(1, 1, 0);
 
     // Create grammar: Expr <- Expr "+" Term
-    const name = ast.Identifier.init(pos, "Expr");
-    const display = ast.StringLit.init(pos, "Expr");
+    const name = try ast.Identifier.init(allocator, pos, "Expr");
+    const display = try ast.StringLit.init(allocator, pos, "Expr");
 
     // Simple expression (just reference to Expr for left recursion)
-    const ref_name = ast.Identifier.init(pos, "Expr");
+    const ref_name = try ast.Identifier.init(allocator, pos, "Expr");
     const expr_ref = try ast.RuleRefExpr.create(allocator, pos, ref_name);
     const expr = ast.Expression{ .rule_ref = expr_ref };
 
@@ -46,15 +46,15 @@ test "Left Recursion - indirect left recursion" {
     const pos = ast.Pos.init(1, 1, 0);
 
     // Create grammar: A <- B, B <- A
-    const name_a = ast.Identifier.init(pos, "A");
-    const display_a = ast.StringLit.init(pos, "A");
-    const ref_b = ast.Identifier.init(pos, "B");
+    const name_a = try ast.Identifier.init(allocator, pos, "A");
+    const display_a = try ast.StringLit.init(allocator, pos, "A");
+    const ref_b = try ast.Identifier.init(allocator, pos, "B");
     const expr_b = try ast.RuleRefExpr.create(allocator, pos, ref_b);
     const rule_a = try ast.Rule.create(allocator, pos, name_a, display_a, ast.Expression{ .rule_ref = expr_b });
 
-    const name_b = ast.Identifier.init(pos, "B");
-    const display_b = ast.StringLit.init(pos, "B");
-    const ref_a = ast.Identifier.init(pos, "A");
+    const name_b = try ast.Identifier.init(allocator, pos, "B");
+    const display_b = try ast.StringLit.init(allocator, pos, "B");
+    const ref_a = try ast.Identifier.init(allocator, pos, "A");
     const expr_a = try ast.RuleRefExpr.create(allocator, pos, ref_a);
     const rule_b = try ast.Rule.create(allocator, pos, name_b, display_b, ast.Expression{ .rule_ref = expr_a });
 
@@ -79,8 +79,8 @@ test "Left Recursion - no recursion" {
     const pos = ast.Pos.init(1, 1, 0);
 
     // Create grammar: A <- "hello"
-    const name = ast.Identifier.init(pos, "A");
-    const display = ast.StringLit.init(pos, "A");
+    const name = try ast.Identifier.init(allocator, pos, "A");
+    const display = try ast.StringLit.init(allocator, pos, "A");
     const lit = try ast.LitMatcher.create(allocator, pos, "hello", false);
     const expr = ast.Expression{ .lit_matcher = lit };
     const rule = try ast.Rule.create(allocator, pos, name, display, expr);
@@ -105,15 +105,15 @@ test "Left Recursion - mixed rules" {
     // Expr <- Expr "+" Term  (left recursive)
     // Term <- "number"       (not recursive)
 
-    const name_expr = ast.Identifier.init(pos, "Expr");
-    const display_expr = ast.StringLit.init(pos, "Expr");
-    const ref_expr = ast.Identifier.init(pos, "Expr");
+    const name_expr = try ast.Identifier.init(allocator, pos, "Expr");
+    const display_expr = try ast.StringLit.init(allocator, pos, "Expr");
+    const ref_expr = try ast.Identifier.init(allocator, pos, "Expr");
     const expr_ref = try ast.RuleRefExpr.create(allocator, pos, ref_expr);
     const expr_expr = ast.Expression{ .rule_ref = expr_ref };
     const rule_expr = try ast.Rule.create(allocator, pos, name_expr, display_expr, expr_expr);
 
-    const name_term = ast.Identifier.init(pos, "Term");
-    const display_term = ast.StringLit.init(pos, "Term");
+    const name_term = try ast.Identifier.init(allocator, pos, "Term");
+    const display_term = try ast.StringLit.init(allocator, pos, "Term");
     const lit = try ast.LitMatcher.create(allocator, pos, "number", false);
     const expr_term = ast.Expression{ .lit_matcher = lit };
     const rule_term = try ast.Rule.create(allocator, pos, name_term, display_term, expr_term);

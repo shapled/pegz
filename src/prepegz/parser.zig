@@ -18,11 +18,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 5, .column = 2, .offset = 18 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 5, .column = 2, .offset = 18 },
                     "Grammar"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -39,7 +41,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 5, .column = 12, .offset = 30 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 5, .column = 12, .offset = 30 },
                                                 "__"
                                             ),
@@ -49,7 +52,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 5, .column = 15, .offset = 33 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 5, .column = 15, .offset = 33 },
                                                 "initializer"
                                             ),
@@ -66,7 +70,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 5, .column = 29, .offset = 47 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 5, .column = 29, .offset = 47 },
                                                                             "Initializer"
                                                                         ),
@@ -76,7 +81,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 5, .column = 41, .offset = 59 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 5, .column = 41, .offset = 59 },
                                                                             "__"
                                                                         ),
@@ -93,7 +99,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 5, .column = 47, .offset = 65 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 5, .column = 47, .offset = 65 },
                                                 "rules"
                                             ),
@@ -110,7 +117,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 5, .column = 55, .offset = 73 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 5, .column = 55, .offset = 73 },
                                                                             "Rule"
                                                                         ),
@@ -120,7 +128,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 5, .column = 60, .offset = 78 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 5, .column = 60, .offset = 78 },
                                                                             "__"
                                                                         ),
@@ -136,7 +145,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 5, .column = 66, .offset = 84 },
                             "{\n    const pos = c.astPos();\n\n    // create the grammar, assign its initializer\n    const g = try c.allocator.create(ast.Grammar);\n    g.* = ast.Grammar{\n        .pos = pos,\n        .init = null,\n        .rules = std.ArrayList(*ast.Rule).init(c.allocator),\n    };\n\n    if (initializer) |init_val| {\n        g.init = @as(*ast.CodeBlock, @ptrCast(init_val));\n    }\n\n    const rules_slice = @as([]const []const u8, @ptrCast(rules));\n    for (rules_slice) |rule_val| {\n        const rule_ptr = @as(*ast.Rule, @ptrCast(rule_val));\n        try g.rules.append(c.allocator, rule_ptr);\n    }\n\n    return g;\n}"
                         ),
@@ -148,11 +158,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 29, .column = 2, .offset = 686 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 29, .column = 2, .offset = 686 },
                     "Initializer"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -169,7 +181,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 29, .column = 16, .offset = 702 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 29, .column = 16, .offset = 702 },
                                                 "code"
                                             ),
@@ -177,7 +190,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 29, .column = 21, .offset = 707 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 29, .column = 21, .offset = 707 },
                                                         "CodeBlock"
                                                     ),
@@ -189,7 +203,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 29, .column = 31, .offset = 717 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 29, .column = 31, .offset = 717 },
                                                 "EOS"
                                             ),
@@ -198,7 +213,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 29, .column = 35, .offset = 721 },
                             "{\n    return code;\n}"
                         ),
@@ -210,11 +226,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 33, .column = 2, .offset = 743 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 33, .column = 2, .offset = 743 },
                     "Rule"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -231,7 +249,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 9, .offset = 752 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 33, .column = 9, .offset = 752 },
                                                 "name"
                                             ),
@@ -239,7 +258,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 33, .column = 14, .offset = 757 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 33, .column = 14, .offset = 757 },
                                                         "IdentifierName"
                                                     ),
@@ -251,7 +271,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 29, .offset = 772 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 33, .column = 29, .offset = 772 },
                                                 "__"
                                             ),
@@ -261,7 +282,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 32, .offset = 775 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 33, .column = 32, .offset = 775 },
                                                 "display"
                                             ),
@@ -278,7 +300,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 33, .column = 42, .offset = 785 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 33, .column = 42, .offset = 785 },
                                                                             "StringLiteral"
                                                                         ),
@@ -288,7 +311,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 33, .column = 56, .offset = 799 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 33, .column = 56, .offset = 799 },
                                                                             "__"
                                                                         ),
@@ -305,7 +329,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 62, .offset = 805 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 33, .column = 62, .offset = 805 },
                                                 "RuleDefOp"
                                             ),
@@ -315,7 +340,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 72, .offset = 815 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 33, .column = 72, .offset = 815 },
                                                 "__"
                                             ),
@@ -325,7 +351,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 75, .offset = 818 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 33, .column = 75, .offset = 818 },
                                                 "expr"
                                             ),
@@ -333,7 +360,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 33, .column = 80, .offset = 823 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 33, .column = 80, .offset = 823 },
                                                         "Expression"
                                                     ),
@@ -345,7 +373,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 33, .column = 91, .offset = 834 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 33, .column = 91, .offset = 834 },
                                                 "EOS"
                                             ),
@@ -354,7 +383,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 33, .column = 95, .offset = 838 },
                             "{\n    const pos = c.astPos();\n\n    const rule = try c.allocator.create(ast.Rule);\n    rule.* = ast.Rule{\n        .pos = pos,\n        .name = name.*,\n        .display_name = undefined,\n        .expression = undefined,\n        .expr = undefined,\n        .visited = false,\n        .nullable = false,\n        .left_recursive = false,\n        .leader = false,\n    };\n\n    if (display) |display_val| {\n        rule.display_name = @as(ast.StringLit, @ptrCast(display_val));\n    } else {\n        rule.display_name = ast.StringLit{\n            .pos = pos,\n            .value = \"\",\n        };\n    }\n\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n    rule.expr = expr_ptr;\n    rule.expression = expr;\n\n    return rule;\n}"
                         ),
@@ -366,11 +396,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 66, .column = 2, .offset = 1587 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 66, .column = 2, .offset = 1587 },
                     "Expression"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -378,7 +410,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.RuleRefExpr.create(
                         allocator,
                         .{ .line = 66, .column = 15, .offset = 1602 },
-                        ast.Identifier.init(
+                        try ast.Identifier.init(
+                            allocator,
                             .{ .line = 66, .column = 15, .offset = 1602 },
                             "ChoiceExpr"
                         ),
@@ -389,11 +422,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 68, .column = 2, .offset = 1614 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 68, .column = 2, .offset = 1614 },
                     "ChoiceExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -410,7 +445,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 68, .column = 15, .offset = 1629 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 68, .column = 15, .offset = 1629 },
                                                 "first"
                                             ),
@@ -418,7 +454,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 68, .column = 21, .offset = 1635 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 68, .column = 21, .offset = 1635 },
                                                         "ActionExpr"
                                                     ),
@@ -430,7 +467,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 68, .column = 32, .offset = 1646 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 68, .column = 32, .offset = 1646 },
                                                 "rest"
                                             ),
@@ -447,7 +485,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 68, .column = 39, .offset = 1653 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 68, .column = 39, .offset = 1653 },
                                                                             "__"
                                                                         ),
@@ -465,7 +504,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 68, .column = 46, .offset = 1660 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 68, .column = 46, .offset = 1660 },
                                                                             "__"
                                                                         ),
@@ -475,7 +515,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 68, .column = 49, .offset = 1663 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 68, .column = 49, .offset = 1663 },
                                                                             "ActionExpr"
                                                                         ),
@@ -491,7 +532,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 68, .column = 63, .offset = 1677 },
                             "{\n    const rest_slice = @as([]const []const u8, @ptrCast(rest));\n    if (rest_slice.len == 0) {\n        return first;\n    }\n\n    const pos = c.astPos();\n    const choice = try ast.ChoiceExpr.init(c.allocator, pos);\n    try choice.alternatives.append(c.allocator, first);\n\n    for (rest_slice) |sl| {\n        const expr = @as(ast.Expression, @ptrCast(sl));\n        try choice.alternatives.append(c.allocator, expr);\n    }\n\n    return ast.Expression{ .choice = choice };\n}"
                         ),
@@ -503,11 +545,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 86, .column = 2, .offset = 2150 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 86, .column = 2, .offset = 2150 },
                     "ActionExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -524,7 +568,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 86, .column = 15, .offset = 2165 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 86, .column = 15, .offset = 2165 },
                                                 "expr"
                                             ),
@@ -532,7 +577,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 86, .column = 20, .offset = 2170 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 86, .column = 20, .offset = 2170 },
                                                         "SeqExpr"
                                                     ),
@@ -544,7 +590,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 86, .column = 28, .offset = 2178 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 86, .column = 28, .offset = 2178 },
                                                 "code"
                                             ),
@@ -561,7 +608,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 86, .column = 35, .offset = 2185 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 86, .column = 35, .offset = 2185 },
                                                                             "__"
                                                                         ),
@@ -571,7 +619,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 86, .column = 38, .offset = 2188 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 86, .column = 38, .offset = 2188 },
                                                                             "CodeBlock"
                                                                         ),
@@ -587,7 +636,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 86, .column = 51, .offset = 2201 },
                             "{\n    if (code == null) {\n        return expr;\n    }\n\n    const pos = c.astPos();\n    const act = try ast.ActionExpr.init(c.allocator, pos, expr, code.?, 0);\n    return ast.Expression{ .action = act };\n}"
                         ),
@@ -599,11 +649,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 96, .column = 2, .offset = 2406 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 96, .column = 2, .offset = 2406 },
                     "SeqExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -620,7 +672,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 96, .column = 12, .offset = 2418 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 96, .column = 12, .offset = 2418 },
                                                 "first"
                                             ),
@@ -628,7 +681,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 96, .column = 18, .offset = 2424 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 96, .column = 18, .offset = 2424 },
                                                         "LabeledExpr"
                                                     ),
@@ -640,7 +694,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 96, .column = 30, .offset = 2436 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 96, .column = 30, .offset = 2436 },
                                                 "rest"
                                             ),
@@ -657,7 +712,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 96, .column = 37, .offset = 2443 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 96, .column = 37, .offset = 2443 },
                                                                             "__"
                                                                         ),
@@ -667,7 +723,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                     try ast.RuleRefExpr.create(
                                                                         allocator,
                                                                         .{ .line = 96, .column = 40, .offset = 2446 },
-                                                                        ast.Identifier.init(
+                                                                        try ast.Identifier.init(
+                                                                            allocator,
                                                                             .{ .line = 96, .column = 40, .offset = 2446 },
                                                                             "LabeledExpr"
                                                                         ),
@@ -683,7 +740,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 96, .column = 55, .offset = 2461 },
                             "{\n    const rest_slice = @as([]const []const u8, @ptrCast(rest));\n    if (rest_slice.len == 0) {\n        return first;\n    }\n    const seq = try ast.SeqExpr.init(c.allocator, c.astPos());\n    try seq.exprs.append(c.allocator, first);\n    for (rest_slice) |sl| {\n        const expr = @as(ast.Expression, @ptrCast(sl));\n        try seq.exprs.append(c.allocator, expr);\n    }\n    return ast.Expression{ .seq = seq };\n}"
                         ),
@@ -695,11 +753,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 110, .column = 2, .offset = 2878 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 110, .column = 2, .offset = 2878 },
                     "LabeledExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -721,7 +781,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LabeledExpr.create(
                                                         allocator,
                                                         .{ .line = 110, .column = 16, .offset = 2894 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 110, .column = 16, .offset = 2894 },
                                                             "label"
                                                         ),
@@ -729,7 +790,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 110, .column = 22, .offset = 2900 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 110, .column = 22, .offset = 2900 },
                                                                     "Identifier"
                                                                 ),
@@ -741,7 +803,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 110, .column = 33, .offset = 2911 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 110, .column = 33, .offset = 2911 },
                                                             "__"
                                                         ),
@@ -759,7 +822,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 110, .column = 40, .offset = 2918 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 110, .column = 40, .offset = 2918 },
                                                             "__"
                                                         ),
@@ -769,7 +833,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LabeledExpr.create(
                                                         allocator,
                                                         .{ .line = 110, .column = 43, .offset = 2921 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 110, .column = 43, .offset = 2921 },
                                                             "expr"
                                                         ),
@@ -777,7 +842,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 110, .column = 48, .offset = 2926 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 110, .column = 48, .offset = 2926 },
                                                                     "PrefixedExpr"
                                                                 ),
@@ -788,7 +854,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             },
                                         ),
                                     ),
-                                    ast.CodeBlock.init(
+                                    try ast.CodeBlock.init(
+                                        allocator,
                                         .{ .line = 110, .column = 61, .offset = 2939 },
                                         "{\n    const pos = c.astPos();\n    const lab = try c.allocator.create(ast.LabeledExpr);\n    const label_ptr = try c.allocator.create(ast.Identifier);\n    label_ptr.* = label.*;\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n\n    lab.* = ast.LabeledExpr{\n        .pos = pos,\n        .label = label_ptr,\n        .expr = expr_ptr,\n    };\n    return ast.Expression{ .labeled = lab };\n}"
                                     ),
@@ -799,7 +866,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 124, .column = 6, .offset = 3359 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 124, .column = 6, .offset = 3359 },
                                         "PrefixedExpr"
                                     ),
@@ -813,11 +881,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 126, .column = 2, .offset = 3373 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 126, .column = 2, .offset = 3373 },
                     "PrefixedExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -839,7 +909,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LabeledExpr.create(
                                                         allocator,
                                                         .{ .line = 126, .column = 17, .offset = 3390 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 126, .column = 17, .offset = 3390 },
                                                             "op"
                                                         ),
@@ -847,7 +918,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 126, .column = 20, .offset = 3393 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 126, .column = 20, .offset = 3393 },
                                                                     "PrefixedOp"
                                                                 ),
@@ -859,7 +931,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 126, .column = 31, .offset = 3404 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 126, .column = 31, .offset = 3404 },
                                                             "__"
                                                         ),
@@ -869,7 +942,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LabeledExpr.create(
                                                         allocator,
                                                         .{ .line = 126, .column = 34, .offset = 3407 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 126, .column = 34, .offset = 3407 },
                                                             "expr"
                                                         ),
@@ -877,7 +951,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 126, .column = 39, .offset = 3412 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 126, .column = 39, .offset = 3412 },
                                                                     "SuffixedExpr"
                                                                 ),
@@ -888,7 +963,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             },
                                         ),
                                     ),
-                                    ast.CodeBlock.init(
+                                    try ast.CodeBlock.init(
+                                        allocator,
                                         .{ .line = 126, .column = 52, .offset = 3425 },
                                         "{\n    const pos = c.astPos();\n    const op_str = @as([]const u8, @ptrCast(op));\n    if (std.mem.eql(u8, op_str, \"&\")) {\n        const and_expr = try ast.AndExpr.init(c.allocator, pos, expr);\n        return ast.Expression{ .and_expr = and_expr };\n    }\n    const not_expr = try c.allocator.create(ast.NotExpr);\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n    not_expr.* = ast.NotExpr{\n        .pos = pos,\n        .expr = expr_ptr,\n    };\n    return ast.Expression{ .not = not_expr };\n}"
                                     ),
@@ -899,7 +975,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 141, .column = 6, .offset = 3952 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 141, .column = 6, .offset = 3952 },
                                         "SuffixedExpr"
                                     ),
@@ -913,11 +990,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 143, .column = 2, .offset = 3966 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 143, .column = 2, .offset = 3966 },
                     "PrefixedOp"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -949,7 +1028,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 143, .column = 29, .offset = 3995 },
                             "{\n    return c.text;\n}"
                         ),
@@ -961,11 +1041,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 147, .column = 2, .offset = 4019 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 147, .column = 2, .offset = 4019 },
                     "SuffixedExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -987,7 +1069,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LabeledExpr.create(
                                                         allocator,
                                                         .{ .line = 147, .column = 17, .offset = 4036 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 147, .column = 17, .offset = 4036 },
                                                             "expr"
                                                         ),
@@ -995,7 +1078,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 147, .column = 22, .offset = 4041 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 147, .column = 22, .offset = 4041 },
                                                                     "PrimaryExpr"
                                                                 ),
@@ -1007,7 +1091,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 147, .column = 34, .offset = 4053 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 147, .column = 34, .offset = 4053 },
                                                             "__"
                                                         ),
@@ -1017,7 +1102,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LabeledExpr.create(
                                                         allocator,
                                                         .{ .line = 147, .column = 37, .offset = 4056 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 147, .column = 37, .offset = 4056 },
                                                             "op"
                                                         ),
@@ -1025,7 +1111,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 147, .column = 40, .offset = 4059 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 147, .column = 40, .offset = 4059 },
                                                                     "SuffixedOp"
                                                                 ),
@@ -1036,7 +1123,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             },
                                         ),
                                     ),
-                                    ast.CodeBlock.init(
+                                    try ast.CodeBlock.init(
+                                        allocator,
                                         .{ .line = 147, .column = 51, .offset = 4070 },
                                         "{\n    const pos = c.astPos();\n    const op_str = @as([]const u8, @ptrCast(op));\n    const expr_ptr = try c.allocator.create(ast.Expression);\n    expr_ptr.* = expr;\n\n    if (std.mem.eql(u8, op_str, \"?\")) {\n        const zero_or_one = try c.allocator.create(ast.ZeroOrOneExpr);\n        zero_or_one.* = ast.ZeroOrOneExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .zero_or_one = zero_or_one };\n    } else if (std.mem.eql(u8, op_str, \"*\")) {\n        const zero_or_more = try c.allocator.create(ast.ZeroOrMoreExpr);\n        zero_or_more.* = ast.ZeroOrMoreExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .zero_or_more = zero_or_more };\n    } else if (std.mem.eql(u8, op_str, \"+\")) {\n        const one_or_more = try c.allocator.create(ast.OneOrMoreExpr);\n        one_or_more.* = ast.OneOrMoreExpr{\n            .pos = pos,\n            .expr = expr_ptr,\n        };\n        return ast.Expression{ .one_or_more = one_or_more };\n    } else {\n        return error.UnknownOperator;\n    }\n}"
                                     ),
@@ -1047,7 +1135,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 177, .column = 6, .offset = 5156 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 177, .column = 6, .offset = 5156 },
                                         "PrimaryExpr"
                                     ),
@@ -1061,11 +1150,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 179, .column = 2, .offset = 5170 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 179, .column = 2, .offset = 5170 },
                     "SuffixedOp"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1105,7 +1196,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 179, .column = 35, .offset = 5205 },
                             "{\n    return c.text;\n}"
                         ),
@@ -1117,11 +1209,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 183, .column = 2, .offset = 5229 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 183, .column = 2, .offset = 5229 },
                     "PrimaryExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1134,7 +1228,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 183, .column = 16, .offset = 5245 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 183, .column = 16, .offset = 5245 },
                                         "LitMatcher"
                                     ),
@@ -1144,7 +1239,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 183, .column = 29, .offset = 5258 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 183, .column = 29, .offset = 5258 },
                                         "CharClassMatcher"
                                     ),
@@ -1154,7 +1250,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 183, .column = 48, .offset = 5277 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 183, .column = 48, .offset = 5277 },
                                         "AnyMatcher"
                                     ),
@@ -1164,7 +1261,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 183, .column = 61, .offset = 5290 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 183, .column = 61, .offset = 5290 },
                                         "RuleRefExpr"
                                     ),
@@ -1174,7 +1272,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 183, .column = 75, .offset = 5304 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 183, .column = 75, .offset = 5304 },
                                         "SemanticPredExpr"
                                     ),
@@ -1201,7 +1300,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 183, .column = 98, .offset = 5327 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 183, .column = 98, .offset = 5327 },
                                                             "__"
                                                         ),
@@ -1211,7 +1311,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.LabeledExpr.create(
                                                         allocator,
                                                         .{ .line = 183, .column = 101, .offset = 5330 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 183, .column = 101, .offset = 5330 },
                                                             "expr"
                                                         ),
@@ -1219,7 +1320,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 183, .column = 106, .offset = 5335 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 183, .column = 106, .offset = 5335 },
                                                                     "Expression"
                                                                 ),
@@ -1231,7 +1333,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 183, .column = 117, .offset = 5346 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 183, .column = 117, .offset = 5346 },
                                                             "__"
                                                         ),
@@ -1248,7 +1351,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             },
                                         ),
                                     ),
-                                    ast.CodeBlock.init(
+                                    try ast.CodeBlock.init(
+                                        allocator,
                                         .{ .line = 183, .column = 124, .offset = 5353 },
                                         "{\n    return expr;\n}"
                                     ),
@@ -1263,11 +1367,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 186, .column = 2, .offset = 5374 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 186, .column = 2, .offset = 5374 },
                     "RuleRefExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1284,7 +1390,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 186, .column = 16, .offset = 5390 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 186, .column = 16, .offset = 5390 },
                                                 "name"
                                             ),
@@ -1292,7 +1399,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 186, .column = 21, .offset = 5395 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 186, .column = 21, .offset = 5395 },
                                                         "IdentifierName"
                                                     ),
@@ -1313,7 +1421,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 186, .column = 39, .offset = 5413 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 186, .column = 39, .offset = 5413 },
                                                                     "__"
                                                                 ),
@@ -1332,7 +1441,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                                 try ast.RuleRefExpr.create(
                                                                                     allocator,
                                                                                     .{ .line = 186, .column = 44, .offset = 5418 },
-                                                                                    ast.Identifier.init(
+                                                                                    try ast.Identifier.init(
+                                                                                        allocator,
                                                                                         .{ .line = 186, .column = 44, .offset = 5418 },
                                                                                         "StringLiteral"
                                                                                     ),
@@ -1342,7 +1452,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                                 try ast.RuleRefExpr.create(
                                                                                     allocator,
                                                                                     .{ .line = 186, .column = 58, .offset = 5432 },
-                                                                                    ast.Identifier.init(
+                                                                                    try ast.Identifier.init(
+                                                                                        allocator,
                                                                                         .{ .line = 186, .column = 58, .offset = 5432 },
                                                                                         "__"
                                                                                     ),
@@ -1357,7 +1468,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 186, .column = 64, .offset = 5438 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 186, .column = 64, .offset = 5438 },
                                                                     "RuleDefOp"
                                                                 ),
@@ -1371,7 +1483,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 186, .column = 76, .offset = 5450 },
                             "{\n    const ref = try c.allocator.create(ast.RuleRefExpr);\n    const name_ptr = try c.allocator.create(ast.Identifier);\n    name_ptr.* = name.*;\n    ref.* = ast.RuleRefExpr{\n        .pos = c.astPos(),\n        .name = name_ptr,\n        .nullable = false,\n    };\n    return ast.Expression{ .rule_ref = ref };\n}"
                         ),
@@ -1383,11 +1496,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 197, .column = 2, .offset = 5759 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 197, .column = 2, .offset = 5759 },
                     "SemanticPredExpr"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1404,7 +1519,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 197, .column = 21, .offset = 5780 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 197, .column = 21, .offset = 5780 },
                                                 "op"
                                             ),
@@ -1412,7 +1528,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 197, .column = 24, .offset = 5783 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 197, .column = 24, .offset = 5783 },
                                                         "SemanticPredOp"
                                                     ),
@@ -1424,7 +1541,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 197, .column = 39, .offset = 5798 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 197, .column = 39, .offset = 5798 },
                                                 "__"
                                             ),
@@ -1434,7 +1552,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 197, .column = 42, .offset = 5801 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 197, .column = 42, .offset = 5801 },
                                                 "code"
                                             ),
@@ -1442,7 +1561,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 197, .column = 47, .offset = 5806 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 197, .column = 47, .offset = 5806 },
                                                         "CodeBlock"
                                                     ),
@@ -1453,7 +1573,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 197, .column = 57, .offset = 5816 },
                             "{\n    const op_str = @as([]const u8, @ptrCast(op));\n    if (std.mem.eql(u8, op_str, \"&\")) {\n        const and_code = try c.allocator.create(ast.AndCodeExpr);\n        and_code.* = ast.AndCodeExpr{\n            .pos = c.astPos(),\n            .code = code,\n            .func_ix = 0,\n        };\n        return ast.Expression{ .and_code = and_code };\n    }\n    const not_code = try c.allocator.create(ast.NotCodeExpr);\n    not_code.* = ast.NotCodeExpr{\n        .pos = c.astPos(),\n        .code = code,\n        .func_ix = 0,\n    };\n    return ast.Expression{ .not_code = not_code };\n}"
                         ),
@@ -1465,11 +1586,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 216, .column = 2, .offset = 6394 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 216, .column = 2, .offset = 6394 },
                     "SemanticPredOp"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1501,7 +1624,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 216, .column = 33, .offset = 6427 },
                             "{\n    return c.text;\n}"
                         ),
@@ -1513,11 +1637,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 220, .column = 2, .offset = 6451 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 220, .column = 2, .offset = 6451 },
                     "RuleDefOp"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1566,11 +1692,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 222, .column = 2, .offset = 6499 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 222, .column = 2, .offset = 6499 },
                     "SourceChar"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1586,11 +1714,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 223, .column = 2, .offset = 6516 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 223, .column = 2, .offset = 6516 },
                     "Comment"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1603,7 +1733,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 223, .column = 12, .offset = 6528 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 223, .column = 12, .offset = 6528 },
                                         "MultiLineComment"
                                     ),
@@ -1613,7 +1744,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 223, .column = 31, .offset = 6547 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 223, .column = 31, .offset = 6547 },
                                         "SingleLineComment"
                                     ),
@@ -1627,11 +1759,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 224, .column = 2, .offset = 6565 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 224, .column = 2, .offset = 6565 },
                     "MultiLineComment"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1675,7 +1809,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 224, .column = 34, .offset = 6599 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 224, .column = 34, .offset = 6599 },
                                                             "SourceChar"
                                                         ),
@@ -1702,11 +1837,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 225, .column = 2, .offset = 6618 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 225, .column = 2, .offset = 6618 },
                     "MultiLineCommentNoLineTerminator"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1753,7 +1890,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                         try ast.RuleRefExpr.create(
                                                                             allocator,
                                                                             .{ .line = 225, .column = 54, .offset = 6672 },
-                                                                            ast.Identifier.init(
+                                                                            try ast.Identifier.init(
+                                                                                allocator,
                                                                                 .{ .line = 225, .column = 54, .offset = 6672 },
                                                                                 "EOL"
                                                                             ),
@@ -1768,7 +1906,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 225, .column = 60, .offset = 6678 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 225, .column = 60, .offset = 6678 },
                                                             "SourceChar"
                                                         ),
@@ -1795,11 +1934,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 226, .column = 2, .offset = 6697 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 226, .column = 2, .offset = 6697 },
                     "SingleLineComment"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1833,7 +1974,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 226, .column = 30, .offset = 6727 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 226, .column = 30, .offset = 6727 },
                                                                     "EOL"
                                                                 ),
@@ -1845,7 +1987,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 226, .column = 34, .offset = 6731 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 226, .column = 34, .offset = 6731 },
                                                             "SourceChar"
                                                         ),
@@ -1864,11 +2007,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 228, .column = 2, .offset = 6746 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 228, .column = 2, .offset = 6746 },
                     "Identifier"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1876,7 +2021,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                     try ast.RuleRefExpr.create(
                         allocator,
                         .{ .line = 228, .column = 15, .offset = 6761 },
-                        ast.Identifier.init(
+                        try ast.Identifier.init(
+                            allocator,
                             .{ .line = 228, .column = 15, .offset = 6761 },
                             "IdentifierName"
                         ),
@@ -1887,11 +2033,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 229, .column = 2, .offset = 6776 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 229, .column = 2, .offset = 6776 },
                     "IdentifierName"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1908,7 +2056,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 229, .column = 19, .offset = 6795 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 229, .column = 19, .offset = 6795 },
                                                 "IdentifierStart"
                                             ),
@@ -1922,7 +2071,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 229, .column = 35, .offset = 6811 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 229, .column = 35, .offset = 6811 },
                                                         "IdentifierPart"
                                                     ),
@@ -1933,7 +2083,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 229, .column = 51, .offset = 6827 },
                             "{\n    return ast.Identifier{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n}"
                         ),
@@ -1945,11 +2096,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 235, .column = 2, .offset = 6943 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 235, .column = 2, .offset = 6943 },
                     "IdentifierStart"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1970,11 +2123,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 236, .column = 2, .offset = 6971 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 236, .column = 2, .offset = 6971 },
                     "IdentifierPart"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -1987,7 +2142,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 236, .column = 19, .offset = 6990 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 236, .column = 19, .offset = 6990 },
                                         "IdentifierStart"
                                     ),
@@ -2013,11 +2169,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 238, .column = 2, .offset = 7015 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 238, .column = 2, .offset = 7015 },
                     "LitMatcher"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2034,7 +2192,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 238, .column = 15, .offset = 7030 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 238, .column = 15, .offset = 7030 },
                                                 "lit"
                                             ),
@@ -2042,7 +2201,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                 try ast.RuleRefExpr.create(
                                                     allocator,
                                                     .{ .line = 238, .column = 19, .offset = 7034 },
-                                                    ast.Identifier.init(
+                                                    try ast.Identifier.init(
+                                                        allocator,
                                                         .{ .line = 238, .column = 19, .offset = 7034 },
                                                         "StringLiteral"
                                                     ),
@@ -2054,7 +2214,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.LabeledExpr.create(
                                             allocator,
                                             .{ .line = 238, .column = 33, .offset = 7048 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 238, .column = 33, .offset = 7048 },
                                                 "ignore"
                                             ),
@@ -2077,7 +2238,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 238, .column = 45, .offset = 7060 },
                             "{\n    const raw_str = lit.value;\n    const unquoted = try std.mem.replaceOwned(u8, c.allocator, raw_str, \"\\\"\", \"\");\n    const lit_matcher = try c.allocator.create(ast.LitMatcher);\n    lit_matcher.* = ast.LitMatcher{\n        .pos = c.astPos(),\n        .value = unquoted,\n        .ignore_case = ignore != null,\n    };\n    return ast.Expression{ .lit_matcher = lit_matcher };\n}"
                         ),
@@ -2089,11 +2251,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 249, .column = 2, .offset = 7435 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 249, .column = 2, .offset = 7435 },
                     "StringLiteral"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2127,7 +2291,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 249, .column = 24, .offset = 7459 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 249, .column = 24, .offset = 7459 },
                                                                     "DoubleStringChar"
                                                                 ),
@@ -2163,7 +2328,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 249, .column = 52, .offset = 7487 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 249, .column = 52, .offset = 7487 },
                                                             "SingleStringChar"
                                                         ),
@@ -2201,7 +2367,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 249, .column = 79, .offset = 7514 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 249, .column = 79, .offset = 7514 },
                                                                     "RawStringChar"
                                                                 ),
@@ -2223,7 +2390,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 249, .column = 100, .offset = 7535 },
                             "{\n    return ast.StringLit{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n}"
                         ),
@@ -2235,11 +2403,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 255, .column = 2, .offset = 7650 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 255, .column = 2, .offset = 7650 },
                     "DoubleStringChar"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2282,7 +2452,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.RuleRefExpr.create(
                                                                     allocator,
                                                                     .{ .line = 255, .column = 37, .offset = 7687 },
-                                                                    ast.Identifier.init(
+                                                                    try ast.Identifier.init(
+                                                                        allocator,
                                                                         .{ .line = 255, .column = 37, .offset = 7687 },
                                                                         "EOL"
                                                                     ),
@@ -2297,7 +2468,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 255, .column = 43, .offset = 7693 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 255, .column = 43, .offset = 7693 },
                                                     "SourceChar"
                                                 ),
@@ -2323,7 +2495,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 255, .column = 61, .offset = 7711 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 255, .column = 61, .offset = 7711 },
                                                     "DoubleStringEscape"
                                                 ),
@@ -2340,11 +2513,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 256, .column = 2, .offset = 7730 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 256, .column = 2, .offset = 7730 },
                     "SingleStringChar"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2387,7 +2562,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.RuleRefExpr.create(
                                                                     allocator,
                                                                     .{ .line = 256, .column = 37, .offset = 7767 },
-                                                                    ast.Identifier.init(
+                                                                    try ast.Identifier.init(
+                                                                        allocator,
                                                                         .{ .line = 256, .column = 37, .offset = 7767 },
                                                                         "EOL"
                                                                     ),
@@ -2402,7 +2578,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 256, .column = 43, .offset = 7773 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 256, .column = 43, .offset = 7773 },
                                                     "SourceChar"
                                                 ),
@@ -2428,7 +2605,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 256, .column = 61, .offset = 7791 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 256, .column = 61, .offset = 7791 },
                                                     "SingleStringEscape"
                                                 ),
@@ -2445,11 +2623,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 257, .column = 2, .offset = 7810 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 257, .column = 2, .offset = 7810 },
                     "RawStringChar"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2476,7 +2656,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 257, .column = 23, .offset = 7833 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 257, .column = 23, .offset = 7833 },
                                         "SourceChar"
                                     ),
@@ -2490,11 +2671,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 259, .column = 2, .offset = 7845 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 259, .column = 2, .offset = 7845 },
                     "DoubleStringEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2515,7 +2698,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 259, .column = 29, .offset = 7874 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 259, .column = 29, .offset = 7874 },
                                         "CommonEscapeSequence"
                                     ),
@@ -2529,11 +2713,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 260, .column = 2, .offset = 7895 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 260, .column = 2, .offset = 7895 },
                     "SingleStringEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2554,7 +2740,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 260, .column = 29, .offset = 7924 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 260, .column = 29, .offset = 7924 },
                                         "CommonEscapeSequence"
                                     ),
@@ -2568,11 +2755,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 262, .column = 2, .offset = 7946 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 262, .column = 2, .offset = 7946 },
                     "CommonEscapeSequence"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2585,7 +2774,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 262, .column = 25, .offset = 7971 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 262, .column = 25, .offset = 7971 },
                                         "SingleCharEscape"
                                     ),
@@ -2595,7 +2785,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 262, .column = 44, .offset = 7990 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 262, .column = 44, .offset = 7990 },
                                         "OctalEscape"
                                     ),
@@ -2605,7 +2796,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 262, .column = 58, .offset = 8004 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 262, .column = 58, .offset = 8004 },
                                         "HexEscape"
                                     ),
@@ -2615,7 +2807,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 262, .column = 70, .offset = 8016 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 262, .column = 70, .offset = 8016 },
                                         "LongUnicodeEscape"
                                     ),
@@ -2625,7 +2818,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 262, .column = 90, .offset = 8036 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 262, .column = 90, .offset = 8036 },
                                         "ShortUnicodeEscape"
                                     ),
@@ -2639,11 +2833,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 263, .column = 2, .offset = 8055 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 263, .column = 2, .offset = 8055 },
                     "SingleCharEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2724,11 +2920,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 264, .column = 2, .offset = 8123 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 264, .column = 2, .offset = 8123 },
                     "OctalEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2741,7 +2939,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 264, .column = 16, .offset = 8139 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 264, .column = 16, .offset = 8139 },
                                         "OctalDigit"
                                     ),
@@ -2751,7 +2950,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 264, .column = 27, .offset = 8150 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 264, .column = 27, .offset = 8150 },
                                         "OctalDigit"
                                     ),
@@ -2761,7 +2961,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 264, .column = 38, .offset = 8161 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 264, .column = 38, .offset = 8161 },
                                         "OctalDigit"
                                     ),
@@ -2775,11 +2976,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 265, .column = 2, .offset = 8172 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 265, .column = 2, .offset = 8172 },
                     "HexEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2800,7 +3003,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 265, .column = 18, .offset = 8190 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 265, .column = 18, .offset = 8190 },
                                         "HexDigit"
                                     ),
@@ -2810,7 +3014,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 265, .column = 27, .offset = 8199 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 265, .column = 27, .offset = 8199 },
                                         "HexDigit"
                                     ),
@@ -2824,11 +3029,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 266, .column = 2, .offset = 8208 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 266, .column = 2, .offset = 8208 },
                     "LongUnicodeEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2849,7 +3056,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 26, .offset = 8234 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 26, .offset = 8234 },
                                         "HexDigit"
                                     ),
@@ -2859,7 +3067,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 35, .offset = 8243 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 35, .offset = 8243 },
                                         "HexDigit"
                                     ),
@@ -2869,7 +3078,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 44, .offset = 8252 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 44, .offset = 8252 },
                                         "HexDigit"
                                     ),
@@ -2879,7 +3089,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 53, .offset = 8261 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 53, .offset = 8261 },
                                         "HexDigit"
                                     ),
@@ -2889,7 +3100,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 62, .offset = 8270 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 62, .offset = 8270 },
                                         "HexDigit"
                                     ),
@@ -2899,7 +3111,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 71, .offset = 8279 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 71, .offset = 8279 },
                                         "HexDigit"
                                     ),
@@ -2909,7 +3122,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 80, .offset = 8288 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 80, .offset = 8288 },
                                         "HexDigit"
                                     ),
@@ -2919,7 +3133,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 266, .column = 89, .offset = 8297 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 266, .column = 89, .offset = 8297 },
                                         "HexDigit"
                                     ),
@@ -2933,11 +3148,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 267, .column = 2, .offset = 8306 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 267, .column = 2, .offset = 8306 },
                     "ShortUnicodeEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -2958,7 +3175,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 27, .offset = 8333 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 267, .column = 27, .offset = 8333 },
                                         "HexDigit"
                                     ),
@@ -2968,7 +3186,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 36, .offset = 8342 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 267, .column = 36, .offset = 8342 },
                                         "HexDigit"
                                     ),
@@ -2978,7 +3197,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 45, .offset = 8351 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 267, .column = 45, .offset = 8351 },
                                         "HexDigit"
                                     ),
@@ -2988,7 +3208,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 267, .column = 54, .offset = 8360 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 267, .column = 54, .offset = 8360 },
                                         "HexDigit"
                                     ),
@@ -3002,11 +3223,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 269, .column = 2, .offset = 8370 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 269, .column = 2, .offset = 8370 },
                     "OctalDigit"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3027,11 +3250,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 270, .column = 2, .offset = 8391 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 270, .column = 2, .offset = 8391 },
                     "DecimalDigit"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3052,11 +3277,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 271, .column = 2, .offset = 8414 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 271, .column = 2, .offset = 8414 },
                     "HexDigit"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3077,11 +3304,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 273, .column = 2, .offset = 8438 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 273, .column = 2, .offset = 8438 },
                     "CharClassMatcher"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3115,7 +3344,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 273, .column = 27, .offset = 8465 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 273, .column = 27, .offset = 8465 },
                                                                     "ClassCharRange"
                                                                 ),
@@ -3125,7 +3355,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 273, .column = 44, .offset = 8482 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 273, .column = 44, .offset = 8482 },
                                                                     "ClassChar"
                                                                 ),
@@ -3148,7 +3379,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                         try ast.RuleRefExpr.create(
                                                                             allocator,
                                                                             .{ .line = 273, .column = 61, .offset = 8499 },
-                                                                            ast.Identifier.init(
+                                                                            try ast.Identifier.init(
+                                                                                allocator,
                                                                                 .{ .line = 273, .column = 61, .offset = 8499 },
                                                                                 "UnicodeClassEscape"
                                                                             ),
@@ -3187,7 +3419,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 273, .column = 92, .offset = 8530 },
                             "{\n    const pos = c.astPos();\n    const char_class = try c.allocator.create(ast.CharClassMatcher);\n    const chars = std.ArrayList(u8).init(c.allocator);\n    const ranges = std.ArrayList(struct { u8, u8 }).init(c.allocator);\n    const unicode_classes = std.ArrayList([]const u8).init(c.allocator);\n\n    char_class.* = ast.CharClassMatcher{\n        .pos = pos,\n        .value = try c.allocator.dupe(u8, c.text),\n        .ignore_case = false,\n        .inverted = false,\n        .chars = chars,\n        .ranges = ranges,\n        .unicode_classes = unicode_classes,\n    };\n    return ast.Expression{ .char_class_matcher = char_class };\n}"
                         ),
@@ -3199,11 +3432,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 291, .column = 2, .offset = 9164 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 291, .column = 2, .offset = 9164 },
                     "ClassCharRange"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3216,7 +3451,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 291, .column = 19, .offset = 9183 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 291, .column = 19, .offset = 9183 },
                                         "ClassChar"
                                     ),
@@ -3234,7 +3470,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 291, .column = 33, .offset = 9197 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 291, .column = 33, .offset = 9197 },
                                         "ClassChar"
                                     ),
@@ -3248,11 +3485,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 292, .column = 2, .offset = 9207 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 292, .column = 2, .offset = 9207 },
                     "ClassChar"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3295,7 +3534,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                                 try ast.RuleRefExpr.create(
                                                                     allocator,
                                                                     .{ .line = 292, .column = 30, .offset = 9237 },
-                                                                    ast.Identifier.init(
+                                                                    try ast.Identifier.init(
+                                                                        allocator,
                                                                         .{ .line = 292, .column = 30, .offset = 9237 },
                                                                         "EOL"
                                                                     ),
@@ -3310,7 +3550,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 292, .column = 36, .offset = 9243 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 292, .column = 36, .offset = 9243 },
                                                     "SourceChar"
                                                 ),
@@ -3336,7 +3577,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 292, .column = 54, .offset = 9261 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 292, .column = 54, .offset = 9261 },
                                                     "CharClassEscape"
                                                 ),
@@ -3353,11 +3595,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 293, .column = 2, .offset = 9277 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 293, .column = 2, .offset = 9277 },
                     "CharClassEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3378,7 +3622,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 try ast.RuleRefExpr.create(
                                     allocator,
                                     .{ .line = 293, .column = 26, .offset = 9303 },
-                                    ast.Identifier.init(
+                                    try ast.Identifier.init(
+                                        allocator,
                                         .{ .line = 293, .column = 26, .offset = 9303 },
                                         "CommonEscapeSequence"
                                     ),
@@ -3392,11 +3637,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 295, .column = 2, .offset = 9325 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 295, .column = 2, .offset = 9325 },
                     "UnicodeClassEscape"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3422,7 +3669,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 295, .column = 29, .offset = 9354 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 295, .column = 29, .offset = 9354 },
                                                     "SingleCharUnicodeClass"
                                                 ),
@@ -3445,7 +3693,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                         try ast.RuleRefExpr.create(
                                                             allocator,
                                                             .{ .line = 295, .column = 58, .offset = 9383 },
-                                                            ast.Identifier.init(
+                                                            try ast.Identifier.init(
+                                                                allocator,
                                                                 .{ .line = 295, .column = 58, .offset = 9383 },
                                                                 "UnicodeClass"
                                                             ),
@@ -3473,11 +3722,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 296, .column = 2, .offset = 9402 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 296, .column = 2, .offset = 9402 },
                     "SingleCharUnicodeClass"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3498,11 +3749,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 297, .column = 2, .offset = 9439 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 297, .column = 2, .offset = 9439 },
                     "UnicodeClass"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3529,11 +3782,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 299, .column = 2, .offset = 9466 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 299, .column = 2, .offset = 9466 },
                     "AnyMatcher"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3549,7 +3804,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 false,
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 299, .column = 19, .offset = 9485 },
                             "{\n    const any_matcher = try c.allocator.create(ast.AnyMatcher);\n    any_matcher.* = ast.AnyMatcher{\n        .pos = c.astPos(),\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n    return ast.Expression{ .any_matcher = any_matcher };\n}"
                         ),
@@ -3561,11 +3817,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 308, .column = 2, .offset = 9732 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 308, .column = 2, .offset = 9732 },
                     "CodeBlock"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3590,7 +3848,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 308, .column = 18, .offset = 9750 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 308, .column = 18, .offset = 9750 },
                                                 "Code"
                                             ),
@@ -3607,7 +3866,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                 },
                             ),
                         ),
-                        ast.CodeBlock.init(
+                        try ast.CodeBlock.init(
+                            allocator,
                             .{ .line = 308, .column = 27, .offset = 9759 },
                             "{\n    const pos = c.astPos();\n    const code_block = try c.allocator.create(ast.CodeBlock);\n    code_block.* = ast.CodeBlock{\n        .pos = pos,\n        .value = try c.allocator.dupe(u8, c.text),\n    };\n    return code_block;\n}"
                         ),
@@ -3619,11 +3879,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 318, .column = 2, .offset = 9989 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 318, .column = 2, .offset = 9989 },
                     "Code"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3667,7 +3929,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                             try ast.RuleRefExpr.create(
                                                                 allocator,
                                                                 .{ .line = 318, .column = 19, .offset = 10008 },
-                                                                ast.Identifier.init(
+                                                                try ast.Identifier.init(
+                                                                    allocator,
                                                                     .{ .line = 318, .column = 19, .offset = 10008 },
                                                                     "SourceChar"
                                                                 ),
@@ -3695,7 +3958,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 318, .column = 39, .offset = 10028 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 318, .column = 39, .offset = 10028 },
                                                             "Code"
                                                         ),
@@ -3722,11 +3986,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 320, .column = 2, .offset = 10041 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 320, .column = 2, .offset = 10041 },
                     "__"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3743,7 +4009,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 320, .column = 9, .offset = 10050 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 320, .column = 9, .offset = 10050 },
                                                 "Whitespace"
                                             ),
@@ -3753,7 +4020,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 320, .column = 22, .offset = 10063 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 320, .column = 22, .offset = 10063 },
                                                 "EOL"
                                             ),
@@ -3763,7 +4031,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 320, .column = 28, .offset = 10069 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 320, .column = 28, .offset = 10069 },
                                                 "Comment"
                                             ),
@@ -3779,11 +4048,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 321, .column = 2, .offset = 10080 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 321, .column = 2, .offset = 10080 },
                     "_"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3800,7 +4071,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 321, .column = 8, .offset = 10088 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 321, .column = 8, .offset = 10088 },
                                                 "Whitespace"
                                             ),
@@ -3810,7 +4082,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                         try ast.RuleRefExpr.create(
                                             allocator,
                                             .{ .line = 321, .column = 21, .offset = 10101 },
-                                            ast.Identifier.init(
+                                            try ast.Identifier.init(
+                                                allocator,
                                                 .{ .line = 321, .column = 21, .offset = 10101 },
                                                 "MultiLineCommentNoLineTerminator"
                                             ),
@@ -3826,11 +4099,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 323, .column = 2, .offset = 10138 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 323, .column = 2, .offset = 10138 },
                     "Whitespace"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3851,11 +4126,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 324, .column = 2, .offset = 10161 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 324, .column = 2, .offset = 10161 },
                     "EOL"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3872,11 +4149,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 325, .column = 2, .offset = 10174 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 325, .column = 2, .offset = 10174 },
                     "EOS"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),
@@ -3894,7 +4173,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 325, .column = 8, .offset = 10182 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 325, .column = 8, .offset = 10182 },
                                                     "__"
                                                 ),
@@ -3920,7 +4200,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 325, .column = 17, .offset = 10191 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 325, .column = 17, .offset = 10191 },
                                                     "_"
                                                 ),
@@ -3934,7 +4215,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                                     try ast.RuleRefExpr.create(
                                                         allocator,
                                                         .{ .line = 325, .column = 19, .offset = 10193 },
-                                                        ast.Identifier.init(
+                                                        try ast.Identifier.init(
+                                                            allocator,
                                                             .{ .line = 325, .column = 19, .offset = 10193 },
                                                             "SingleLineComment"
                                                         ),
@@ -3946,7 +4228,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 325, .column = 38, .offset = 10212 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 325, .column = 38, .offset = 10212 },
                                                     "EOL"
                                                 ),
@@ -3964,7 +4247,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 325, .column = 44, .offset = 10218 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 325, .column = 44, .offset = 10218 },
                                                     "__"
                                                 ),
@@ -3974,7 +4258,8 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
                                             try ast.RuleRefExpr.create(
                                                 allocator,
                                                 .{ .line = 325, .column = 47, .offset = 10221 },
-                                                ast.Identifier.init(
+                                                try ast.Identifier.init(
+                                                    allocator,
                                                     .{ .line = 325, .column = 47, .offset = 10221 },
                                                     "EOF"
                                                 ),
@@ -3991,11 +4276,13 @@ pub fn getGrammar(allocator: std.mem.Allocator) !*ast.Grammar {
             try ast.Rule.create(
                 allocator,
                 .{ .line = 327, .column = 2, .offset = 10226 },
-                ast.Identifier.init(
+                try ast.Identifier.init(
+                    allocator,
                     .{ .line = 327, .column = 2, .offset = 10226 },
                     "EOF"
                 ),
-                ast.StringLit.init(
+                try ast.StringLit.init(
+                    allocator,
                     .{ .line = 0, .column = 0, .offset = 0 },
                     ""
                 ),

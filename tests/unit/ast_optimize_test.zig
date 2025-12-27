@@ -18,8 +18,8 @@ test "AST Optimize - simple grammar" {
     const pos = ast.Pos.init(1, 1, 0);
 
     // Create a simple grammar with one rule
-    const name = ast.Identifier.init(pos, "A");
-    const display = ast.StringLit.init(pos, "A");
+    const name = try ast.Identifier.init(allocator, pos, "A");
+    const display = try ast.StringLit.init(allocator, pos, "A");
     const lit = try ast.LitMatcher.create(allocator, pos, "hello", false);
     const expr = ast.Expression{ .lit_matcher = lit };
     const rule = try ast.Rule.create(allocator, pos, name, display, expr);
@@ -52,8 +52,8 @@ test "AST Optimize - sequence expression" {
     const seq = try ast.SeqExpr.create(allocator, pos, exprs.items);
     const expr = ast.Expression{ .seq = seq };
 
-    const name = ast.Identifier.init(pos, "Rule");
-    const display = ast.StringLit.init(pos, "Rule");
+    const name = try ast.Identifier.init(allocator, pos, "Rule");
+    const display = try ast.StringLit.init(allocator, pos, "Rule");
     const rule = try ast.Rule.create(allocator, pos, name, display, expr);
     const grammar = try ast.Grammar.create(allocator, pos, &[_]*ast.Rule{rule});
 
@@ -84,8 +84,8 @@ test "AST Optimize - choice expression" {
     const choice = try ast.ChoiceExpr.create(allocator, pos, alts.items);
     const expr = ast.Expression{ .choice = choice };
 
-    const name = ast.Identifier.init(pos, "Rule");
-    const display = ast.StringLit.init(pos, "Rule");
+    const name = try ast.Identifier.init(allocator, pos, "Rule");
+    const display = try ast.StringLit.init(allocator, pos, "Rule");
     const rule = try ast.Rule.create(allocator, pos, name, display, expr);
     const grammar = try ast.Grammar.create(allocator, pos, &[_]*ast.Rule{rule});
 
@@ -109,8 +109,8 @@ test "AST Optimize - zero or more" {
     const zom = try ast.ZeroOrMoreExpr.create(allocator, pos, lit_expr);
     const expr = ast.Expression{ .zero_or_more = zom };
 
-    const name = ast.Identifier.init(pos, "Rule");
-    const display = ast.StringLit.init(pos, "Rule");
+    const name = try ast.Identifier.init(allocator, pos, "Rule");
+    const display = try ast.StringLit.init(allocator, pos, "Rule");
     const rule = try ast.Rule.create(allocator, pos, name, display, expr);
     const grammar = try ast.Grammar.create(allocator, pos, &[_]*ast.Rule{rule});
 

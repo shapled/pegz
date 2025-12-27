@@ -41,8 +41,13 @@ const PosValue = struct {
     pos: Pos,
     value: []const u8,
 
-    pub fn init(pos: Pos, value: []const u8) PosValue {
-        return .{ .pos = pos, .value = value };
+    pub fn init(allocator: std.mem.Allocator, pos: Pos, value: []const u8) !PosValue {
+        const duped = try allocator.dupe(u8, value);
+        return .{ .pos = pos, .value = duped };
+    }
+
+    pub fn deinit(self: *const PosValue, allocator: std.mem.Allocator) void {
+        allocator.free(self.value);
     }
 };
 
@@ -92,6 +97,22 @@ pub const Grammar = struct {
         try self.format(buffer.writer(gpa));
         return buffer.toOwnedSlice(gpa);
     }
+
+    pub fn deinit(self: *Grammar, allocator: std.mem.Allocator) void {
+        // Free all rules
+        for (self.rules.items) |rule| {
+            rule.deinit(allocator);
+        }
+        self.rules.deinit(allocator);
+
+        // Free init CodeBlock if present
+        if (self.init) |init_block| {
+            init_block.deinit(allocator);
+        }
+
+        // Free the Grammar struct itself
+        allocator.destroy(self);
+    }
 };
 
 pub const Identifier = PosValue;
@@ -112,11 +133,17 @@ pub const Rule = struct {
     const Self = @This();
 
     pub fn create(allocator: std.mem.Allocator, pos: Pos, name: Identifier, display_name: StringLit, expr: Expression) !*Rule {
+        const name_owned = try Identifier.init(allocator, name.pos, name.value);
+        errdefer name_owned.deinit(allocator);
+
+        const display_owned = try StringLit.init(allocator, display_name.pos, display_name.value);
+        errdefer display_owned.deinit(allocator);
+
         const self = try allocator.create(Rule);
         self.* = .{
             .pos = pos,
-            .name = name,
-            .display_name = display_name,
+            .name = name_owned,
+            .display_name = display_owned,
             .expr = expr,
             .visited = false,
             .nullable = false,
@@ -159,6 +186,13 @@ pub const Rule = struct {
 
     pub fn initialNames(self: *Self, gpa: std.mem.Allocator) !StringHashMap(void) {
         return self.expr.initialNames(gpa);
+    }
+
+    pub fn deinit(self: *Rule, allocator: std.mem.Allocator) void {
+        self.name.deinit(allocator);
+        self.display_name.deinit(allocator);
+        self.expr.deinit(allocator);
+        allocator.destroy(self);
     }
 };
 
@@ -285,6 +319,29 @@ pub const Expression = union(enum) {
             },
         };
     }
+
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        switch (self.*) {
+            .choice => |e| e.deinit(allocator),
+            .recovery => |e| e.deinit(allocator),
+            .action => |e| e.deinit(allocator),
+            .throw => |e| e.deinit(allocator),
+            .seq => |e| e.deinit(allocator),
+            .labeled => |e| e.deinit(allocator),
+            .and_expr => |e| e.deinit(allocator),
+            .not => |e| e.deinit(allocator),
+            .zero_or_one => |e| e.deinit(allocator),
+            .zero_or_more => |e| e.deinit(allocator),
+            .one_or_more => |e| e.deinit(allocator),
+            .rule_ref => |e| e.deinit(allocator),
+            .state_code => |e| e.deinit(allocator),
+            .and_code => |e| e.deinit(allocator),
+            .not_code => |e| e.deinit(allocator),
+            .lit_matcher => |e| e.deinit(allocator),
+            .char_class_matcher => |e| e.deinit(allocator),
+            .any_matcher => |e| e.deinit(allocator),
+        }
+    }
 };
 
 pub const RecoveryExpr = struct {
@@ -313,9 +370,14 @@ pub const RecoveryExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.labels.deinit(self.allocator);
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.expr.deinit(allocator);
+        self.recover_expr.deinit(allocator);
+        for (self.labels.items) |label| {
+            allocator.free(label);
+        }
+        self.labels.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -379,8 +441,10 @@ pub const ActionExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.expr.deinit(allocator);
+        self.code.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -420,16 +484,18 @@ pub const ThrowExpr = struct {
     const Self = @This();
 
     pub fn create(allocator: std.mem.Allocator, pos: Pos, label: []const u8) !*ThrowExpr {
+        const label_owned = try allocator.dupe(u8, label);
         const self = try allocator.create(ThrowExpr);
         self.* = .{
             .pos = pos,
-            .label = label,
+            .label = label_owned,
         };
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        std.heap.page_allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        allocator.free(self.label);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -486,9 +552,12 @@ pub const SeqExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.exprs.deinit(self.allocator);
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        for (self.exprs.items) |*expr| {
+            expr.deinit(allocator);
+        }
+        self.exprs.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -556,6 +625,12 @@ pub const LabeledExpr = struct {
         return self;
     }
 
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.label.deinit(allocator);
+        self.expr.deinit(allocator);
+        allocator.destroy(self);
+    }
+
     pub fn format(self: *const Self, writer: anytype) !void {
         try writer.print("{s}: {s}{{Label: {}, Expr: {}}}", .{
             self.pos,
@@ -602,8 +677,9 @@ pub const AndExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.expr.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -655,8 +731,9 @@ pub const NotExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.expr.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -708,8 +785,9 @@ pub const ZeroOrOneExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.expr.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -760,8 +838,9 @@ pub const ZeroOrMoreExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.expr.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -812,8 +891,9 @@ pub const OneOrMoreExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.expr.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -866,8 +946,9 @@ pub const RuleRefExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.name.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -923,8 +1004,9 @@ pub const StateCodeExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        std.heap.page_allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.code.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -976,8 +1058,9 @@ pub const AndCodeExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        std.heap.page_allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.code.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -1029,8 +1112,9 @@ pub const NotCodeExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        std.heap.page_allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        self.code.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -1073,13 +1157,19 @@ pub const LitMatcher = struct {
     const Self = @This();
 
     pub fn create(allocator: std.mem.Allocator, pos: Pos, value: []const u8, ignore_case: bool) !*LitMatcher {
+        const value_owned = try allocator.dupe(u8, value);
         const self = try allocator.create(LitMatcher);
         self.* = .{
             .pos = pos,
-            .value = value,
+            .value = value_owned,
             .ignore_case = ignore_case,
         };
         return self;
+    }
+
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        allocator.free(self.value);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -1126,10 +1216,11 @@ pub const CharClassMatcher = struct {
     const Self = @This();
 
     pub fn create(allocator: std.mem.Allocator, pos: Pos, value: []const u8, ignore_case: bool, inverted: bool, chars: []const u8, ranges: []const struct { u8, u8 }, unicode_classes: []const []const u8) !*CharClassMatcher {
+        const value_owned = try allocator.dupe(u8, value);
         const self = try allocator.create(CharClassMatcher);
         self.* = .{
             .pos = pos,
-            .value = value,
+            .value = value_owned,
             .ignore_case = ignore_case,
             .inverted = inverted,
             .chars = ArrayList(u8).initCapacity(allocator, chars.len) catch unreachable,
@@ -1143,16 +1234,21 @@ pub const CharClassMatcher = struct {
             self.ranges.append(allocator, r) catch unreachable;
         }
         for (unicode_classes) |uc| {
-            self.unicode_classes.append(allocator, uc) catch unreachable;
+            const uc_owned = try allocator.dupe(u8, uc);
+            self.unicode_classes.append(allocator, uc_owned) catch unreachable;
         }
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.chars.deinit();
-        self.ranges.deinit();
-        self.unicode_classes.deinit();
-        std.heap.page_allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        allocator.free(self.value);
+        self.chars.deinit(allocator);
+        self.ranges.deinit(allocator);
+        for (self.unicode_classes.items) |uc| {
+            allocator.free(uc);
+        }
+        self.unicode_classes.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -1200,6 +1296,11 @@ pub const AnyMatcher = struct {
             .value = value,
         };
         return self;
+    }
+
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        allocator.free(self.value);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {
@@ -1256,9 +1357,12 @@ pub const ChoiceExpr = struct {
         return self;
     }
 
-    pub fn deinit(self: *Self) void {
-        self.alternatives.deinit(self.allocator);
-        self.allocator.destroy(self);
+    pub fn deinit(self: *Self, allocator: std.mem.Allocator) void {
+        for (self.alternatives.items) |*alt| {
+            alt.deinit(allocator);
+        }
+        self.alternatives.deinit(allocator);
+        allocator.destroy(self);
     }
 
     pub fn format(self: *const Self, writer: anytype) !void {

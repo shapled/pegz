@@ -231,6 +231,20 @@ pub fn build(b: *std.Build) void {
     const run_unit_ast_optimize_tests = b.addRunArtifact(unit_ast_optimize_tests);
     test_step.dependOn(&run_unit_ast_optimize_tests.step);
 
+    // Test unit memory_test
+    const unit_memory_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/unit/memory_test.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    unit_memory_test_module.addImport("pegz_common", common_module);
+    const unit_memory_tests = b.addTest(.{
+        .name = "unit-memory-test",
+        .root_module = unit_memory_test_module,
+    });
+    const run_unit_memory_tests = b.addRunArtifact(unit_memory_tests);
+    test_step.dependOn(&run_unit_memory_tests.step);
+
     // Test integration parser_test
     const integration_test_module = b.createModule(.{
         .root_source_file = b.path("tests/integration/parser_test.zig"),

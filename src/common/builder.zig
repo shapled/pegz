@@ -305,7 +305,8 @@ pub const Builder = struct {
     }
 
     fn writeCodeBlock(self: *Builder, code: *const ast.CodeBlock, indent: usize) BuilderError!void {
-        try writeWithIndent(self.writer, indent, "ast.CodeBlock.init(\n");
+        try writeWithIndent(self.writer, indent, "try ast.CodeBlock.init(\n");
+        try writeWithIndent(self.writer, indent + 1, "allocator,\n");
         try self.writePos(code.pos, indent + 1);
         const escaped_code = try escapeZigString(code.value, self.allocator);
         defer self.allocator.free(escaped_code);
@@ -314,7 +315,8 @@ pub const Builder = struct {
     }
 
     fn writeStringLit(self: *Builder, str_lit: *const ast.StringLit, indent: usize) BuilderError!void {
-        try writeWithIndent(self.writer, indent, "ast.StringLit.init(\n");
+        try writeWithIndent(self.writer, indent, "try ast.StringLit.init(\n");
+        try writeWithIndent(self.writer, indent + 1, "allocator,\n");
         if (str_lit.value.len > 0) {
             try self.writePos(str_lit.pos, indent + 1);
         } else {
@@ -327,7 +329,8 @@ pub const Builder = struct {
     }
 
     fn writeIdentifier(self: *Builder, ident: *const ast.Identifier, indent: usize) BuilderError!void {
-        try writeWithIndent(self.writer, indent, "ast.Identifier.init(\n");
+        try writeWithIndent(self.writer, indent, "try ast.Identifier.init(\n");
+        try writeWithIndent(self.writer, indent + 1, "allocator,\n");
         try self.writePos(ident.pos, indent + 1);
         const escaped_value = try escapeZigString(ident.value, self.allocator);
         defer self.allocator.free(escaped_value);
