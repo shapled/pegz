@@ -1,7 +1,3 @@
-{
-package main
-}
-
 Grammar ← __ initializer:( Initializer __ )? rules:( Rule __ )+ {
     const pos = c.astPos();
 

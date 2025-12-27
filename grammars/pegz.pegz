@@ -1,7 +1,3 @@
-{
-package main
-}
-
 # Pegz Grammar - Full-featured PEG parser generator grammar
 # This is a self-hosting grammar that supports error recovery, throw expressions,
 # Unicode character classes, and comprehensive error checking.

@@ -177,15 +177,20 @@ pub const Builder = struct {
     }
 
     fn writeInit(self: *Builder, init_code: ?*ast.CodeBlock) !void {
-        if (init_code) |_| {
-            // Write init code block
-            try self.writer.writeAll("// Init code\n");
-            try self.writer.writeAll("fn initParser(allocator: std.mem.Allocator) !void {\n");
-            try self.writer.writeAll("    _ = allocator;\n");
-            // TODO: Process the code block and extract Zig code
-            // For now, skip the content
-            try self.writer.writeAll("    // Init code here\n");
-            try self.writer.writeAll("}\n\n");
+        if (init_code) |code| {
+            // Remove opening and closing braces
+            // Pigeon does: init.Val[1:len(init.Val)-1]
+            const content = code.value;
+            if (content.len > 1 and content[0] == '{' and content[content.len - 1] == '}') {
+                // Strip braces and trim whitespace
+                const trimmed = std.mem.trim(u8, content[1 .. content.len - 1], &std.ascii.whitespace);
+                try self.writer.writeAll("// Init code\n");
+                try self.writer.print("{s}\n\n", .{trimmed});
+            } else {
+                // No braces, write as-is
+                try self.writer.writeAll("// Init code\n");
+                try self.writer.print("{s}\n\n", .{content});
+            }
         }
     }
 

@@ -156,3 +156,55 @@ test "Integration - builder handles empty grammar" {
     const stat = try std.fs.cwd().statFile(output_path);
     try testing.expect(stat.size > 0);
 }
+
+test "Integration - builder handles grammar with init code" {
+    var arena = std.heap.ArenaAllocator.init(testing.allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+
+    const pos = ast.Pos.init(1, 1, 0);
+
+    // Create an init code block with actual Zig code
+    const init_code = try allocator.create(ast.CodeBlock);
+    init_code.* = try ast.CodeBlock.init(allocator, pos, "const std = @import(\"std\");\nvar global_counter: u32 = 0;");
+
+    const name = ast.Identifier{ .pos = pos, .value = "Test" };
+    const display = ast.StringLit{ .pos = pos, .value = "Test" };
+
+    const lit_matcher = try ast.LitMatcher.create(allocator, pos, "test", false);
+    const expr = ast.Expression{ .lit_matcher = lit_matcher };
+
+    const rule = try ast.Rule.create(allocator, pos, name, display, expr);
+    const grammar = try ast.Grammar.create(allocator, pos, &[_]*ast.Rule{rule});
+
+    // Set the init code
+    grammar.init = init_code;
+
+    // Generate parser code
+    const output_path = ".zig-cache/integration_init_parser.zig";
+
+    const out_file = try std.fs.cwd().createFile(output_path, .{ .read = true, .truncate = true });
+    defer out_file.close();
+
+    var write_buffer: [1024 * 1024]u8 = undefined;
+    var file_writer = out_file.writer(&write_buffer);
+    const writer_interface = &file_writer.interface;
+
+    var builder = try builder_mod.Builder.init(allocator, writer_interface, .{});
+    try builder.buildParser(grammar);
+    try writer_interface.flush();
+
+    // Read generated file and verify init code is present
+    const content = try out_file.getEndPos();
+    try out_file.seekTo(0);
+    const file_content = try allocator.alloc(u8, content);
+    _ = try out_file.readAll(file_content);
+
+    // Check that init code is in the generated file
+    const content_str = std.mem.sliceTo(file_content, 0);
+
+    // Verify the init code section exists
+    try testing.expect(std.mem.indexOf(u8, content_str, "// Init code") != null);
+    try testing.expect(std.mem.indexOf(u8, content_str, "const std = @import(\"std\");") != null);
+    try testing.expect(std.mem.indexOf(u8, content_str, "var global_counter: u32 = 0;") != null);
+}
